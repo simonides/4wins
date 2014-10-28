@@ -8,7 +8,7 @@ int main(){
 	shape.setRadius(40.f);
 	shape.setPosition(100.f, 100.f);
 	shape.setFillColor(sf::Color::Cyan);
-
+	//jakob ist der meister der memory leaks
 	while (window.isOpen()){
 
 		sf::Event event;
