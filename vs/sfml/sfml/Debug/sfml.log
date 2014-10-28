@@ -1,0 +1,13 @@
+﻿Build started 28.10.2014 00:25:28.
+     1>Project "C:\Users\paradies\git\gadel\vs\sfml\sfml\sfml.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\VisualStudio\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt game.cpp
+         game.cpp
+       Link:
+         D:\VisualStudio\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\paradies\git\gadel\vs\sfml\Debug\sfml.exe" /INCREMENTAL /NOLOGO "sfml-graphics-d.lib" "sfml-window-d.lib" "sfml-system-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\paradies\git\gadel\vs\sfml\Debug\sfml.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\paradies\git\gadel\vs\sfml\Debug\sfml.lib" /MACHINE:X86 Debug\game.obj
+         sfml.vcxproj -> C:\Users\paradies\git\gadel\vs\sfml\Debug\sfml.exe
+     1>Done Building Project "C:\Users\paradies\git\gadel\vs\sfml\sfml\sfml.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.65

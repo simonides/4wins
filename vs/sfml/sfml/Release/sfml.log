@@ -1,0 +1,15 @@
+﻿Build started 28.10.2014 10:36:55.
+     1>Project "C:\Users\paradies\git\gadel\vs\sfml\sfml\sfml.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\VisualStudio\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt game.cpp
+         game.cpp
+       Link:
+         D:\VisualStudio\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\paradies\git\gadel\vs\sfml\Release\sfml.exe" /INCREMENTAL:NO /NOLOGO "sfml-graphics.lib" "sfml-window.lib" "sfml-system.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\paradies\git\gadel\vs\sfml\Release\sfml.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\paradies\git\gadel\vs\sfml\Release\sfml.lib" /MACHINE:X86 /SAFESEH Release\game.obj
+         Generating code
+         Finished generating code
+         sfml.vcxproj -> C:\Users\paradies\git\gadel\vs\sfml\Release\sfml.exe
+     1>Done Building Project "C:\Users\paradies\git\gadel\vs\sfml\sfml\sfml.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.60
