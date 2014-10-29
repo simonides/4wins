@@ -1,4 +1,10 @@
 
+vs/sfml/[Dd]ebug/*.exe
+vs/sfml/[Dd]ebug/*.pdb
+vs/sfml/[Dd]ebug/*.ilk
+vs/sfml/[Rr]elease/*.exe
+vs/sfml/[Rr]elease/*.pdb
+vs/sfml/[Rr]elease/*.ilk
 
 
 *.tlog
@@ -41,9 +47,7 @@ vs/sfml/*.userosscache
 vs/sfml/*.sln.docstates
 
 # Build results
-vs/sfml/[Dd]ebug/
 vs/sfml/[Dd]ebugPublic/
-vs/sfml/[Rr]elease/
 vs/sfml/[Rr]eleases/
 vs/sfml/x64/
 vs/sfml/x86/
