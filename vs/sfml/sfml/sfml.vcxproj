@@ -84,7 +84,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="boardState.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="meeple.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="boardState.h" />
+    <ClInclude Include="helper.h" />
+    <ClInclude Include="meeple.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
