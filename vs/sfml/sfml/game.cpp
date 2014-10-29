@@ -10,7 +10,7 @@ int main(){
 	shape.setFillColor(sf::Color::Cyan);
 	//jakob ist der meister des c++
 	while (window.isOpen()){
-
+        //und sebastian ist neidisch darauf    
 		sf::Event event;
 		while (window.pollEvent(event)){
 
