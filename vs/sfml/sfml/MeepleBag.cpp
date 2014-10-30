@@ -18,8 +18,8 @@ MeepleBag::~MeepleBag(){
     for (std::set<Meeple*>::iterator iter = meeples.begin(); iter != meeples.end(); iter++){
         delete *(iter);
     }
-}
-
+} 
+ 
 
 
 std::set<Meeple*>::const_iterator MeepleBag::getMeeples() const{

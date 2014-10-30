@@ -8,7 +8,7 @@ vs/sfml/[Rr]elease/*.ilk
 
 
 *.tlog
-
+*.idb
 
 
 ./vs/sfml/Debug/sfml.ilk
