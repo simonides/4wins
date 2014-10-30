@@ -40,7 +40,7 @@
       <Filter>Source Files\AI</Filter>
     </ClCompile>
     <ClCompile Include="MeepleBag.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +57,7 @@
       <Filter>Header Files\AI</Filter>
     </ClInclude>
     <ClInclude Include="MeepleBag.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

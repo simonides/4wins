@@ -15,7 +15,7 @@ private:
     std::set<Meeple*> meeples;
 
 public:
-    MeepleBag(MeepleColor color);           //creates a new bag with 8 brand new meeples
+    MeepleBag(MeepleColor::Enum color);           //creates a new bag with 8 brand new meeples
     virtual ~MeepleBag();
 
     std::set<Meeple*>::const_iterator getMeeples() const;                //returns all meeples in the bag

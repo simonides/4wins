@@ -1,29 +1,29 @@
-#include "meeple.h"
+#include "Meeple.h"
 
 
 
 
 
-Meeple::Meeple(MeepleColor color, MeepleSize size, MeepleShape shape, MeepleDetail detail){
+Meeple::Meeple(MeepleColor::Enum color, MeepleSize::Enum size, MeepleShape::Enum shape, MeepleDetail::Enum detail){
     this->color = color;
     this->size = size;
     this->shape = shape;
     this->detail = detail;
 }
 
-MeepleColor Meeple::getColor() const{
+MeepleColor::Enum Meeple::getColor() const{
     return color;
 }
 
-MeepleSize Meeple::getSize() const{
+MeepleSize::Enum Meeple::getSize() const{
     return size;
 }
 
-MeepleShape Meeple::getShape() const{
+MeepleShape::Enum Meeple::getShape() const{
     return shape;
 }
 
-MeepleDetail Meeple::getDetail() const{
+MeepleDetail::Enum Meeple::getDetail() const{
     return detail;
 }
 

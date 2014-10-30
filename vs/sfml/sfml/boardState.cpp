@@ -1,4 +1,4 @@
-#include "boardState.h"
+#include "BoardState.h"
 
 
 BoardState::BoardState(){

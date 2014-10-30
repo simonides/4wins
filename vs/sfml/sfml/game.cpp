@@ -8,7 +8,7 @@
 
 int main(){
     
-    delete new MeepleBag(WHITE);
+    delete new MeepleBag(MeepleColor::WHITE);
 
 
 

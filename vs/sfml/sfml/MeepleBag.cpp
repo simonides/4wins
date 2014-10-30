@@ -2,15 +2,15 @@
 
 
 
-MeepleBag::MeepleBag(MeepleColor color){       //creates a new bag with 8 brand new meeples
-    meeples.insert(new Meeple(color, SMALL, SQUARE, NO_HOLE));
-    meeples.insert(new Meeple(color, SMALL, SQUARE, HOLE));
-    meeples.insert(new Meeple(color, SMALL, ROUND, NO_HOLE));
-    meeples.insert(new Meeple(color, SMALL, ROUND, HOLE));
-    meeples.insert(new Meeple(color, BIG, SQUARE, NO_HOLE));
-    meeples.insert(new Meeple(color, BIG, SQUARE, HOLE));
-    meeples.insert(new Meeple(color, BIG, ROUND, NO_HOLE));
-    meeples.insert(new Meeple(color, BIG, ROUND, HOLE));
+MeepleBag::MeepleBag(MeepleColor::Enum color){       //creates a new bag with 8 brand new meeples
+    meeples.insert(new Meeple(color, MeepleSize::SMALL, MeepleShape::SQUARE, MeepleDetail::NO_HOLE));
+    meeples.insert(new Meeple(color, MeepleSize::SMALL, MeepleShape::SQUARE, MeepleDetail::HOLE));
+    meeples.insert(new Meeple(color, MeepleSize::SMALL, MeepleShape::ROUND,  MeepleDetail::NO_HOLE));
+    meeples.insert(new Meeple(color, MeepleSize::SMALL, MeepleShape::ROUND,  MeepleDetail::HOLE));
+    meeples.insert(new Meeple(color, MeepleSize::BIG,   MeepleShape::SQUARE, MeepleDetail::NO_HOLE));
+    meeples.insert(new Meeple(color, MeepleSize::BIG,   MeepleShape::SQUARE, MeepleDetail::HOLE));
+    meeples.insert(new Meeple(color, MeepleSize::BIG,   MeepleShape::ROUND,  MeepleDetail::NO_HOLE));
+    meeples.insert(new Meeple(color, MeepleSize::BIG,   MeepleShape::ROUND,  MeepleDetail::HOLE));
 }
 
 
