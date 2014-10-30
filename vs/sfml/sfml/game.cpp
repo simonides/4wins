@@ -17,10 +17,10 @@ int main(){
         //und sebastian ist neidisch darauf    
 		
 		// Load a sprite to display
-		//sf::Texture texture;
-		//if (!texture.loadFromFile(WORKING_DIR+"3996.jpg" ))
-			//return EXIT_FAILURE; 
-		//sf::Sprite sprite(texture);
+		sf::Texture texture;
+		if (!texture.loadFromFile(WORKING_DIR+"3996.jpg" ))
+		return EXIT_FAILURE; 
+		sf::Sprite sprite(texture);
 		
 		// Create a graphical text to display
 		sf::Font font;
@@ -38,7 +38,7 @@ int main(){
 
 		window.clear();
 		window.draw(shape);
-		//window.draw(sprite);
+		window.draw(sprite);
 		window.draw(text);
 
 		window.display();
