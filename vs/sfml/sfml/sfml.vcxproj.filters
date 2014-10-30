@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Entities">
       <UniqueIdentifier>{89e9fb73-a3c0-4b5e-a921-dfac085e2c05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\AI">
+      <UniqueIdentifier>{9085895b-5a71-4906-bf6d-5d69416b7e77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI">
+      <UniqueIdentifier>{fcd95d2a-6770-44b3-a8c6-a4d2d160d60e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game.cpp">
@@ -30,6 +36,12 @@
     <ClCompile Include="meeple.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="AI.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="MeepleBag.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boardState.h">
@@ -39,6 +51,12 @@
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="MeepleBag.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

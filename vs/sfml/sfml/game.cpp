@@ -1,8 +1,16 @@
 #include <SFML/Graphics.hpp>
 
 #include "boardState.h"
+
+#include "MeepleBag.h"
+
+
 int main(){
     
+    delete new MeepleBag(WHITE);
+
+
+
 	sf::RenderWindow window(sf::VideoMode(640, 480), "SFML Application");
 	sf::CircleShape shape;
 	shape.setRadius(40.f);

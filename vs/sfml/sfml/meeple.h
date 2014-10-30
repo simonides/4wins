@@ -1,17 +1,25 @@
 #pragma once
 
+#include "helper.h"
+
+//Spielfigur
 class Meeple{
   
 private:
-    bool big;
-    bool round;
-    bool hole;
+    MeepleColor color;
+    MeepleSize size;
+    MeepleShape shape;
+    MeepleDetail detail;
 
 public:
-    Meeple(bool isBig, bool isRound, bool hasHole);
-       
-    bool isBig() const;
-    bool isRound() const;
-    bool hasHole() const;
+    Meeple(MeepleColor color, MeepleSize size, MeepleShape shape, MeepleDetail detail);
+    
+    MeepleColor getColor() const;
+    MeepleSize getSize() const;
+    MeepleShape getShape() const;
+    MeepleDetail getDetail() const;
+
+    bool equals(Meeple& meeple) const;
+
 };
 
