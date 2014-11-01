@@ -84,22 +84,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AI.cpp" />
-    <ClCompile Include="boardState.cpp" />
-    <ClCompile Include="game.cpp" />
-    <ClCompile Include="meeple.cpp" />
+    <ClCompile Include="I_AI.cpp" />
+    <ClCompile Include="BoardState.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="I_Player.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Meeple.cpp" />
     <ClCompile Include="MeepleBag.cpp" />
+    <ClCompile Include="RandomAI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AI.h" />
-    <ClInclude Include="boardState.h" />
+    <ClInclude Include="I_AI.h" />
+    <ClInclude Include="BoardState.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="helper.h" />
-    <ClInclude Include="meeple.h" />
+    <ClInclude Include="I_Player.h" />
+    <ClInclude Include="Meeple.h" />
     <ClInclude Include="MeepleBag.h" />
+    <ClInclude Include="RandomAI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
-    <ClInclude Include="game.h" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\add.png" />

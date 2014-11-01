@@ -19,53 +19,81 @@
     <Filter Include="Source Files\Entities">
       <UniqueIdentifier>{89e9fb73-a3c0-4b5e-a921-dfac085e2c05}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\AI">
+    <Filter Include="Header Files\Player">
+      <UniqueIdentifier>{662bc5d9-081d-4954-918c-ede05ef61edb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Player">
+      <UniqueIdentifier>{6b454fe3-7fba-4cf4-aea7-2beebe22fb8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Player\AI">
+      <UniqueIdentifier>{fcd95d2a-6770-44b3-a8c6-a4d2d160d60e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Player\AI">
       <UniqueIdentifier>{9085895b-5a71-4906-bf6d-5d69416b7e77}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\AI">
-      <UniqueIdentifier>{fcd95d2a-6770-44b3-a8c6-a4d2d160d60e}</UniqueIdentifier>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{f2bda1d3-b0c7-4f83-8103-b07e30d71505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{8ec03194-cc58-4a33-b829-c6b5cd04f657}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="boardState.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="meeple.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="AI.cpp">
-      <Filter>Source Files\AI</Filter>
-    </ClCompile>
     <ClCompile Include="MeepleBag.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="BoardState.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Meeple.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomAI.cpp">
+      <Filter>Source Files\Player\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="I_Player.cpp">
+      <Filter>Source Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="I_AI.cpp">
+      <Filter>Source Files\Player\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="boardState.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="meeple.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
     <ClInclude Include="helper.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AI.h">
-      <Filter>Header Files\AI</Filter>
     </ClInclude>
     <ClInclude Include="MeepleBag.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="game.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="Meeple.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="BoardState.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomAI.h">
+      <Filter>Header Files\Player\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="I_Player.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="I_AI.h">
+      <Filter>Header Files\Player\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
