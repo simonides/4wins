@@ -1,7 +1,7 @@
 #pragma once
 
 #include "helper.h"
-
+#include <ostream>
 
 
 struct MeepleColor{
@@ -9,6 +9,9 @@ struct MeepleColor{
         WHITE,
         BLACK
     };
+    static std::string toString(Enum color){
+        return color == WHITE ? "white" : "black";
+    }
 };
 
 struct MeepleSize{
@@ -16,6 +19,9 @@ struct MeepleSize{
         BIG,
         SMALL
     };
+    static std::string toString(Enum size){
+        return size == BIG ? "big" : "small";
+    }
 };
 
 struct MeepleShape{
@@ -23,6 +29,9 @@ struct MeepleShape{
         ROUND,
         SQUARE
     };
+    static std::string toString(Enum shape){
+        return shape == ROUND ? "round" : "square";
+    }
 };
 
 struct MeepleDetail{
@@ -30,6 +39,9 @@ struct MeepleDetail{
         HOLE,
         NO_HOLE
     };
+    static std::string toString(Enum detail){
+        return detail == HOLE ? "hole" : "solid";
+    }
 };
 
 
@@ -51,7 +63,9 @@ public:
     MeepleShape::Enum getShape() const;
     MeepleDetail::Enum getDetail() const;
 
-    bool equals(Meeple& meeple) const;
+    std::string toString() const;
 
+    bool equals(Meeple& meeple) const;
+    bool operator == (Meeple& meeple) const;
 };
 

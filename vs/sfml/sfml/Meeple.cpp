@@ -1,6 +1,7 @@
 #include "Meeple.h"
 
 
+#include <iostream>
 
 
 
@@ -27,6 +28,10 @@ MeepleDetail::Enum Meeple::getDetail() const{
     return detail;
 }
 
+std::string Meeple::toString() const{
+    return MeepleColor::toString(color) + ' ' + MeepleSize::toString(size) + ' ' + MeepleShape::toString(shape) + ' ' + MeepleDetail::toString(detail);
+}
+
 bool Meeple::equals(Meeple& meeple) const{
     if (meeple.getColor() == color &&
         meeple.getSize() == size &&
@@ -35,4 +40,8 @@ bool Meeple::equals(Meeple& meeple) const{
         return true;
     }
     return false;
+}
+
+bool Meeple::operator == (Meeple& meeple) const{
+    return equals(meeple);
 }

@@ -25,6 +25,8 @@ private:
 
     I_Player& player1;
     I_Player& player2;
+
+    void runGameCycle(I_Player& player, I_Player& opponent, int playerNr);
 public:
     Game(I_Player& player1, I_Player& player2); //Initialises the game with 2 players
     GameWinner::Enum runGame();                 //Runs the game, until it is over; returns the winner

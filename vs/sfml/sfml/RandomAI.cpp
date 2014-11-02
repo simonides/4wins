@@ -1,29 +1,24 @@
 #include "RandomAI.h"
 
+#include <assert.h>
+#include <algorithm>
 #include "BoardState.h"
 #include "MeepleBag.h"
-#include "Meeple.h"
-
-RandomAI::RandomAI() : I_AI(){
-}
-
-
-RandomAI::~RandomAI(){
-}
-
+//#include "Meeple.h"
 
 
 
 const Meeple& RandomAI::selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board){
-    return **(opponentBag.getMeeples());
+    std::set<Meeple*>::const_iterator it = opponentBag.getMeeples();
+    advance(it, rand() % opponentBag.getMeepleCount());
+    return **it;
 }
 
 BoardPos RandomAI::selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board, const Meeple& meepleToSet){
-    for (unsigned int y = 0; y < 4; y++){
-        for (unsigned int x = 0; x < 4; x++){
-            if (board.isFieldEmpty({ x, y })){
-                return{ x, y };
-            }
-        }
-    }
+    BoardPos pos;
+    do{
+        pos.x = rand() % 4;
+        pos.y = rand() % 4;
+    } while (!board.isFieldEmpty(pos));    
+    return pos;
 }

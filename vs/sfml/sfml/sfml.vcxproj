@@ -92,6 +92,7 @@
     <ClCompile Include="Meeple.cpp" />
     <ClCompile Include="MeepleBag.cpp" />
     <ClCompile Include="RandomAI.cpp" />
+    <ClCompile Include="StupidAI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="I_AI.h" />
@@ -102,10 +103,10 @@
     <ClInclude Include="Meeple.h" />
     <ClInclude Include="MeepleBag.h" />
     <ClInclude Include="RandomAI.h" />
+    <ClInclude Include="StupidAI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
-    <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\add.png" />

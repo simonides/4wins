@@ -1,25 +1,35 @@
-#include "main.h"
-#include <SFML/Graphics.hpp>
 
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <string>
 
 #include "Game.h"
 #include "config.h"
 #include "RandomAI.h"
+#include "StupidAI.h"
+
+
+using namespace std;
 
 int main(){
     
     I_Player* p1 = new RandomAI();
-    I_Player* p2 = new RandomAI();
+    I_Player* p2 = new RandomAI();// StupidAI();
 
     Game* game = new Game(*p1, *p2);
-
-
-
-
+    GameWinner::Enum winner = game->runGame();
+    switch (winner){
+        case GameWinner::PLAYER_1: cout << "Player 1 wins!" << endl; break;
+        case GameWinner::PLAYER_2: cout << "Player 2 wins!" << endl; break;
+        case GameWinner::TIE: cout << "Tie! There is no winner." << endl; break;
+    }
+    
     delete p1;
     delete p2;
     delete game;
 
+    cin.ignore();   //wait for keypress
+    return 0;
 
 
 

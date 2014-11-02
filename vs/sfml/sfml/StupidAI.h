@@ -1,10 +1,8 @@
 #pragma once
 #include "I_AI.h"
 
-struct BoardPos;
-
-
-class RandomAI : public I_AI{
+//This AI always choses the first meeple in the bag, and puts meeples at the first free position on the field
+class StupidAI : public I_AI{
 public:
     virtual const Meeple& selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board);
     virtual BoardPos selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board, const Meeple& meepleToSet);
