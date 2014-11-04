@@ -7,28 +7,36 @@
 #include "config.h"
 #include "RandomAI.h"
 #include "StupidAI.h"
-
+#include "Player.h"
+#include "ThinkingAI.h"
 
 using namespace std;
 
 int main(){
+    unsigned int pw1 = 0, pw2 = 0, ties=0;
+   
     
-    I_Player* p1 = new RandomAI();
-    I_Player* p2 = new RandomAI();// StupidAI();
+    std::cout << "Calculating...\n";
+    for (int g = 0;g<10000;g++){
+        I_Player* p1 = new ThinkingAI(false);// RandomAI();
+        I_Player* p2 = new ThinkingAI(true); //RandomAI();// StupidAI();   //Player(/*inject sfml-objects for user input here*/);
 
-    Game* game = new Game(*p1, *p2);
-    GameWinner::Enum winner = game->runGame();
-    switch (winner){
-        case GameWinner::PLAYER_1: cout << "Player 1 wins!" << endl; break;
-        case GameWinner::PLAYER_2: cout << "Player 2 wins!" << endl; break;
-        case GameWinner::TIE: cout << "Tie! There is no winner." << endl; break;
+        Game* game = new Game(*p1, *p2);
+        GameWinner::Enum winner = game->runGame();      //DIESE METHODE darf umgeschrieben werden, damit es mit sfml kompatibel wird
+        switch (winner){
+            case GameWinner::PLAYER_1: pw1++; break;
+            case GameWinner::PLAYER_2: pw2++; break;
+            case GameWinner::TIE: ties++;  break;
+        }
+
+        delete p1;
+        delete p2;
+        delete game;
     }
-    
-    delete p1;
-    delete p2;
-    delete game;
 
+    std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties."<<std::endl;
     cin.ignore();   //wait for keypress
+
     return 0;
 
 

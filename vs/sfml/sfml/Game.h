@@ -17,6 +17,7 @@ struct GameWinner{
 
 
 //Contains all information about a game, and handles the game loop
+//A Game-object is usable for exacly one round
 class Game
 {
 private:

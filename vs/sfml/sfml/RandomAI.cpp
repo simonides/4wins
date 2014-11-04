@@ -4,12 +4,14 @@
 #include <algorithm>
 #include "BoardState.h"
 #include "MeepleBag.h"
-//#include "Meeple.h"
+#include <time.h>       
 
-
+RandomAI::RandomAI(){
+    srand(static_cast<unsigned int>(time(NULL)));
+}
 
 const Meeple& RandomAI::selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board){
-    std::set<Meeple*>::const_iterator it = opponentBag.getMeeples();
+    std::set<const Meeple*>::const_iterator it = opponentBag.getMeeples()->cbegin();
     advance(it, rand() % opponentBag.getMeepleCount());
     return **it;
 }

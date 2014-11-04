@@ -6,23 +6,73 @@
 
 
 BoardState::BoardState(){
-    for (int y = 0; y < 4; y++){
-        for (int x = 0; x < 4; x++){
+    for (int y = 0; y < 4; ++y){
+        for (int x = 0; x < 4; ++x){
             board[x][y] = nullptr;
         }
     }
+
+    //populate the winCombinations-positions:
+
+    //rows and columns:    
+        for (int rc = 0; rc < 4; ++rc){     //Row or column (depending)
+            WinCombination *row = new WinCombination();
+            WinCombination *col = new WinCombination();
+
+            for (int o = 0; o < 4; ++o){    //opposite axis
+                row->positions[o] = { o, rc };
+                col->positions[o] = { rc, o };
+                row->meeples[o] = nullptr;          //no meeples set yet
+                col->meeples[o] = nullptr;          //no meeples set yet
+                winCombinations.combination.insert(row);
+                winCombinations.combination.insert(col);
+            }
+        }
+    //diagonals:
+        WinCombination *diaTL = new WinCombination();   //diagonal top-left to bottom-right
+        WinCombination *diaTR = new WinCombination();   //diagonal top-right to bottom-left
+            
+        for (int d = 0; d < 4; ++d){
+            diaTL->positions[d] = { d, d };
+            diaTR->positions[d] = { 3 - d, d };
+            diaTL->meeples[d] = nullptr;          //no meeples set yet
+            diaTR->meeples[d] = nullptr;          //no meeples set yet
+            winCombinations.combination.insert(diaTL);
+            winCombinations.combination.insert(diaTR);
+        }
+    isWinCombinationSetUp2Date = true;
 }
 
 
 BoardState::~BoardState(){
-    for (int y = 0; y < 4; y++){
-        for (int x = 0; x < 4; x++){
+    for (int y = 0; y < 4; ++y){
+        for (int x = 0; x < 4; ++x){
             delete board[x][y];
         }
     }
+    for (std::set<WinCombination*>::iterator it = winCombinations.combination.begin(); it != winCombinations.combination.end(); ++it){
+        delete *it;
+    }
+    winCombinations.combination.clear();
 }
 
+const WinCombinationSet* BoardState::getWinCombinations() const{
+    updateWinCombinations();
+    return &winCombinations;
+}
 
+void BoardState::updateWinCombinations() const{
+    if (isWinCombinationSetUp2Date){
+        return;
+    }
+    for (std::set<WinCombination*>::iterator it = winCombinations.combination.begin(); it != winCombinations.combination.end(); ++it){
+        for (int m = 0; m < 4; ++m){
+            (*it)->meeples[m] = board[(*it)->positions[m].x][(*it)->positions[m].y];
+        }
+    }
+    //TODO: how to not use a c-cast here?
+    (bool)isWinCombinationSetUp2Date = true;
+}
 
 const Meeple* BoardState::getMeeple(BoardPos position) const{
     assert(position.x < 4 && position.y < 4);
@@ -38,11 +88,19 @@ void BoardState::setMeeple(BoardPos position, Meeple& meeple){
     assert(position.x < 4 && position.y < 4);
     assert(isFieldEmpty(position));
     board[position.x][position.y] = &meeple;
+    isWinCombinationSetUp2Date = false;
+}
+
+Meeple* BoardState::removeMeeple(BoardPos position){
+    Meeple* m = board[position.x][position.y];
+    board[position.x][position.y] = nullptr;
+    isWinCombinationSetUp2Date = false;
+    return m;
 }
 
 bool BoardState::isFull() const{
-    for (int y = 0; y < 4; y++){
-        for (int x = 0; x < 4; x++){
+    for (int y = 0; y < 4; ++y){
+        for (int x = 0; x < 4; ++x){
             if (isFieldEmpty({ x, y })){
                 return false;
             }
@@ -52,84 +110,50 @@ bool BoardState::isFull() const{
 }
 
 
-bool BoardState::checkWinSituation() const{  
-    const Meeple *row[4];
-    const Meeple *col[4];
+const WinCombination* BoardState::checkWinSituation() const{
+    const WinCombinationSet* winCombinations = getWinCombinations();
 
-    //Check rows and columns:    
-        for (int rc = 0; rc < 4; rc++){     //Row or column (depending)
-            for (int o = 0; o < 4; o++){    //opposite axis
-                row[o] = board[o][rc];      
-                col[o] = board[rc][o];
-            }
-            if (checkSimpleWinSituation(row) || checkSimpleWinSituation(col)){
-                return true;
-            }
+    for (std::set<WinCombination*>::iterator it = winCombinations->combination.begin(); it != winCombinations->combination.end(); ++it){
+        if (checkSimpleWinCombination(*it)){
+            return *it;
         }
-    //Check diagonals:
-        const Meeple *diaTL[4];     //diagonal top-left to bottom-right
-        const Meeple *diaTR[4];     //diagonal top-right to bottom-left
-        for (int d = 0; d < 4; d++){
-            diaTL[d] = board[d][d];
-            diaTR[d] = board[3-d][d];
-        }
-        if (checkSimpleWinSituation(diaTL) || checkSimpleWinSituation(diaTR)){
-            return true;
-        }
-
-    return false;
+    }
+    return nullptr;
 }
 
 
-bool BoardState::checkSimpleWinSituation(const Meeple *meeple[4]) const{
+bool BoardState::checkSimpleWinCombination(const WinCombination* comb) const{
     int m;
     //check null-pointers:
-        for (m = 0; m < 4; m++){
-            if (meeple[m] == nullptr){
+        for (m = 0; m < 4; ++m){
+            if (comb->meeples[m] == nullptr){
                 return false;
             }
         }
-    
-    //color:
-        MeepleColor::Enum color = meeple[0]->getColor();
-        for (m = 1; m < 4; m++){
-            if (meeple[m]->getColor() != color){    //no match
-                goto check_size;
+    //check similarity:
+        int color = comb->meeples[0]->getColor();
+        int size = comb->meeples[0]->getSize();
+        int shape = comb->meeples[0]->getShape();
+        int detail = comb->meeples[0]->getDetail();        
+        for (m = 1; m < 4; ++m){
+            if (comb->meeples[m]->getColor() != color){
+                color = -1;
+            }
+            if (comb->meeples[m]->getSize() != size){
+                size = -1;
+            }
+            if (comb->meeples[m]->getShape() != shape){
+                shape = -1;
+            }
+            if (comb->meeples[m]->getDetail() != detail){
+                detail = -1;
             }
         }
-        return true;
-    check_size:
-        MeepleSize::Enum size = meeple[0]->getSize();
-        for (m = 1; m < 4; m++){
-            if (meeple[m]->getSize() != size){    //no match
-                goto check_shape;
-            }
+        if (color != -1 || size != -1 || shape != -1 || detail != -1){
+            return true;
         }
-        return true;
-    check_shape:
-        MeepleShape::Enum shape = meeple[0]->getShape();
-        for (m = 1; m < 4; m++){
-            if (meeple[m]->getShape() != shape){    //no match
-                goto check_detail;
-            }
-        }
-        return true;
-    check_detail:
-        MeepleDetail::Enum detail = meeple[0]->getDetail();
-        for (m = 1; m < 4; m++){
-            if (meeple[m]->getDetail() != detail){    //no match
-                goto nomatch;
-            }
-        }
-        return true;
-    
-    nomatch:
         return false;
 }
-
-
-
-
 
 void BoardState::print(std::ostream& output) const{
     //This function is just for debugging purposes.

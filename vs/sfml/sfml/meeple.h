@@ -65,6 +65,11 @@ public:
 
     std::string toString() const;
 
+
+    void doSth();
+
+
+
     bool equals(Meeple& meeple) const;
     bool operator == (Meeple& meeple) const;
 };

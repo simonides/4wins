@@ -66,6 +66,12 @@
     <ClCompile Include="StupidAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ThinkingAI.cpp">
+      <Filter>Source Files\Player\AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -96,6 +102,12 @@
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="StupidAI.h">
+      <Filter>Header Files\Player\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ThinkingAI.h">
       <Filter>Header Files\Player\AI</Filter>
     </ClInclude>
   </ItemGroup>

@@ -24,8 +24,13 @@ MeepleBag::~MeepleBag(){
  
 
 
-std::set<Meeple*>::const_iterator MeepleBag::getMeeples() const{
+/*std::set<Meeple*>::const_iterator MeepleBag::getMeeples() const{
      return meeples.begin();
+}*/
+
+const std::set<const Meeple*>* MeepleBag::getMeeples() const{
+    //TODO: how to cast this set with c++ casts? reinterpret_cast is propably the wrong method
+    return (std::set<const Meeple*>*)&meeples;
 }
 
 
