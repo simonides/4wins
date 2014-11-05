@@ -1,5 +1,6 @@
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <string>
 
@@ -14,6 +15,28 @@ using namespace std;
 
 int main(){
     srand(static_cast<unsigned int>(time(NULL)));
+
+
+
+
+
+
+    /*
+    sf::SoundBuffer buffer;
+    if (!buffer.loadFromFile(WORKING_DIR + "test.mp3"))
+        return -1;
+
+
+    sf::Sound sound;
+    sound.setBuffer(buffer);
+    sound.play();*/
+
+    sf::Music music;
+    if (!music.openFromFile(WORKING_DIR + "test.ogg"))
+        return -1; // error
+    music.play();
+    music.setLoop(true);
+
 
 
     unsigned int pw1 = 0, pw2 = 0, ties=0;
@@ -42,6 +65,9 @@ int main(){
 
 
     std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties."<<std::endl;
+
+    music.stop();
+
     cin.ignore();   //wait for keypress
 
     return 0;
