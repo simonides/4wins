@@ -12,13 +12,14 @@
 class MeepleBag
 {
 private:
+    std::set<Meeple*> usedMeeples;
     std::set<Meeple*> meeples;
-
 public:
-    MeepleBag(MeepleColor::Enum color);           //creates a new bag with 8 brand new meeples
+    MeepleBag(MeepleColor::Enum color);                     //creates a new bag with 8 brand new meeples
     virtual ~MeepleBag();
+    void reset();                                           //Reinitialises the object
 
-    //std::set<Meeple*>::const_iterator getMeeples() const;   //returns all meeples in the bag
+    //std::set<Meeple*>::const_iterator getMeeples() const; //returns all meeples in the bag
     unsigned int getMeepleCount() const;                    //returns the number of meeples in the bag
     
     const std::set<const Meeple*>* getMeeples() const;      //returns all meeples in the bag

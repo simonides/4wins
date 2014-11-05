@@ -35,6 +35,8 @@ public:
     BoardState();
     virtual ~BoardState();
 
+    void reset();                                               //Reinitialises the object
+
     const Meeple* getMeeple(BoardPos position) const;
     bool isFieldEmpty(BoardPos position) const;
     void setMeeple(BoardPos position, Meeple& meeple);

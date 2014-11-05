@@ -20,8 +20,16 @@ MeepleBag::~MeepleBag(){
     for (std::set<Meeple*>::iterator iter = meeples.begin(); iter != meeples.end(); iter++){
         delete *(iter);
     }
+    for (std::set<Meeple*>::iterator iter = usedMeeples.begin(); iter != usedMeeples.end(); iter++){
+        delete *(iter);
+    }
 } 
  
+
+void MeepleBag::reset(){
+    meeples.insert(usedMeeples.begin(), usedMeeples.end());
+    usedMeeples.clear();
+}
 
 
 /*std::set<Meeple*>::const_iterator MeepleBag::getMeeples() const{
@@ -43,7 +51,8 @@ Meeple* MeepleBag::removeMeeple(const Meeple& meeple){
         if (meeple == **iter){           
             Meeple* m = *iter;
             meeples.erase(iter);
-            return m;   //We can't delete the meeple, because it will be placed on the board
+            usedMeeples.insert(m);
+            return m;
         }
     }
     throw new std::exception("unable to remove meeple from bag");

@@ -45,15 +45,25 @@ BoardState::BoardState(){
 
 
 BoardState::~BoardState(){
-    for (int y = 0; y < 4; ++y){
+    /*for (int y = 0; y < 4; ++y){
         for (int x = 0; x < 4; ++x){
             delete board[x][y];
         }
-    }
+    }*/
     for (std::set<WinCombination*>::iterator it = winCombinations.combination.begin(); it != winCombinations.combination.end(); ++it){
         delete *it;
     }
     winCombinations.combination.clear();
+}
+
+
+void BoardState::reset(){
+    for (int y = 0; y < 4; ++y){
+        for (int x = 0; x < 4; ++x){
+            board[x][y] = nullptr;
+        }
+    }
+    isWinCombinationSetUp2Date = false;
 }
 
 const WinCombinationSet* BoardState::getWinCombinations() const{

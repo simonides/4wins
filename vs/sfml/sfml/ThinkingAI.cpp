@@ -36,7 +36,6 @@ float getAverage(int* intArray, unsigned int length){
 ThinkingAI::ThinkingAI(bool intelligentMeepleChoosing, bool intelligentMeeplePositioning) : intelligentMeepleChoosing(intelligentMeepleChoosing), intelligentMeeplePositioning(intelligentMeeplePositioning){
 }
 
-
 struct MeeplePoints{ //Internal structure, which is needed during the computation of the meeple to be chosen
     const Meeple* meeple;
     int points;
@@ -120,8 +119,12 @@ int* ThinkingAI::buildThinkingMap(const BoardState& board, const Meeple& meepleT
         WinCombination* comb = *it;
         int points = getPointsForCombination(comb->meeples, meepleToSet);
         for (int m = 0; m < 4; m++){
+            uint8_t field = comb->positions[m].x + 4 * comb->positions[m].y;
             if (comb->meeples[m] == nullptr){    //The field is empty --> add the points
-                scoreMap[comb->positions[m].x + 4*comb->positions[m].y] += points +1;           //+1 --> occupied fields have 0, free fields >0. Diagonal fields have automatically 1 point more than others
+                scoreMap[field] += points + 1;           //+1 --> occupied fields have 0, free fields >0. Diagonal fields have automatically 1 point more than others
+                assert(scoreMap[field] > -100);
+            }else{
+                scoreMap[field] = INT_MIN;
             }
         }
     }
