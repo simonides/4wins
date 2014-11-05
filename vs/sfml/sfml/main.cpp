@@ -13,13 +13,18 @@
 using namespace std;
 
 int main(){
+    srand(static_cast<unsigned int>(time(NULL)));
+
+
     unsigned int pw1 = 0, pw2 = 0, ties=0;
    
-    
-    std::cout << "Calculating...\n";
+
+
+
+    std::cout << "Calculating..."<<std::endl;
     for (int g = 0;g<10000;g++){
-        I_Player* p1 = new ThinkingAI(false);// RandomAI();
-        I_Player* p2 = new ThinkingAI(true); //RandomAI();// StupidAI();   //Player(/*inject sfml-objects for user input here*/);
+        I_Player* p1 = new ThinkingAI(true, false);
+        I_Player* p2 = new ThinkingAI(false, true); //RandomAI();// StupidAI();   //Player(/*inject sfml-objects for user input here*/);
 
         Game* game = new Game(*p1, *p2);
         GameWinner::Enum winner = game->runGame();      //DIESE METHODE darf umgeschrieben werden, damit es mit sfml kompatibel wird
