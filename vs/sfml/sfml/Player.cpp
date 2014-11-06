@@ -9,7 +9,7 @@
 
 const Meeple& Player::selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board){
     //TODO: the user has to use the mouse, in order to find the meeple
-    return **(opponentBag.getMeeples()->begin());
+    return *opponentBag.getMeeple(0);
 }
 
 BoardPos Player::selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board, const Meeple& meepleToSet){

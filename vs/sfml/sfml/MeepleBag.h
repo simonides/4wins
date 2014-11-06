@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <set>
 
 #include "helper.h"
 #include "meeple.h"
@@ -12,8 +11,8 @@
 class MeepleBag
 {
 private:
-    std::set<Meeple*> usedMeeples;
-    std::set<Meeple*> meeples;
+    std::vector<Meeple*> usedMeeples;
+    std::vector<Meeple*> meeples;
 public:
     explicit MeepleBag(MeepleColor::Enum color);            //creates a new bag with 8 brand new meeples
     virtual ~MeepleBag();
@@ -26,9 +25,12 @@ public:
     unsigned int getSimilarMeepleCount(MeepleShape::Enum shape) const;      //Returns the number of meeples with the same shape
     unsigned int getSimilarMeepleCount(MeepleDetail::Enum detail) const;    //Returns the number of meeples with the same detail
     
-    const std::set<const Meeple*>* getMeeples() const;      //returns all meeples in the bag
+    const Meeple* getMeeple(unsigned int index) const;      //Returns a specific meeple from the set
         
-    Meeple* removeMeeple(const Meeple& meeple);             //removes the meeple from the bag. NOTE: the meeple will not be deleted
+    Meeple* removeMeeple(const Meeple& meeple);             //removes the meeple from the bag
+    Meeple* removeMeeple(unsigned int index);               //removes the meeple from the bag
+    
     bool isMeepleInBag(const Meeple& meeple) const;         //returns, if this meeple is in the bag
+    int getMeepleIndex(const Meeple& meeple) const;         //returns the index of the meeple in the bag; returns -1, if the meeple is not in the bag
 };
 

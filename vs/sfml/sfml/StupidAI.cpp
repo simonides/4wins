@@ -8,7 +8,7 @@
 
 
 const Meeple& StupidAI::selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board){
-    return **(opponentBag.getMeeples()->cbegin());
+    return *opponentBag.getMeeple(0);
 }
 
 BoardPos StupidAI::selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board, const Meeple& meepleToSet){

@@ -10,11 +10,15 @@ private:
     const bool intelligentMeeplePositioning;
 
 
-    int* buildThinkingMap(const BoardState& board, const Meeple& meepleToSet) const;       //Note: the return-value has to be deleted[]
-    int getPointsForCombination(const Meeple *meeple[4], const Meeple& meepleToSet) const;
-    BoardPos getOptimalScoreMapPosition(int* scoreMap, bool printThinkMap);                //Searches for the field with the best score in the scoreMap, and returns its position
+    int* buildThinkingMap(const BoardState& board, const Meeple& meepleToSet, const MeepleBag& ownBag, const MeepleBag& opponentBag) const;       //Note: the return-value has to be deleted[]
+    BoardPos getOptimalScoreMapPosition(int* scoreMap, bool printThinkMap);                 //Searches for the field with the best score in the scoreMap, and returns its position
+
+protected:
+    virtual int getPointsForCombination(const Meeple *meeple[4], const Meeple& meepleToSet, const MeepleBag& ownBag, const MeepleBag& opponentBag) const;
+
 public:
     ThinkingAI(bool intelligentMeepleChoosing = true, bool intelligentMeeplePositioning = true);
+
     virtual const Meeple& selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board);
     virtual BoardPos selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board, const Meeple& meepleToSet);
 };

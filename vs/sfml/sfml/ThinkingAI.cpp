@@ -29,10 +29,6 @@ float getAverage(int* intArray, unsigned int length){
 }
 
 
-
-
-
-
 ThinkingAI::ThinkingAI(bool intelligentMeepleChoosing, bool intelligentMeeplePositioning) : intelligentMeepleChoosing(intelligentMeepleChoosing), intelligentMeeplePositioning(intelligentMeeplePositioning){
 }
 
@@ -44,7 +40,7 @@ struct MeeplePoints{ //Internal structure, which is needed during the computatio
 
 const Meeple& ThinkingAI::selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board){
     if (!intelligentMeepleChoosing){
-        return **(opponentBag.getMeeples()->cbegin());
+        return *opponentBag.getMeeple(0);
     }
         
     /* We take one meeple after another from the opponent's bag
@@ -56,9 +52,10 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const MeepleBag& ownBag, const M
     */
     
     const WinCombinationSet* allCombinations = board.getWinCombinations();
-    const std::set<const Meeple*>* meeples = opponentBag.getMeeples();      //we have to choose one of these meeples
+    //const std::set<const Meeple*>* meeples = opponentBag.getMeeples();      //we have to choose one of these meeples
+    unsigned int meepleCount = opponentBag.getMeepleCount();
 
-    MeeplePoints* points = new MeeplePoints[meeples->size()];               //Each meeple in the opponents bag will get an entry .. soon
+    MeeplePoints* points = new MeeplePoints[meepleCount];                       //Each meeple in the opponents bag will get an entry .. soon
     
 
     if (PRINT_THINK_MAP){
@@ -66,20 +63,21 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const MeepleBag& ownBag, const M
     }
 
     int* scoreMap;
-    int f=0;
-    for (std::set<const Meeple*>::const_iterator it = meeples->begin(); it != meeples->end(); ++it, ++f){
-        scoreMap = buildThinkingMap(board, **it);     //The opponent gets this map, if this meeple is chosen
+    int f = 0;
+    for (; f < static_cast<int>(meepleCount); ++f){
+        points[f].meeple = opponentBag.getMeeple(f);
+        
+        scoreMap = buildThinkingMap(board, *points[f].meeple, ownBag, opponentBag);          //The opponent gets this map, if this meeple is chosen
         
         int best = getMaximum(scoreMap, 4 * 4);
         float avg = getAverage(scoreMap, 4 * 4);
         
         delete[] scoreMap;
 
-        points[f].meeple = *it;
         points[f].points = best * 8 + (int)(avg * 2.f);  //The higher this score, the better for the opponent
 
         if (PRINT_THINK_MAP){
-            std::cout << (*it)->toString() << ":  Score = " << points[f].points << " (max: " << best << ", avg: " << avg << ")" << std::endl;
+            std::cout << points[f].meeple->toString() << ":  Score = " << points[f].points << " (max: " << best << ", avg: " << avg << ")" << std::endl;
         }
     }
 
@@ -101,7 +99,7 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const MeepleBag& ownBag, const M
 }
 
 
-int* ThinkingAI::buildThinkingMap(const BoardState& board, const Meeple& meepleToSet) const{
+int* ThinkingAI::buildThinkingMap(const BoardState& board, const Meeple& meepleToSet, const MeepleBag& ownBag, const MeepleBag& opponentBag) const{
     int* scoreMap = new int[4*4];
     for (int i = 0; i < 4 * 4; i++){
         scoreMap[i] = 0;
@@ -117,12 +115,12 @@ int* ThinkingAI::buildThinkingMap(const BoardState& board, const Meeple& meepleT
     const WinCombinationSet* allCombinations = board.getWinCombinations();
     for (std::set<WinCombination*>::const_iterator it = allCombinations->combination.begin(); it != allCombinations->combination.end(); it++){
         WinCombination* comb = *it;
-        int points = getPointsForCombination(comb->meeples, meepleToSet);
+        int points = getPointsForCombination(comb->meeples, meepleToSet, ownBag, opponentBag);
         for (int m = 0; m < 4; m++){
             uint8_t field = comb->positions[m].x + 4 * comb->positions[m].y;
             if (comb->meeples[m] == nullptr){    //The field is empty --> add the points
                 scoreMap[field] += points + 1;           //+1 --> occupied fields have 0, free fields >0. Diagonal fields have automatically 1 point more than others
-                assert(scoreMap[field] > -100);
+                assert(scoreMap[field] > -10000);
             }else{
                 scoreMap[field] = INT_MIN;
             }
@@ -182,7 +180,7 @@ BoardPos ThinkingAI::selectMeeplePosition(const MeepleBag& ownBag, const MeepleB
         return pos;
     }
         
-    int* scoreMap = buildThinkingMap(board, meepleToSet);
+    int* scoreMap = buildThinkingMap(board, meepleToSet, ownBag, opponentBag);
     BoardPos pos = getOptimalScoreMapPosition(scoreMap, PRINT_THINK_MAP);
    
     delete[] scoreMap;
@@ -190,7 +188,7 @@ BoardPos ThinkingAI::selectMeeplePosition(const MeepleBag& ownBag, const MeepleB
 }
 
 
-int ThinkingAI::getPointsForCombination(const Meeple *meeple[4], const Meeple& meepleToSet) const{
+int ThinkingAI::getPointsForCombination(const Meeple *meeple[4], const Meeple& meepleToSet, const MeepleBag& ownBag, const MeepleBag& opponentBag) const{
     //take each property of the meepleToSet
     //go through all meeples in the combination-set. If a meeple has the same property, add some points.
     //if the meeple has a different property, remove some points (we would block the field for further usage)

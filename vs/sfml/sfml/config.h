@@ -1,7 +1,10 @@
+#pragma once
+#pragma warning( disable : 4005 )
+
 #define WORKING_DIR std::string("Resources/")
 
 
-#define PRINT_ALL
+//#define PRINT_ALL
 
 
 
