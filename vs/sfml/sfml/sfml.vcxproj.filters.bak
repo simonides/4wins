@@ -78,8 +78,13 @@
     <ClCompile Include="ThinkingAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Renderable_Board.cpp">
+      <Filter>Source Files\REntities</Filter>
+=======
     <ClCompile Include="IntelAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
+>>>>>>> 317b7fc04775e11574431160b82433bbc1f71e3b
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,8 +124,13 @@
     <ClInclude Include="ThinkingAI.h">
       <Filter>Header Files\Player\AI</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="Renderable_Board.h">
+      <Filter>Header Files\REntities</Filter>
+=======
     <ClInclude Include="IntelAI.h">
       <Filter>Header Files\Player\AI</Filter>
+>>>>>>> 317b7fc04775e11574431160b82433bbc1f71e3b
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

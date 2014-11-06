@@ -26,6 +26,15 @@ Game::~Game(){
 }
 
 
+void Game::reset(){
+    bag[0]->reset();
+    bag[1]->reset();
+    board->reset();
+    player1.reset();
+    player2.reset();
+}
+
+
 
 //Game Loop for one game, until there is a winner or the board is full
 GameWinner::Enum Game::runGame(){
