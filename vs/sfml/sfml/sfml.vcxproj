@@ -93,6 +93,7 @@
     <ClCompile Include="MeepleBag.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RandomAI.cpp" />
+    <ClCompile Include="Renderable_Board.cpp" />
     <ClCompile Include="StupidAI.cpp" />
     <ClCompile Include="ThinkingAI.cpp" />
   </ItemGroup>
@@ -106,6 +107,7 @@
     <ClInclude Include="MeepleBag.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RandomAI.h" />
+    <ClInclude Include="Renderable_Board.h" />
     <ClInclude Include="StupidAI.h" />
     <ClInclude Include="ThinkingAI.h" />
   </ItemGroup>
@@ -114,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\add.png" />
+    <Image Include="Resources\field.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

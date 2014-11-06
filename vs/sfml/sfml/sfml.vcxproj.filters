@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Game">
       <UniqueIdentifier>{8ec03194-cc58-4a33-b829-c6b5cd04f657}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\REntities">
+      <UniqueIdentifier>{42a7e74a-7d40-4c29-95af-4f3cb6a02cac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\REntities">
+      <UniqueIdentifier>{0e82b7ca-b6a4-415e-a2a0-b95d6ded47ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MeepleBag.cpp">
@@ -71,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="ThinkingAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderable_Board.cpp">
+      <Filter>Source Files\REntities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,9 +119,15 @@
     <ClInclude Include="ThinkingAI.h">
       <Filter>Header Files\Player\AI</Filter>
     </ClInclude>
+    <ClInclude Include="Renderable_Board.h">
+      <Filter>Header Files\REntities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\add.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\field.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -12,14 +12,20 @@
 
 using namespace std;
 
+
+#define BOARD_X_OFFSET 675
+#define BOARD_Y_OFFSET 150
+
+#define BOARD_X_SPACEING 150
+#define BOARD_Y_SPACEING 75
+
 int main(){
-    unsigned int pw1 = 0, pw2 = 0, ties=0;
-   
-    
+	/*
+	unsigned int pw1 = 0, pw2 = 0, ties=0;
     std::cout << "Calculating...\n";
     for (int g = 0;g<10000;g++){
         I_Player* p1 = new ThinkingAI(false);// RandomAI();
-        I_Player* p2 = new ThinkingAI(true); //RandomAI();// StupidAI();   //Player(/*inject sfml-objects for user input here*/);
+        I_Player* p2 = new ThinkingAI(true); //RandomAI();// StupidAI();   
 
         Game* game = new Game(*p1, *p2);
         GameWinner::Enum winner = game->runGame();      //DIESE METHODE darf umgeschrieben werden, damit es mit sfml kompatibel wird
@@ -28,60 +34,167 @@ int main(){
             case GameWinner::PLAYER_2: pw2++; break;
             case GameWinner::TIE: ties++;  break;
         }
-
         delete p1;
         delete p2;
         delete game;
     }
-
     std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties."<<std::endl;
     cin.ignore();   //wait for keypress
-
     return 0;
+	*/
+	bool keypressedK = false;
+	bool glow = false;
 
-
-
-
-
-
-	sf::RenderWindow window(sf::VideoMode(640, 480), "SFML Application");
+	//sf::RenderWindow wind(sf::Style::Fullscreen set_difference(), "sfadsf");
+	sf::RenderWindow window(sf::VideoMode(1350, 690), "SFML Application");
+	window.setPosition(sf::Vector2i(0.f, 0.f));
 	
+	//window.setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
+	//window.setFramerateLimit(30);
+	sf::RectangleShape leftPanel(sf::Vector2f(200.f,690.f));
+	leftPanel.setPosition(sf::Vector2f(0.f, 0.f));
+	leftPanel.setFillColor(sf::Color::Green);
+
+	sf::RectangleShape rightPanel(sf::Vector2f(200.f,690.f));
+	rightPanel.setPosition(sf::Vector2f(1150.f, 0.f));
+	rightPanel.setFillColor(sf::Color::Magenta);
+
+	//sf::RectangleShape* middle = new sf::RectangleShape()
+
+
+	sf::CircleShape* squares = new sf::CircleShape[16]();
+
 	
-	
-	sf::CircleShape shape;
-	shape.setRadius(40.f);
-	shape.setPosition(100.f, 100.f);
-	shape.setFillColor(sf::Color::Cyan);
-	//jakob ist der meister des c++
+	int counter = 0;
+	for (int y= 0; y < 7; ++y){
+
+		//cout << "counter in loop: " << counter << endl;
+		
+
+		int times = (y + 1) > 3 ? 7 - y  : y + 1;
+		cout << "times: "  << times << endl;
+		
+		float calcX = BOARD_X_OFFSET - ((times -1)/2.f *BOARD_X_SPACEING) ;
+
+		for (int x = 0; x < times; ++x){	
+			squares[counter].setOrigin(sf::Vector2f(40.f, 40.f));
+			squares[counter].setFillColor(sf::Color::Yellow);
+			squares[counter].setRadius(40);
+			squares[counter].setPointCount(6);
+			squares[counter].setPosition(sf::Vector2f(calcX, y * BOARD_Y_SPACEING + BOARD_Y_OFFSET));
+			calcX += BOARD_X_SPACEING;
+			++counter;
+		}
+	}
+		cout << "counter: " << counter << endl;
 	while (window.isOpen()){
-        //und sebastian ist neidisch darauf    
-		
-		// Load a sprite to display
-		sf::Texture texture;
-		if (!texture.loadFromFile(WORKING_DIR+"3996.jpg" ))
-		return EXIT_FAILURE; 
-		sf::Sprite sprite(texture);
-		
-		// Create a graphical text to display
-		sf::Font font;
-		if (!font.loadFromFile(WORKING_DIR+"/Fonts/roboto/Roboto-Light.ttf"))
-			return EXIT_FAILURE;
-		sf::Text text("Hello SFML", font, 50);
 		
 		
+	
 		sf::Event event;
 		while (window.pollEvent(event)){
 
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed){
 				window.close();
+			}
+
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::K)
+				{
+					cout << "key k pressed " << endl;
+					keypressedK = true;
+				}
+			}
+			if (event.type == sf::Event::KeyReleased)
+			{
+				if (event.key.code == sf::Keyboard::K)
+				{
+					cout << "key k released " << endl;
+					keypressedK = false;
+				}
+			}
+			if (event.type == sf::Event::MouseWheelMoved)
+			{
+				//std::cout << "wheel movement: " << event.mouseWheel.delta << std::endl;
+				//std::cout << "mouse x: " << event.mouseWheel.x << std::endl;
+				//std::cout << "mouse y: " << event.mouseWheel.y << std::endl;
+			}
+
+			if (event.type == sf::Event::MouseButtonPressed)
+			{
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					//std::cout << "the left button was pressed" << std::endl;
+					//std::cout << "mouse x: " << event.mouseButton.x << std::endl;
+					//std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+				}
+				if (event.mouseButton.button == sf::Mouse::Right)
+				{
+					//std::cout << "the right button was pressed" << std::endl;
+					//std::cout << "mouse x: " << event.mouseButton.x << std::endl;
+					//std::cout << "mouse y: " << event.mouseButton.y << std::endl ;
+				}
+			}
+			if (event.type == sf::Event::MouseMoved)
+			{
+
+				sf::Vector2i mousepos = sf::Mouse::getPosition(window);
+				sf::Vector2f converted = window.mapPixelToCoords(mousepos);
+				
+				for (int i = 0; i < 16; ++i){
+					if (squares[i].getGlobalBounds().contains(converted)){
+						squares[i].setFillColor(sf::Color::Red);
+					}
+					else{
+						squares[i].setFillColor(sf::Color::Yellow);
+					}
+					//window.draw(squares[i]);
+					//squares[i].setPointCount(5);
+				}
+
+				//cout << "converted.x " << converted.x << "|| converted.y " << converted.y << endl;
+				//glow = square.getGlobalBounds().contains(converted);
+
+				//std::cout << "new mouse x: " << event.mouseMove.x << std::endl;
+				//std::cout << "new mouse y: " << event.mouseMove.y << std::endl << endl;
+
+			}
 		}
+		
+		
+		//square.setPosition(sf::Vector2f(150.f, 150.f));
+		//square.move(sf::Vector2f(4.f, 4.f));
+		//square.setFillColor(sf::Color::Cyan);
 
-		window.clear();
-		window.draw(shape);
-		window.draw(sprite);
-		window.draw(text);
+		
+		//squareglow.move(sf::Vector2f(1.f, 1.f));
 
+		//squareglow.setPosition(sf::Vector2f(150.f, 150.f));
+		//squareglow.setFillColor(sf::Color::Yellow);
+
+		window.clear(sf::Color::Black);
+		/*if (glow){
+			window.draw(squareglow);
+		}
+		window.draw(square);
+	*/	
+
+		for (int i = 0; i < 16; ++i){
+			window.draw(squares[i]);
+			//squares[i].setPointCount(5);
+		}
+		window.draw(rightPanel);
+		window.draw(leftPanel);
 		window.display();
+
+		//window.setPosition(sf::Vector2i(10, 50));
 	}
 
+	
+
 }
+
+//void draw(sf::RenderWindow& window){
+//	window.draw();
+//}
