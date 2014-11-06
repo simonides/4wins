@@ -10,6 +10,7 @@
 #include "StupidAI.h"
 #include "Player.h"
 #include "ThinkingAI.h"
+#include "IntelAI.h"
 
 using namespace std;
 
@@ -21,15 +22,6 @@ int main(){
 
 
 
-    /*
-    sf::SoundBuffer buffer;
-    if (!buffer.loadFromFile(WORKING_DIR + "test.mp3"))
-        return -1;
-
-
-    sf::Sound sound;
-    sound.setBuffer(buffer);
-    sound.play();*/
 
     sf::Music music;
     if (!music.openFromFile(WORKING_DIR + "test.ogg"))
@@ -41,8 +33,8 @@ int main(){
 
     unsigned int pw1 = 0, pw2 = 0, ties=0;
    
-    I_Player* p1 = new ThinkingAI(true, false);
-    I_Player* p2 = new ThinkingAI(false, true); //RandomAI();// StupidAI();   //Player(/*inject sfml-objects for user input here*/);
+    I_Player* p1 = new ThinkingAI(true, true);
+    I_Player* p2 = new IntelAI(true, true); //RandomAI();// StupidAI();   //Player(/*inject sfml-objects for user input here*/);
     Game* game = new Game(*p1, *p2);
     
     std::cout << "Calculating..."<<std::endl;

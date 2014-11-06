@@ -80,8 +80,7 @@ void BoardState::updateWinCombinations() const{
             (*it)->meeples[m] = board[(*it)->positions[m].x][(*it)->positions[m].y];
         }
     }
-    //TODO: how to not use a c-cast here?
-    (bool)isWinCombinationSetUp2Date = true;
+    isWinCombinationSetUp2Date = true;
 }
 
 const Meeple* BoardState::getMeeple(BoardPos position) const{

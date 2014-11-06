@@ -72,6 +72,9 @@
     <ClCompile Include="ThinkingAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
     </ClCompile>
+    <ClCompile Include="IntelAI.cpp">
+      <Filter>Source Files\Player\AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -108,6 +111,9 @@
       <Filter>Header Files\Player</Filter>
     </ClInclude>
     <ClInclude Include="ThinkingAI.h">
+      <Filter>Header Files\Player\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="IntelAI.h">
       <Filter>Header Files\Player\AI</Filter>
     </ClInclude>
   </ItemGroup>

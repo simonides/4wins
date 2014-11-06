@@ -26,7 +26,7 @@ class BoardState
 private:
     Meeple* board[4][4];   
 
-    bool isWinCombinationSetUp2Date;                            //if false, the winCombinations-field needs to be updated before usage
+    mutable bool isWinCombinationSetUp2Date;                    //if false, the winCombinations-field needs to be updated before usage (can be changed by the const function "updateWinCombinations")
     WinCombinationSet winCombinations;                          //Contains all possible win combinations (is buffered, to avoid new's and delete's all the time)
     
     bool checkSimpleWinCombination(const WinCombination* comb) const;  //Checks 4 meeples for similarity

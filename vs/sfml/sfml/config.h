@@ -1,7 +1,7 @@
 #define WORKING_DIR std::string("Resources/")
 
 
-//#define PRINT_ALL
+#define PRINT_ALL
 
 
 
@@ -27,4 +27,8 @@
     #define PRINT_THINK_MAP 1
 #endif
 
-//TODO: beim punkte rechnen --> punkt abziehen, wenn es keine gemeinsamkeiten gibt, und dadurch ein platz blockiert werden würde!
+
+//Weitere improvements:
+//
+//  - gegnerische felder blockieren, wenn der gegner mit dem nächsten zug gewinnen könnte!
+//

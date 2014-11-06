@@ -84,6 +84,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="IntelAI.cpp" />
     <ClCompile Include="I_AI.cpp" />
     <ClCompile Include="BoardState.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -97,6 +98,7 @@
     <ClCompile Include="ThinkingAI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IntelAI.h" />
     <ClInclude Include="I_AI.h" />
     <ClInclude Include="BoardState.h" />
     <ClInclude Include="Game.h" />

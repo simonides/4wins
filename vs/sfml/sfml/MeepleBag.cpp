@@ -31,11 +31,6 @@ void MeepleBag::reset(){
     usedMeeples.clear();
 }
 
-
-/*std::set<Meeple*>::const_iterator MeepleBag::getMeeples() const{
-     return meeples.begin();
-}*/
-
 const std::set<const Meeple*>* MeepleBag::getMeeples() const{
     //TODO: how to cast this set with c++ casts? reinterpret_cast is propably the wrong method
     return (std::set<const Meeple*>*)&meeples;
@@ -65,4 +60,44 @@ bool MeepleBag::isMeepleInBag(const Meeple& meeple) const{
         }
     }
     return false;
+}
+
+unsigned int MeepleBag::getSimilarMeepleCount(MeepleColor::Enum color) const{
+    unsigned int count = 0;
+    for (std::set<Meeple*>::iterator iter = meeples.begin(); iter != meeples.end(); iter++){
+        if ((*iter)->getColor() == color){
+            count++;
+        }
+    }
+    return count;
+}
+
+unsigned int MeepleBag::getSimilarMeepleCount(MeepleSize::Enum size) const{
+    unsigned int count = 0;
+    for (std::set<Meeple*>::iterator iter = meeples.begin(); iter != meeples.end(); iter++){
+        if ((*iter)->getSize() == size){
+            count++;
+        }
+    }
+    return count;
+}
+
+unsigned int MeepleBag::getSimilarMeepleCount(MeepleShape::Enum shape) const{
+    unsigned int count = 0;
+    for (std::set<Meeple*>::iterator iter = meeples.begin(); iter != meeples.end(); iter++){
+        if ((*iter)->getShape() == shape){
+            count++;
+        }
+    }
+    return count;
+}
+
+unsigned int MeepleBag::getSimilarMeepleCount(MeepleDetail::Enum detail) const{
+    unsigned int count = 0;
+    for (std::set<Meeple*>::iterator iter = meeples.begin(); iter != meeples.end(); iter++){
+        if ((*iter)->getDetail() == detail){
+            count++;
+        }
+    }
+    return count;
 }
