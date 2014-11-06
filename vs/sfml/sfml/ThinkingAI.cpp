@@ -11,7 +11,7 @@
 int getMaximum(int* intArray, unsigned int length){
     assert(length > 0);
     int max = intArray[0];
-    for (unsigned int i = 1; i < length; i++){
+    for (unsigned int i = 1; i < length; ++i){
         if (intArray[i] > max){
             max = intArray[i];
         }
@@ -22,7 +22,7 @@ int getMaximum(int* intArray, unsigned int length){
 float getAverage(int* intArray, unsigned int length){
     assert(length > 0);
     long sum = 0;
-    for (unsigned int i = 0; i < length; i++){
+    for (unsigned int i = 0; i < length; ++i){
         sum += intArray[i];
     }
     return sum / (float)length;
@@ -67,7 +67,7 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const MeepleBag& ownBag, const M
     for (; f < static_cast<int>(meepleCount); ++f){
         points[f].meeple = opponentBag.getMeeple(f);
         
-        scoreMap = buildThinkingMap(board, *points[f].meeple, ownBag, opponentBag);          //The opponent gets this map, if this meeple is chosen
+        scoreMap = buildThinkingMap(board, ownBag, opponentBag, *points[f].meeple);          //The opponent gets this map, if this meeple is chosen
         
         int best = getMaximum(scoreMap, 4 * 4);
         float avg = getAverage(scoreMap, 4 * 4);
@@ -99,9 +99,9 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const MeepleBag& ownBag, const M
 }
 
 
-int* ThinkingAI::buildThinkingMap(const BoardState& board, const Meeple& meepleToSet, const MeepleBag& ownBag, const MeepleBag& opponentBag) const{
+int* ThinkingAI::buildThinkingMap(const BoardState& board, const MeepleBag& ownBag, const MeepleBag& opponentBag, const Meeple& meepleToSet) const{
     int* scoreMap = new int[4*4];
-    for (int i = 0; i < 4 * 4; i++){
+    for (int i = 0; i < 4 * 4; ++i){
         scoreMap[i] = 0;
     }
 
@@ -113,10 +113,10 @@ int* ThinkingAI::buildThinkingMap(const BoardState& board, const Meeple& meepleT
     //(Afterwards, go through the scoreMap, and choose the field with the most points)
 
     const WinCombinationSet* allCombinations = board.getWinCombinations();
-    for (std::set<WinCombination*>::const_iterator it = allCombinations->combination.begin(); it != allCombinations->combination.end(); it++){
+    for (std::set<WinCombination*>::const_iterator it = allCombinations->combination.begin(); it != allCombinations->combination.end(); ++it){
         WinCombination* comb = *it;
-        int points = getPointsForCombination(comb->meeples, meepleToSet, ownBag, opponentBag);
-        for (int m = 0; m < 4; m++){
+        int points = getPointsForCombination(ownBag, opponentBag, meepleToSet, comb->meeples);
+        for (int m = 0; m < 4; ++m){
             uint8_t field = comb->positions[m].x + 4 * comb->positions[m].y;
             if (comb->meeples[m] == nullptr){    //The field is empty --> add the points
                 scoreMap[field] += points + 1;           //+1 --> occupied fields have 0, free fields >0. Diagonal fields have automatically 1 point more than others
@@ -140,7 +140,7 @@ BoardPos ThinkingAI::getOptimalScoreMapPosition(int* scoreMap, bool printThinkMa
     if (printThinkMap){
         std::cout << "Thinkingmap for choosing a position:" << std::endl;
     }
-    for (uint8_t f = 0; f < 4 * 4; f++){
+    for (uint8_t f = 0; f < 4 * 4; ++f){
         if (printThinkMap){
             std::cout << scoreMap[f];
         }
@@ -180,7 +180,7 @@ BoardPos ThinkingAI::selectMeeplePosition(const MeepleBag& ownBag, const MeepleB
         return pos;
     }
         
-    int* scoreMap = buildThinkingMap(board, meepleToSet, ownBag, opponentBag);
+    int* scoreMap = buildThinkingMap(board, ownBag, opponentBag, meepleToSet);
     BoardPos pos = getOptimalScoreMapPosition(scoreMap, PRINT_THINK_MAP);
    
     delete[] scoreMap;
@@ -188,60 +188,40 @@ BoardPos ThinkingAI::selectMeeplePosition(const MeepleBag& ownBag, const MeepleB
 }
 
 
-int ThinkingAI::getPointsForCombination(const Meeple *meeple[4], const Meeple& meepleToSet, const MeepleBag& ownBag, const MeepleBag& opponentBag) const{
+int ThinkingAI::getPointsForCombination(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Meeple& meepleToSet, const Meeple *meeple[4]) const{
     //take each property of the meepleToSet
     //go through all meeples in the combination-set. If a meeple has the same property, add some points.
     //if the meeple has a different property, remove some points (we would block the field for further usage)
 
     //return the points. The caller than has to assign this points to all positions, where no meeple is currently present
     
-    int m;
-    int color = 0;
-    int size = 0;
-    int shape = 0;
-    int detail = 0;
+    int m, p;
+    int propPoints[4] = { 0 };
 
-    for (m = 0; m < 4; m++){
+    for (m = 0; m < 4; ++m){
         if (meeple[m] == nullptr){
             continue;
         }
-        if (meeple[m]->getColor() == meepleToSet.getColor() && color >= 0){
-            color += 5;
-        }
-        else{  //color will never match -> negative points (we would destroy the opportunity to use this field later)
-            color = -2;
-        }
-        if (meeple[m]->getSize() == meepleToSet.getSize() && size >= 0){
-            size += 5;
-        }
-        else{
-            size = -2;
-        }
-        if (meeple[m]->getShape() == meepleToSet.getShape() && shape >= 0){
-            shape += 5;
-        }
-        else{
-            shape = -2;
-        }
-        if (meeple[m]->getDetail() == meepleToSet.getDetail() && detail >= 0){
-            detail += 5;
-        }
-        else{
-            detail = -2;
+
+        for (p = 0; p < 4; p++){    //For each property
+            if (meeple[m]->getProperty(p) == meepleToSet.getProperty(p) && propPoints[p] >= 0){
+                propPoints[p] += 5;
+            }
+            else{  //property will never match -> negative points (we would destroy the opportunity to use this field later)
+                propPoints[p] = -2;
+            }
         }
     }
 
-    //Note: the AI can be improved here. Go through all properties with -2, and check if we are really blocking possible future-movements (which can be an advantage for the AI)
-    //if not, set it to 0
-
-
+   
     int bonus = 0;
-    if (true){
-        if (color >= 15 || size >= 15 || shape >= 15 || detail >= 15){      //It's possible to win the game with this move
+    int sum = 0;
+    for (p = 0; p < 4; p++){
+        sum += propPoints[p];
+        if (propPoints[p] >= 15){      //It's possible to win the game with this move
             bonus = 20;
         }
     }
 
-    //Return the sum of all points:
-    return bonus + color + size + shape + detail;
+    return bonus +sum;
 }

@@ -45,11 +45,6 @@ BoardState::BoardState(){
 
 
 BoardState::~BoardState(){
-    /*for (int y = 0; y < 4; ++y){
-        for (int x = 0; x < 4; ++x){
-            delete board[x][y];
-        }
-    }*/
     for (std::set<WinCombination*>::iterator it = winCombinations.combination.begin(); it != winCombinations.combination.end(); ++it){
         delete *it;
     }
@@ -132,36 +127,28 @@ const WinCombination* BoardState::checkWinSituation() const{
 
 
 bool BoardState::checkSimpleWinCombination(const WinCombination* comb) const{
-    int m;
     //check null-pointers:
+        int m;
         for (m = 0; m < 4; ++m){
             if (comb->meeples[m] == nullptr){
                 return false;
             }
         }
     //check similarity:
-        int color = comb->meeples[0]->getColor();
-        int size = comb->meeples[0]->getSize();
-        int shape = comb->meeples[0]->getShape();
-        int detail = comb->meeples[0]->getDetail();        
-        for (m = 1; m < 4; ++m){
-            if (comb->meeples[m]->getColor() != color){
-                color = -1;
+        for (int p = 0; p < 4; ++p){
+            MeepleProperty prop = comb->meeples[0]->getProperty(p);
+            bool match = true;
+            for (m = 1; m < 4; ++m){
+                if (comb->meeples[m]->getProperty(p) != prop){
+                    match = false;
+                    break;
+                }
             }
-            if (comb->meeples[m]->getSize() != size){
-                size = -1;
-            }
-            if (comb->meeples[m]->getShape() != shape){
-                shape = -1;
-            }
-            if (comb->meeples[m]->getDetail() != detail){
-                detail = -1;
+            if (match){
+                return true;
             }
         }
-        if (color != -1 || size != -1 || shape != -1 || detail != -1){
-            return true;
-        }
-        return false;
+    return false;
 }
 
 void BoardState::print(std::ostream& output) const{
@@ -170,10 +157,10 @@ void BoardState::print(std::ostream& output) const{
     
     output << (char)201 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)187 << std::endl;
         
-    for (int y = 0; y < 4; y++){
-        for (int l = 0; l < 2; l++){
+    for (int y = 0; y < 4; ++y){
+        for (int l = 0; l < 2; ++l){
             output << (char)186 << ' ';
-            for (int x = 0; x < 4; x++){
+            for (int x = 0; x < 4; ++x){
                 if (isFieldEmpty({ x, y })){
                     output << "   ";
                     continue;

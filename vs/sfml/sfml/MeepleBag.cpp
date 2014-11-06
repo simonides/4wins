@@ -13,11 +13,11 @@ MeepleBag::MeepleBag(MeepleColor::Enum color){       //creates a new bag with 8 
 }
 
 MeepleBag::~MeepleBag(){
-    for (std::vector<Meeple*>::iterator iter = meeples.begin(); iter != meeples.end(); iter++){
-        delete *(iter);
+    for (std::vector<Meeple*>::iterator it = meeples.begin(); it != meeples.end(); ++it){
+        delete *(it);
     }
-    for (std::vector<Meeple*>::iterator iter = usedMeeples.begin(); iter != usedMeeples.end(); iter++){
-        delete *(iter);
+    for (std::vector<Meeple*>::iterator it = usedMeeples.begin(); it != usedMeeples.end(); ++it){
+        delete *(it);
     }
 } 
  
@@ -73,40 +73,10 @@ int MeepleBag::getMeepleIndex(const Meeple& meeple) const{
     return -1;
 }
 
-unsigned int MeepleBag::getSimilarMeepleCount(MeepleColor::Enum color) const{
+unsigned int MeepleBag::getSimilarMeepleCount(MeepleProperty prop) const{
     unsigned int count = 0;
     for (std::vector<Meeple*>::const_iterator it = meeples.begin(); it != meeples.end(); ++it){
-        if ((*it)->getColor() == color){
-            count++;
-        }
-    }
-    return count;
-}
-
-unsigned int MeepleBag::getSimilarMeepleCount(MeepleSize::Enum size) const{
-    unsigned int count = 0;
-    for (std::vector<Meeple*>::const_iterator it = meeples.begin(); it != meeples.end(); ++it){
-        if ((*it)->getSize() == size){
-            count++;
-        }
-    }
-    return count;
-}
-
-unsigned int MeepleBag::getSimilarMeepleCount(MeepleShape::Enum shape) const{
-    unsigned int count = 0;
-    for (std::vector<Meeple*>::const_iterator it = meeples.begin(); it != meeples.end(); ++it){
-        if ((*it)->getShape() == shape){
-            count++;
-        }
-    }
-    return count;
-}
-
-unsigned int MeepleBag::getSimilarMeepleCount(MeepleDetail::Enum detail) const{
-    unsigned int count = 0;
-    for (std::vector<Meeple*>::const_iterator it = meeples.begin(); it != meeples.end(); ++it){
-        if ((*it)->getDetail() == detail){
+        if ((*it)->hasSameProperty(prop)){
             count++;
         }
     }

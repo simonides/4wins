@@ -38,7 +38,7 @@ int main(){
     Game* game = new Game(*p1, *p2);
     
     std::cout << "Calculating..."<<std::endl;
-    for (int g = 0;g<10000;g++){
+    for (int g = 0;g<10000;++g){
         
         GameWinner::Enum winner = game->runGame();      //DIESE METHODE darf umgeschrieben werden, damit es mit sfml kompatibel wird
         switch (winner){

@@ -14,8 +14,8 @@ const Meeple& Player::selectOpponentsMeeple(const MeepleBag& ownBag, const Meepl
 
 BoardPos Player::selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board, const Meeple& meepleToSet){
     //TODO: the user has to use the mouse, in order to select a field    
-    for (unsigned int y = 0; y < 4; y++){
-        for (unsigned int x = 0; x < 4; x++){
+    for (unsigned int y = 0; y < 4; ++y){
+        for (unsigned int x = 0; x < 4; ++x){
             if (board.isFieldEmpty({ x, y })){
                 return{ x, y };
             }

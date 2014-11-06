@@ -12,8 +12,8 @@ const Meeple& StupidAI::selectOpponentsMeeple(const MeepleBag& ownBag, const Mee
 }
 
 BoardPos StupidAI::selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board, const Meeple& meepleToSet){
-    for (unsigned int y = 0; y < 4; y++){
-        for (unsigned int x = 0; x < 4; x++){
+    for (unsigned int y = 0; y < 4; ++y){
+        for (unsigned int x = 0; x < 4; ++x){
             if (board.isFieldEmpty({ x, y })){
                 return{ x, y };
             }
