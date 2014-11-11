@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "Meeple.h"
 #include "MeepleBag.h"
-#include "BoardState.h"
+#include "Board.h"
 #include "I_Player.h"
 #include "config.h"
 
@@ -15,7 +15,7 @@ using namespace std;
 Game::Game(I_Player& player1, I_Player& player2) : player1(player1), player2(player2){
     bag[0] = new MeepleBag(MeepleColor::WHITE);
     bag[1] = new MeepleBag(MeepleColor::BLACK);
-    board = new BoardState();
+    board = new Board();
 }
 
 

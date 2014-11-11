@@ -48,9 +48,6 @@
     <ClCompile Include="MeepleBag.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="BoardState.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
     <ClCompile Include="Meeple.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
@@ -81,6 +78,12 @@
     <ClCompile Include="IntelAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
     </ClCompile>
+    <ClCompile Include="Renderable_Board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Board.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -90,9 +93,6 @@
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Meeple.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="BoardState.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
@@ -121,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="IntelAI.h">
       <Filter>Header Files\Player\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable_Board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Board.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

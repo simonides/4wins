@@ -1,11 +1,11 @@
-﻿#include "BoardState.h"
+﻿#include "Board.h"
 
 #include <assert.h>
 #include <iostream>
 #include "Meeple.h"
 
 
-BoardState::BoardState(){
+Board::Board(){
     for (int y = 0; y < 4; ++y){
         for (int x = 0; x < 4; ++x){
             board[x][y] = nullptr;
@@ -44,7 +44,7 @@ BoardState::BoardState(){
 }
 
 
-BoardState::~BoardState(){
+Board::~Board(){
     for (std::set<WinCombination*>::iterator it = winCombinations.combination.begin(); it != winCombinations.combination.end(); ++it){
         delete *it;
     }
@@ -52,7 +52,7 @@ BoardState::~BoardState(){
 }
 
 
-void BoardState::reset(){
+void Board::reset(){
     for (int y = 0; y < 4; ++y){
         for (int x = 0; x < 4; ++x){
             board[x][y] = nullptr;
@@ -61,12 +61,12 @@ void BoardState::reset(){
     isWinCombinationSetUp2Date = false;
 }
 
-const WinCombinationSet* BoardState::getWinCombinations() const{
+const WinCombinationSet* Board::getWinCombinations() const{
     updateWinCombinations();
     return &winCombinations;
 }
 
-void BoardState::updateWinCombinations() const{
+void Board::updateWinCombinations() const{
     if (isWinCombinationSetUp2Date){
         return;
     }
@@ -78,31 +78,31 @@ void BoardState::updateWinCombinations() const{
     isWinCombinationSetUp2Date = true;
 }
 
-const Meeple* BoardState::getMeeple(BoardPos position) const{
+const Meeple* Board::getMeeple(BoardPos position) const{
     assert(position.x < 4 && position.y < 4);
     return board[position.x][position.y];
 }
 
-bool BoardState::isFieldEmpty(BoardPos position) const{
+bool Board::isFieldEmpty(BoardPos position) const{
     assert(position.x < 4 && position.y < 4);
     return board[position.x][position.y] == nullptr;
 }
 
-void BoardState::setMeeple(BoardPos position, Meeple& meeple){
+void Board::setMeeple(BoardPos position, Meeple& meeple){
     assert(position.x < 4 && position.y < 4);
     assert(isFieldEmpty(position));
     board[position.x][position.y] = &meeple;
     isWinCombinationSetUp2Date = false;
 }
 
-Meeple* BoardState::removeMeeple(BoardPos position){
+Meeple* Board::removeMeeple(BoardPos position){
     Meeple* m = board[position.x][position.y];
     board[position.x][position.y] = nullptr;
     isWinCombinationSetUp2Date = false;
     return m;
 }
 
-bool BoardState::isFull() const{
+bool Board::isFull() const{
     for (int y = 0; y < 4; ++y){
         for (int x = 0; x < 4; ++x){
             if (isFieldEmpty({ x, y })){
@@ -114,7 +114,7 @@ bool BoardState::isFull() const{
 }
 
 
-const WinCombination* BoardState::checkWinSituation() const{
+const WinCombination* Board::checkWinSituation() const{
     const WinCombinationSet* winCombinations = getWinCombinations();
 
     for (std::set<WinCombination*>::iterator it = winCombinations->combination.begin(); it != winCombinations->combination.end(); ++it){
@@ -126,7 +126,7 @@ const WinCombination* BoardState::checkWinSituation() const{
 }
 
 
-bool BoardState::checkSimpleWinCombination(const WinCombination* comb) const{
+bool Board::checkSimpleWinCombination(const WinCombination* comb) const{
     //check null-pointers:
         int m;
         for (m = 0; m < 4; ++m){
@@ -151,9 +151,9 @@ bool BoardState::checkSimpleWinCombination(const WinCombination* comb) const{
     return false;
 }
 
-void BoardState::print(std::ostream& output) const{
+void Board::print(std::ostream& output) const{
     //This function is just for debugging purposes.
-    //It is allowed, that this function is ugly, and that it uses c-casts.
+    //Therefore it is allowed that it's ugly (and that it uses c-casts).
     
     output << (char)201 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)187 << std::endl;
         
