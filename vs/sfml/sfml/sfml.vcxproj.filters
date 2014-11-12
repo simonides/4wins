@@ -75,11 +75,14 @@
     <ClCompile Include="IntelAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Renderable_Board.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Board.cpp">
       <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="RMeeple.cpp">
+      <Filter>Source Files\REntities</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderable_Board.cpp">
+      <Filter>Source Files\REntities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,11 +122,14 @@
     <ClInclude Include="IntelAI.h">
       <Filter>Header Files\Player\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Renderable_Board.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Board.h">
       <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="RMeeple.h">
+      <Filter>Header Files\REntities</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable_Board.h">
+      <Filter>Header Files\REntities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

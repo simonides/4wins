@@ -22,10 +22,17 @@ using namespace std;
 #define BOARD_Y_SPACEING 75
 
 
-int gameCounter = 0;
+//+++++++++++++++++++++
+#define MEEPLE_HIGHT 90
+#define MEEPLE_WIDTH 45
 
+#define MEEPLE_SNAP_X 22
+#define MEEPLE_SNAP_Y 65
 
-
+#define MEEPLE_SNAP_OFFSET_X 12
+#define MEEPLE_SNAP_OFFSET_Y 30
+//membervars!!!!
+//+++++++++++++++++++++
 
 
 
@@ -51,7 +58,6 @@ void AI_testFunction(){
         if (g % 100 == 0){
             std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties.\r";
         }
-        gameCounter = g;
     }
     delete game;
     delete p2;
@@ -66,13 +72,18 @@ void AI_testFunction(){
 
 
 
-
 int main(){
-    srand(static_cast<unsigned int>(time(NULL)));
+	srand(static_cast<unsigned int>(time(NULL)));
 
+	//AI_testFunction();
 
-
-    AI_testFunction();
+	//--------------------
+	//membervars
+	bool dragme = false;
+	sf::Vector2f dragmeVect(0, 0);
+	sf::Vector2f oldPos(30, 30);
+	//--------------------
+   
 
 
 	/*
@@ -94,7 +105,7 @@ int main(){
 	sf::RenderWindow window(sf::VideoMode(1350, 690), "SFML Application");
 	window.setPosition(sf::Vector2i(0, 0));
 	
-	//window.setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
+	window.setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
 	//window.setFramerateLimit(30);
 	sf::RectangleShape leftPanel(sf::Vector2f(200.f,690.f));
 	leftPanel.setPosition(sf::Vector2f(0.f, 0.f));
@@ -104,7 +115,11 @@ int main(){
 	rightPanel.setPosition(sf::Vector2f(1150.f, 0.f));
 	rightPanel.setFillColor(sf::Color::Magenta);
 
-	//sf::RectangleShape* middle = new sf::RectangleShape()
+
+	sf::RectangleShape boardPanel(sf::Vector2f(450.f, 450.f));
+	boardPanel.setFillColor(sf::Color::White);
+	boardPanel.setPosition(sf::Vector2f(BOARD_X_OFFSET, BOARD_Y_OFFSET- 95.f));
+	boardPanel.setRotation(45.f);
 
 
 	sf::CircleShape* squares = new sf::CircleShape[16]();
@@ -131,10 +146,29 @@ int main(){
 			++counter;
 		}
 	}
-		cout << "counter: " << counter << endl;
+	
+	
+	sf::RectangleShape meeple(sf::Vector2f(MEEPLE_WIDTH,MEEPLE_HIGHT));
+	
+	sf::Texture texture;
+	// load a 32x32 rectangle that starts at (10, 10)
+	if (!texture.loadFromFile(WORKING_DIR+"field.jpg"))
+	{
+		//error
+	
+	}
+	texture.setRepeated(true);
+	//textur
+	cout << "load tex..." << endl;
+	meeple.setTexture(&texture);
+	meeple.setTextureRect(sf::IntRect(10, 10, 32, 32));
+
+	//meeple.setTexture(&texture);
+
+	//meeple.setFillColor(sf::Color::Blue);
+	meeple.setPosition(30,30);
+
 	while (window.isOpen()){
-		
-		
 	
 		sf::Event event;
 		while (window.pollEvent(event)){
@@ -166,16 +200,57 @@ int main(){
 				//std::cout << "mouse y: " << event.mouseWheel.y << std::endl;
 			}
 
+			if (event.type == sf::Event::MouseButtonReleased){
+				if (event.mouseButton.button == sf::Mouse::Left){
+					dragme = false;
+					sf::Vector2f meeplePos(meeple.getGlobalBounds().left + MEEPLE_SNAP_X, meeple.getGlobalBounds().top +MEEPLE_SNAP_Y);
+					for (int i = 0; i < 16; ++i){
+
+						if (squares[i].getGlobalBounds().contains(meeplePos)){
+							cout << "snap to: " << i << endl;
+							
+							//squares[i].getGlobalBounds().left
+							//oldPos= dragmeVect;
+							oldPos = sf::Vector2f(meeple.getGlobalBounds().left, meeple.getGlobalBounds().top);
+								//oldPos = sf::Vector2f(squares[i].getGlobalBounds().left+ MEEPLE_SNAP_OFFSET_X, squares[i].getGlobalBounds().top- MEEPLE_SNAP_OFFSET_Y);
+						
+						}
+						
+
+					}
+					//if ( meeple.getGlobalBounds())
+					meeple.setPosition(oldPos);
+				}
+			}
+
 			if (event.type == sf::Event::MouseButtonPressed)
 			{
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					//std::cout << "the left button was pressed" << std::endl;
+					sf::Vector2i mousepos = sf::Mouse::getPosition(window);
+					sf::Vector2f converted = window.mapPixelToCoords(mousepos);
+
+					std::cout << "the left button was pressed" << std::endl;
+
+					if (meeple.getGlobalBounds().contains(converted)){
+						dragme = true;
+						cout << "globalbounds x|y : " << meeple.getGlobalBounds().left << "|" << meeple.getGlobalBounds().top << endl;
+						cout << "converted x|y : " << converted.x << "|" << converted.y << endl <<endl;
+						dragmeVect.x = converted.x - meeple.getGlobalBounds().left;
+						dragmeVect.y = converted.y - meeple.getGlobalBounds().top;
+
+						oldPos.x = meeple.getGlobalBounds().left;
+						oldPos.y = meeple.getGlobalBounds().top;
+						
+					}
+
+
 					//std::cout << "mouse x: " << event.mouseButton.x << std::endl;
 					//std::cout << "mouse y: " << event.mouseButton.y << std::endl;
 				}
 				if (event.mouseButton.button == sf::Mouse::Right)
 				{
+					
 					//std::cout << "the right button was pressed" << std::endl;
 					//std::cout << "mouse x: " << event.mouseButton.x << std::endl;
 					//std::cout << "mouse y: " << event.mouseButton.y << std::endl ;
@@ -183,10 +258,9 @@ int main(){
 			}
 			if (event.type == sf::Event::MouseMoved)
 			{
-
 				sf::Vector2i mousepos = sf::Mouse::getPosition(window);
 				sf::Vector2f converted = window.mapPixelToCoords(mousepos);
-				
+
 				for (int i = 0; i < 16; ++i){
 					if (squares[i].getGlobalBounds().contains(converted)){
 						squares[i].setFillColor(sf::Color::Red);
@@ -198,6 +272,17 @@ int main(){
 					//squares[i].setPointCount(5);
 				}
 
+				if (meeple.getGlobalBounds().contains(converted)){
+					//meeple.setFillColor(sf::Color::Red);
+				}
+				else{
+					//meeple.setFillColor(sf::Color::Blue);
+				}
+
+				if (dragme){
+					meeple.setPosition(converted-dragmeVect);
+				}
+
 				//cout << "converted.x " << converted.x << "|| converted.y " << converted.y << endl;
 				//glow = square.getGlobalBounds().contains(converted);
 
@@ -207,39 +292,19 @@ int main(){
 			}
 		}
 		
-		
-		//square.setPosition(sf::Vector2f(150.f, 150.f));
-		//square.move(sf::Vector2f(4.f, 4.f));
-		//square.setFillColor(sf::Color::Cyan);
-
-		
-		//squareglow.move(sf::Vector2f(1.f, 1.f));
-
-		//squareglow.setPosition(sf::Vector2f(150.f, 150.f));
-		//squareglow.setFillColor(sf::Color::Yellow);
-
 		window.clear(sf::Color::Black);
-		/*if (glow){
-			window.draw(squareglow);
-		}
-		window.draw(square);
-	*/	
+		window.draw(boardPanel);
+
 
 		for (int i = 0; i < 16; ++i){
 			window.draw(squares[i]);
 			//squares[i].setPointCount(5);
 		}
+
 		window.draw(rightPanel);
 		window.draw(leftPanel);
+		window.draw(meeple);
 		window.display();
-
-		//window.setPosition(sf::Vector2i(10, 50));
 	}
-
-	
-
 }
 
-//void draw(sf::RenderWindow& window){
-//	window.draw();
-//}
