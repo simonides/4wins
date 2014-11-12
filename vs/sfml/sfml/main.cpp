@@ -73,12 +73,7 @@ void AI_testFunction(){
 int main(){
 	srand(static_cast<unsigned int>(time(NULL)));
 
-
-
 	//AI_testFunction();
-
-
-
 
 	//--------------------
 	//membervars
@@ -213,8 +208,9 @@ int main(){
 							cout << "snap to: " << i << endl;
 							
 							//squares[i].getGlobalBounds().left
-
-								oldPos = sf::Vector2f(squares[i].getGlobalBounds().left+ MEEPLE_SNAP_OFFSET_X, squares[i].getGlobalBounds().top- MEEPLE_SNAP_OFFSET_Y);
+							//oldPos= dragmeVect;
+							oldPos = sf::Vector2f(meeple.getGlobalBounds().left, meeple.getGlobalBounds().top);
+								//oldPos = sf::Vector2f(squares[i].getGlobalBounds().left+ MEEPLE_SNAP_OFFSET_X, squares[i].getGlobalBounds().top- MEEPLE_SNAP_OFFSET_Y);
 						
 						}
 						

@@ -97,6 +97,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RandomAI.cpp" />
     <ClCompile Include="Renderable_Board.cpp" />
+    <ClCompile Include="RMeeple.cpp" />
     <ClCompile Include="StupidAI.cpp" />
     <ClCompile Include="ThinkingAI.cpp" />
   </ItemGroup>
@@ -112,6 +113,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="RandomAI.h" />
     <ClInclude Include="Renderable_Board.h" />
+    <ClInclude Include="RMeeple.h" />
     <ClInclude Include="StupidAI.h" />
     <ClInclude Include="ThinkingAI.h" />
   </ItemGroup>
