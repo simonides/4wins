@@ -21,7 +21,7 @@ struct WinCombinationSet{   //Contains all possible combinations, that can lead 
 };
 
 
-class BoardState
+class Board
 {
 private:
     Meeple* board[4][4];   
@@ -32,8 +32,8 @@ private:
     bool checkSimpleWinCombination(const WinCombination* comb) const;  //Checks 4 meeples for similarity
     void updateWinCombinations() const;                         //updates the winCombination-field (sets the meeple-pointers to the current board-state)
 public:
-    BoardState();
-    virtual ~BoardState();
+    Board();
+    virtual ~Board();
 
     void reset();                                               //Reinitialises the object
 

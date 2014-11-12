@@ -1,6 +1,6 @@
 #include "ThinkingAI.h"
 
-#include "BoardState.h"
+#include "Board.h"
 #include "MeepleBag.h"
 #include "config.h"
 
@@ -38,7 +38,7 @@ struct MeeplePoints{ //Internal structure, which is needed during the computatio
 };
 
 
-const Meeple& ThinkingAI::selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board){
+const Meeple& ThinkingAI::selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Board& board){
     if (!intelligentMeepleChoosing){
         return *opponentBag.getMeeple(0);
     }
@@ -99,7 +99,7 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const MeepleBag& ownBag, const M
 }
 
 
-int* ThinkingAI::buildThinkingMap(const BoardState& board, const MeepleBag& ownBag, const MeepleBag& opponentBag, const Meeple& meepleToSet) const{
+int* ThinkingAI::buildThinkingMap(const Board& board, const MeepleBag& ownBag, const MeepleBag& opponentBag, const Meeple& meepleToSet) const{
     int* scoreMap = new int[4*4];
     for (int i = 0; i < 4 * 4; ++i){
         scoreMap[i] = 0;
@@ -170,7 +170,7 @@ BoardPos ThinkingAI::getOptimalScoreMapPosition(int* scoreMap, bool printThinkMa
 
 
 
-BoardPos ThinkingAI::selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const BoardState& board, const Meeple& meepleToSet){
+BoardPos ThinkingAI::selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Board& board, const Meeple& meepleToSet){
     if (!intelligentMeeplePositioning){
         BoardPos pos;
         do{

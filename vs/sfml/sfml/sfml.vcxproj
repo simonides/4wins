@@ -88,7 +88,7 @@
   <ItemGroup>
     <ClCompile Include="IntelAI.cpp" />
     <ClCompile Include="I_AI.cpp" />
-    <ClCompile Include="BoardState.cpp" />
+    <ClCompile Include="Board.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="I_Player.cpp" />
     <ClCompile Include="main.cpp" />
@@ -103,7 +103,7 @@
   <ItemGroup>
     <ClInclude Include="IntelAI.h" />
     <ClInclude Include="I_AI.h" />
-    <ClInclude Include="BoardState.h" />
+    <ClInclude Include="Board.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="helper.h" />
     <ClInclude Include="I_Player.h" />

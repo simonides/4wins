@@ -21,6 +21,7 @@ using namespace std;
 #define BOARD_X_SPACEING 150
 #define BOARD_Y_SPACEING 75
 
+
 //+++++++++++++++++++++
 #define MEEPLE_HIGHT 90
 #define MEEPLE_WIDTH 45
@@ -34,14 +35,59 @@ using namespace std;
 //+++++++++++++++++++++
 
 
+
+
+void AI_testFunction(){
+    unsigned int pw1 = 0, pw2 = 0, ties = 0;
+
+    I_Player* p1 = new ThinkingAI(true, true);
+    I_Player* p2 = new IntelAI(true, true); //RandomAI();// StupidAI();   //Player(
+    Game* game = new Game(*p1, *p2);
+
+    std::cout << "Calculating..." << std::endl;
+    for (int g = 0; g<10000; ++g){
+
+        GameWinner::Enum winner = game->runGame();      //DIESE METHODE darf umgeschrieben werden, damit es mit sfml kompatibel wird
+        switch (winner){
+        case GameWinner::PLAYER_1: pw1++; break;
+        case GameWinner::PLAYER_2: pw2++; break;
+        case GameWinner::TIE: ties++;  break;
+        }
+
+        game->reset();
+
+    }
+    delete p1;
+    delete p2;
+    delete game;
+
+    std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties." << std::endl;
+    cin.ignore();   //wait for keypress
+    exit(0);
+}
+
+
+
+
+
 int main(){
-    srand(static_cast<unsigned int>(time(NULL)));
+	srand(static_cast<unsigned int>(time(NULL)));
+
+
+
+	//AI_testFunction();
+
+
+
+
 	//--------------------
 	//membervars
 	bool dragme = false;
 	sf::Vector2f dragmeVect(0, 0);
 	sf::Vector2f oldPos(30, 30);
 	//--------------------
+   
+
 
 	/*
     sf::Music music;
@@ -50,38 +96,9 @@ int main(){
     music.play();
     music.setLoop(true);
 
-
-
-    unsigned int pw1 = 0, pw2 = 0, ties=0;
-   
-    I_Player* p1 = new ThinkingAI(true, true);
-    I_Player* p2 = new IntelAI(true, true); //RandomAI();// StupidAI();   //Player(
-    Game* game = new Game(*p1, *p2);
-    
-    std::cout << "Calculating..."<<std::endl;
-    for (int g = 0;g<10000;++g){
-        
-        GameWinner::Enum winner = game->runGame();      //DIESE METHODE darf umgeschrieben werden, damit es mit sfml kompatibel wird
-        switch (winner){
-            case GameWinner::PLAYER_1: pw1++; break;
-            case GameWinner::PLAYER_2: pw2++; break;
-            case GameWinner::TIE: ties++;  break;
-        }
-
-        game->reset();
-        
-    }
-    delete p1;
-    delete p2;
-    delete game;
-
-
-
-    std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties."<<std::endl;
+    cin.ignore();   //wait for keypress
 
     music.stop();
-
-    cin.ignore();   //wait for keypress
     return 0;
 	*/
 	bool keypressedK = false;
@@ -132,18 +149,26 @@ int main(){
 			++counter;
 		}
 	}
-
+	
+	
 	sf::RectangleShape meeple(sf::Vector2f(MEEPLE_WIDTH,MEEPLE_HIGHT));
 	
-	sf::Texture* texture = new sf::Texture();
+	sf::Texture texture;
 	// load a 32x32 rectangle that starts at (10, 10)
-	if (!texture->loadFromFile(std::string("Resources/")+"field.png"))
+	if (!texture.loadFromFile(WORKING_DIR+"field.jpg"))
 	{
-		//cout << "load tex..." << endl;
-		meeple.setTexture(texture);
-		meeple.setTextureRect(sf::IntRect(10, 10, 32, 32));
+		//error
+	
 	}
-	meeple.setFillColor(sf::Color::Blue);
+	texture.setRepeated(true);
+	//textur
+	cout << "load tex..." << endl;
+	meeple.setTexture(&texture);
+	meeple.setTextureRect(sf::IntRect(10, 10, 32, 32));
+
+	//meeple.setTexture(&texture);
+
+	//meeple.setFillColor(sf::Color::Blue);
 	meeple.setPosition(30,30);
 
 	while (window.isOpen()){
@@ -250,10 +275,10 @@ int main(){
 				}
 
 				if (meeple.getGlobalBounds().contains(converted)){
-					meeple.setFillColor(sf::Color::Red);
+					//meeple.setFillColor(sf::Color::Red);
 				}
 				else{
-					meeple.setFillColor(sf::Color::Blue);
+					//meeple.setFillColor(sf::Color::Blue);
 				}
 
 				if (dragme){
@@ -277,6 +302,7 @@ int main(){
 			window.draw(squares[i]);
 			//squares[i].setPointCount(5);
 		}
+
 		window.draw(rightPanel);
 		window.draw(leftPanel);
 		window.draw(meeple);

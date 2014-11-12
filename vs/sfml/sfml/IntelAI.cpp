@@ -1,6 +1,6 @@
 #include "IntelAI.h"
 
-#include "BoardState.h"
+#include "Board.h"
 #include "MeepleBag.h"
 #include "config.h"
 

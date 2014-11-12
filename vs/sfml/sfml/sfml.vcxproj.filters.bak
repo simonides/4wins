@@ -48,9 +48,6 @@
     <ClCompile Include="MeepleBag.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="BoardState.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
     <ClCompile Include="Meeple.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
@@ -78,14 +75,18 @@
     <ClCompile Include="ThinkingAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="Renderable_Board.cpp">
-      <Filter>Source Files\REntities</Filter>
-=======
     <ClCompile Include="IntelAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
->>>>>>> 317b7fc04775e11574431160b82433bbc1f71e3b
     </ClCompile>
+    <ClCompile Include="Renderable_Board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="Board.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+>>>>>>> c9f2aa0de0f1be67a2d7b7047a0e8877d6a9d645
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -95,9 +96,6 @@
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Meeple.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="BoardState.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
@@ -124,14 +122,18 @@
     <ClInclude Include="ThinkingAI.h">
       <Filter>Header Files\Player\AI</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="Renderable_Board.h">
-      <Filter>Header Files\REntities</Filter>
-=======
     <ClInclude Include="IntelAI.h">
       <Filter>Header Files\Player\AI</Filter>
->>>>>>> 317b7fc04775e11574431160b82433bbc1f71e3b
     </ClInclude>
+    <ClInclude Include="Renderable_Board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Board.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+>>>>>>> c9f2aa0de0f1be67a2d7b7047a0e8877d6a9d645
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\add.png">

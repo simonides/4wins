@@ -1,7 +1,7 @@
 #pragma once
 
 class MeepleBag;
-class BoardState;
+class Board;
 class I_Player;
 
 
@@ -22,7 +22,7 @@ class Game
 {
 private:
     MeepleBag* bag[2];
-    BoardState* board;
+    Board* board;
 
     I_Player& player1;
     I_Player& player2;
