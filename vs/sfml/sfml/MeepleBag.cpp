@@ -1,5 +1,5 @@
 #include "MeepleBag.h"
-
+#include <algorithm>
 
 MeepleBag::MeepleBag(MeepleColor::Enum color){       //creates a new bag with 8 brand new meeples
     meeples.push_back(new Meeple(color, MeepleSize::SMALL, MeepleShape::SQUARE, MeepleDetail::NO_HOLE));
@@ -10,6 +10,7 @@ MeepleBag::MeepleBag(MeepleColor::Enum color){       //creates a new bag with 8 
     meeples.push_back(new Meeple(color, MeepleSize::BIG, MeepleShape::SQUARE, MeepleDetail::HOLE));
     meeples.push_back(new Meeple(color, MeepleSize::BIG, MeepleShape::ROUND, MeepleDetail::NO_HOLE));
     meeples.push_back(new Meeple(color, MeepleSize::BIG, MeepleShape::ROUND, MeepleDetail::HOLE));
+    std::random_shuffle(meeples.begin(), meeples.end());
 }
 
 MeepleBag::~MeepleBag(){
@@ -21,9 +22,13 @@ MeepleBag::~MeepleBag(){
     }
 } 
  
-void MeepleBag::reset(){    
+
+
+void MeepleBag::reset(){
     meeples.insert(meeples.end(), usedMeeples.begin(), usedMeeples.end());
     usedMeeples.clear();
+    std::random_shuffle(meeples.begin(), meeples.end());
+    assert(meeples.size() == 8); 
 }
 
 const Meeple* MeepleBag::getMeeple(unsigned int index) const{

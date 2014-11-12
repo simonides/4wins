@@ -5,10 +5,10 @@
 
 class IntelAI : public ThinkingAI {
     private:
-        int getPointsForCombination_combineMeeples(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Meeple& meepleToSet, const Meeple *meeple[4]) const;
-        int getPointsForCombination_blockOpponent(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Meeple& meepleToSet, const Meeple *meeple[4]) const;
+        int getPointsForCombination_combineMeeples(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const;
+        float getPointsForCombination_blockOpponent(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const;
     protected:
-        virtual int getPointsForCombination(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Meeple& meepleToSet, const Meeple *meeple[4]) const;
+        virtual int getPointsForCombination(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const;
     public:
         IntelAI(bool intelligentMeepleChoosing = true, bool intelligentMeeplePositioning = true);
 };

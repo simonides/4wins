@@ -113,6 +113,18 @@ bool Board::isFull() const{
     return true;
 }
 
+BoardPos Board::getRandomEmptyField() const{
+    BoardPos pos;
+    do{
+        pos.x = rand() % 4;
+        pos.y = rand() % 4;
+    } while (!isFieldEmpty(pos));
+    return pos;
+}
+
+
+
+
 
 const WinCombination* Board::checkWinSituation() const{
     const WinCombinationSet* winCombinations = getWinCombinations();

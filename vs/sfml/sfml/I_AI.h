@@ -2,6 +2,6 @@
 
 #include "I_Player.h"
 
-class I_AI : public I_Player
-{};
+class I_AI : public I_Player{
+};
 

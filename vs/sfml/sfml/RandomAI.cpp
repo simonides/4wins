@@ -2,23 +2,20 @@
 
 #include <assert.h>
 #include <algorithm>
+#include <time.h>  
+
+#include "Game.h"
 #include "Board.h"
-#include "MeepleBag.h"
-#include <time.h>       
+#include "MeepleBag.h"     
 
 RandomAI::RandomAI(){
     srand(static_cast<unsigned int>(time(NULL)));
 }
 
-const Meeple& RandomAI::selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Board& board){
-    return *opponentBag.getMeeple( rand() % opponentBag.getMeepleCount() );
+const Meeple& RandomAI::selectOpponentsMeeple(const GameState& gameState){
+    return *(gameState.opponentBag.getMeeple(rand() % gameState.opponentBag.getMeepleCount()));
 }
 
-BoardPos RandomAI::selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Board& board, const Meeple& meepleToSet){
-    BoardPos pos;
-    do{
-        pos.x = rand() % 4;
-        pos.y = rand() % 4;
-    } while (!board.isFieldEmpty(pos));    
-    return pos;
+BoardPos RandomAI::selectMeeplePosition(const GameState& gameState, const Meeple& meepleToSet){
+    return gameState.board.getRandomEmptyField();
 }

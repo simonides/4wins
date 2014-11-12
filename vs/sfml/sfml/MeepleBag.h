@@ -7,6 +7,7 @@
 
 
 
+
 //All meeples a player has (8 different meeples)
 class MeepleBag
 {
@@ -21,17 +22,7 @@ public:
     unsigned int getMeepleCount() const;                    //returns the number of meeples in the bag
 
     unsigned int getSimilarMeepleCount(MeepleProperty prop) const;          //Returns the number of meeples with the same property value
-
     
-    /*unsigned int getSimilarMeepleCount(MeepleColor::Enum color) const;      //Returns the number of meeples with the same color
-    unsigned int getSimilarMeepleCount(MeepleSize::Enum size) const;        //Returns the number of meeples with the same size
-    unsigned int getSimilarMeepleCount(MeepleShape::Enum shape) const;      //Returns the number of meeples with the same shape
-    unsigned int getSimilarMeepleCount(MeepleDetail::Enum detail) const;    //Returns the number of meeples with the same detail
-    */
-
-
-
-
     const Meeple* getMeeple(unsigned int index) const;      //Returns a specific meeple from the set
         
     Meeple* removeMeeple(const Meeple& meeple);             //removes the meeple from the bag

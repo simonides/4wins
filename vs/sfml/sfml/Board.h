@@ -42,6 +42,7 @@ public:
     void setMeeple(BoardPos position, Meeple& meeple);
     Meeple* removeMeeple(BoardPos position);                    //Removes a meeple from the board; DOES NOT DELETE the meeple
     const WinCombinationSet* getWinCombinations() const;        //Returns all possible win-combinations. The result must not be deleted
+    BoardPos getRandomEmptyField() const;                       //Returns an random empty field
 
     bool isFull() const;
     

@@ -22,30 +22,40 @@ using namespace std;
 #define BOARD_Y_SPACEING 75
 
 
+int gameCounter = 0;
+
+
+
+
+
+
 
 void AI_testFunction(){
     unsigned int pw1 = 0, pw2 = 0, ties = 0;
 
+    
     I_Player* p1 = new ThinkingAI(true, true);
     I_Player* p2 = new IntelAI(true, true); //RandomAI();// StupidAI();   //Player(
     Game* game = new Game(*p1, *p2);
 
     std::cout << "Calculating..." << std::endl;
     for (int g = 0; g<10000; ++g){
-
+        
         GameWinner::Enum winner = game->runGame();      //DIESE METHODE darf umgeschrieben werden, damit es mit sfml kompatibel wird
         switch (winner){
-        case GameWinner::PLAYER_1: pw1++; break;
-        case GameWinner::PLAYER_2: pw2++; break;
-        case GameWinner::TIE: ties++;  break;
+            case GameWinner::PLAYER_1: pw1++; break;
+            case GameWinner::PLAYER_2: pw2++; break;
+            case GameWinner::TIE: ties++;  break;
         }
-
         game->reset();
-
+        if (g % 100 == 0){
+            std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties.\r";
+        }
+        gameCounter = g;
     }
-    delete p1;
-    delete p2;
     delete game;
+    delete p2;
+    delete p1;
 
     std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties." << std::endl;
     cin.ignore();   //wait for keypress

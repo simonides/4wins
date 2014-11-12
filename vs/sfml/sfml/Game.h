@@ -5,7 +5,6 @@ class Board;
 class I_Player;
 
 
-
 struct GameWinner{
     enum Enum{
         PLAYER_1,
@@ -14,6 +13,14 @@ struct GameWinner{
     };
 };
 
+
+//This data is given to the players/AIs, to calculate their next moves
+struct GameState{              
+    const MeepleBag& ownBag;            //The meeples which are owned by the AI
+    const MeepleBag& opponentBag;       //The meeples which are owned by the oppnent's AI
+    const Board& board;                 //The current state of the board (and the meeples on the board)
+    GameState(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Board& board) : ownBag(ownBag), opponentBag(opponentBag), board(board){}     //needed to initialise the referneces
+};
 
 
 //Contains all information about a game, and handles the game loop
@@ -24,10 +31,13 @@ private:
     MeepleBag* bag[2];
     Board* board;
 
+    GameState* gameStatePlayer1;                //stores the gamestate for player 1 (buffered)
+    GameState* gameStatePlayer2;
+
     I_Player& player1;
     I_Player& player2;
 
-    void runGameCycle(I_Player& player, I_Player& opponent, int playerNr);
+    void runGameCycle(I_Player& player, I_Player& opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr);
 public:
     Game(I_Player& player1, I_Player& player2); //Initialises the game with 2 players
     void reset();                               //Reinitialises the object

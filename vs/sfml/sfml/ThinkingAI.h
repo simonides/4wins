@@ -1,24 +1,25 @@
 #pragma once
 #include "I_AI.h"
+struct WinCombination;
 
-int getMaximum(int* intArray, unsigned int length);         //Returns the max. value within an int-array
-float getAverage(int* intArray, unsigned int length);       //Returns the averaage value within an int-array
+//The following functions are used to select the opponent's meeple:
+    int getMaximum(int* intArray, unsigned int length);         //Returns the max. value within an int-array
+    float getAverage(int* intArray, unsigned int length);       //Returns the averaage value within an int-array
+// ~ ~ ~ ~ ~ ~
 
-class ThinkingAI : public I_AI {
+class ThinkingAI : public I_AI{
 private:
     const bool intelligentMeepleChoosing;
     const bool intelligentMeeplePositioning;
 
-
-    int* buildThinkingMap(const Board& board, const MeepleBag& ownBag, const MeepleBag& opponentBag, const Meeple& meepleToSet) const;       //Note: the return-value has to be deleted[]
-    BoardPos getOptimalScoreMapPosition(int* scoreMap, bool printThinkMap);                 //Searches for the field with the best score in the scoreMap, and returns its position
+    int* buildScoreMap(const GameState& gameState, const Meeple& meepleToSet) const;        //Caclulated the points for each combination, and sums the points up for each field on the board; the field with the highest points should get chosen for meeple positioning; Note: the return-value has to be deleted[]
+    BoardPos getOptimalScoreMapPosition(int* scoreMap, bool printScoreMap);                 //Searches for the field with the best score in the scoreMap, and returns its position
 protected:
-    virtual int getPointsForCombination(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Meeple& meepleToSet, const Meeple *meeple[4]) const;
+    virtual int getPointsForCombination(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const;
 
 public:
     ThinkingAI(bool intelligentMeepleChoosing = true, bool intelligentMeeplePositioning = true);
 
-    virtual const Meeple& selectOpponentsMeeple(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Board& board);
-    virtual BoardPos selectMeeplePosition(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Board& board, const Meeple& meepleToSet);
+    virtual const Meeple& selectOpponentsMeeple(const GameState& gameState);
+    virtual BoardPos selectMeeplePosition(const GameState& gameState, const Meeple& meepleToSet);
 };
-
