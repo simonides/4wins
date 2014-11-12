@@ -104,20 +104,15 @@ int IntelAI::getPointsForCombination_combineMeeples(const GameState& gameState, 
 
 
 float IntelAI::getPointsForCombination_blockOpponent(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{
-    //THIS FUNCTION IS SUICIDAL
-    //--> it does what it should - we can block the opponent from forming combinations - BUT only caring about one single property
-    // HOWEVER, it is possible that another property is an advantage for the enemy!
-    //
-    //TODO: check, if we can ACUTUALLY BLOCK the specific property with out meepleToSet!
-    //
-
-
-    //Returns points, if we can avoid that our opponent creates similarities
-    
+    //Returns points, if we can avoid that our opponent creates combinations / combines similar meeples
+    //  (the return-value is actually in percent: 100% = block it! now!   0% -->  can't block anything    
     // --> check, if the meeples on the board share any property (every meeple has the same property)
-    // --> If yes: check, if the opponent has meeples, which also have the same property
+    // --> If the meeples share a property: 
+    //          check if the meeple we have to set is able to block the property WITHOUT helping the opponent
+    // --> if we can block the opponent: check, if the opponent has meeples, which also have the same property
     // --> If also yes: return points, depending on how many meeples share the same property, and on how many meeples the opponent has with this property
         
+    
     int8_t match[4] = { 0 };           //stores the number of meeples in the combination, who share the same property
     const Meeple* ancestor = nullptr;   //The meeple, with which we compare the properties
     uint8_t empty = 0;                  //Number of empty fields in the combination
@@ -131,6 +126,7 @@ float IntelAI::getPointsForCombination_blockOpponent(const GameState& gameState,
         }
         if (ancestor == nullptr){
             ancestor = winCombination.meeples[m];
+
             for (p = 0; p < 4; p++){
                 match[p] = 1;
             }
@@ -147,17 +143,34 @@ float IntelAI::getPointsForCombination_blockOpponent(const GameState& gameState,
             }
         }
     }
+    if (empty == 0 || empty == 4){      //nothing todo (we can't block anything, if there are no meeples/no empty fields to set)
+        return 0;
+    }
+    uint8_t blockProp = 0;
+    uint8_t helpProp = 0;
     for (p = 0; p < 4; p++){
         if (match[p] < 0){
             match[p] = 0;
         }
+        if (ancestor->getProperty(p) == meepleToSet.getProperty(p)){        //we can't block the opponent with our meeple
+            if (match[p] == 2){     //NEVER EVER set the meeple here - we would allow the enemy to win
+                //todo: only aborthere, if the enemy has still meeples that could help him to win here
+                return 0;
+            }
+            if (match[p] % 2 == 0){
+                ++helpProp;
+            }
+            match[p] = 0;
+        }else{
+            if (match[p] % 2 == 1){
+                ++blockProp;
+            }
+        }
     }
-
-    if (empty == 0 || empty == 4){      //nothing todo
+    if (helpProp >= blockProp){     //It makes no sense to block the player here, because we are helping him with much more properties
         return 0;
     }
-
-
+    
 
     //Current situation:
     //  ancestor = contains the 4 Properties

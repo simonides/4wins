@@ -75,7 +75,7 @@ void AI_testFunction(){
 int main(){
 	srand(static_cast<unsigned int>(time(NULL)));
 
-	//AI_testFunction();
+	AI_testFunction();
 
 	//--------------------
 	//membervars
