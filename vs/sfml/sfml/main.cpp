@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Game.h"
+#include "GameSimulator.h"
 #include "config.h"
 #include "RandomAI.h"
 #include "StupidAI.h"
@@ -21,10 +22,6 @@
 
 #define GAME_TITLE "4 Wins"
 
-
-
-
-
 //+++++++++++++++++++++
 #define MEEPLE_HIGHT 90
 #define MEEPLE_WIDTH 45
@@ -40,32 +37,20 @@
 
 sf::RenderWindow* setupWindow();
 
-void AI_testFunction(){
-    //unsigned int pw1 = 0, pw2 = 0, ties = 0;
-    //I_Player* p1 = new ThinkingAI(true, true);
-    //I_Player* p2 = new IntelAI(true, true); //RandomAI();// StupidAI();   //Player(
-    //Game* game = new Game(*window, *p1, *p2);
 
-    //std::cout << "Calculating..." << std::endl;
-    //for (int g = 0; g<10000; ++g){
-    //    
-    //    GameWinner::Enum winner = game->runGame();      //DIESE METHODE darf umgeschrieben werden, damit es mit sfml kompatibel wird
-    //    switch (winner){
-    //        case GameWinner::PLAYER_1: pw1++; break;
-    //        case GameWinner::PLAYER_2: pw2++; break;
-    //        case GameWinner::TIE: ties++;  break;
-    //    }
-    //    game->reset();
-    //    if (g % 100 == 0){
-    //        std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties.\r";
-    //    }
-    //}
-    //delete game;
-    //delete p2;
-    //delete p1;
+void AI_testFunction(){     
+    I_Player* p1 = new ThinkingAI(true, true); //ThinkingAI(true, true);
+    I_Player* p2 = new IntelAI(true, true); //RandomAI();// StupidAI();   //Player(
+    GameSimulator* game = new GameSimulator(*p1, *p2);
 
-    //std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties." << std::endl;
-    //std::cin.ignore();   //wait for keypress
+    GameWinner::Enum winner = game->runManyGames(10000, true);
+   
+    delete game;
+    delete p2;
+    delete p1;
+
+    std::cout << "And the winner is: " << (winner == GameWinner::TIE ? "NOONE - TIE!" : (winner == GameWinner::PLAYER_1 ? "Player 1" : "Player 2")) << std::endl;
+    std::cin.ignore();   //wait for keypress
     exit(0);
 }
 
@@ -76,14 +61,14 @@ void AI_testFunction(){
 int main(){
 
 	sf::RenderWindow* window = setupWindow();
-	Menu* menu = new Menu(*window);
+	Menu* menu = new Menu(window);
 	
 	while (window->isOpen()){
 		
 		GameSettings gamesettings = menu->loop();
 		system("pause");
 		
-		Game* game = new Game(*window, gamesettings.playerOne,gamesettings.playerTwo);
+		Game* game = new Game(*window, *gamesettings.playerOne,*gamesettings.playerTwo);
 		game->runGame();
 
 	}
@@ -93,10 +78,10 @@ int main(){
 }
 
 sf::RenderWindow* setupWindow(){
-	sf::RenderWindow* window  = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML Application");
+	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML Application");
 	window->setPosition(sf::Vector2i(0, 0));
 	window->setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
-	
+
 	return window;
 }
 

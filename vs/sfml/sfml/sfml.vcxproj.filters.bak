@@ -43,6 +43,12 @@
     <Filter Include="Source Files\REntities">
       <UniqueIdentifier>{0e82b7ca-b6a4-415e-a2a0-b95d6ded47ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Menu">
+      <UniqueIdentifier>{a72cba36-ca77-4365-a120-a595e8d94d00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Menu">
+      <UniqueIdentifier>{ad006007-0ed7-43ae-b100-00ebd8a6f333}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MeepleBag.cpp">
@@ -60,9 +66,6 @@
     <ClCompile Include="I_Player.cpp">
       <Filter>Source Files\Player</Filter>
     </ClCompile>
-    <ClCompile Include="I_AI.cpp">
-      <Filter>Source Files\Player\AI</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
@@ -78,15 +81,23 @@
     <ClCompile Include="IntelAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Renderable_Board.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-<<<<<<< HEAD
-=======
     <ClCompile Include="Board.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
->>>>>>> c9f2aa0de0f1be67a2d7b7047a0e8877d6a9d645
+    <ClCompile Include="RMeeple.cpp">
+      <Filter>Source Files\REntities</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderable_Board.cpp">
+      <Filter>Source Files\REntities</Filter>
+    </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files\Menu</Filter>
+=======
+    <ClCompile Include="GameSimulator.cpp">
+      <Filter>Source Files\Game</Filter>
+>>>>>>> 5f19f740727e4537f6c16173b0b95b8ad22f9525
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -125,15 +136,23 @@
     <ClInclude Include="IntelAI.h">
       <Filter>Header Files\Player\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Renderable_Board.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-=======
     <ClInclude Include="Board.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
->>>>>>> c9f2aa0de0f1be67a2d7b7047a0e8877d6a9d645
+    <ClInclude Include="RMeeple.h">
+      <Filter>Header Files\REntities</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable_Board.h">
+      <Filter>Header Files\REntities</Filter>
+    </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files\Menu</Filter>
+=======
+    <ClInclude Include="GameSimulator.h">
+      <Filter>Header Files\Game</Filter>
+>>>>>>> 5f19f740727e4537f6c16173b0b95b8ad22f9525
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\add.png">

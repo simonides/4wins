@@ -12,7 +12,9 @@
 
 using namespace std;
 
-Game::Game(sf::RenderWindow* window,I_Player* player1, I_Player* player2) : window(window), player1(player1), player2(player2) {
+Game::Game(sf::RenderWindow& window,I_Player& player1, I_Player& player2) : window(&window), player1(&player1), player2(&player2) {
+    assert(&player1 != &player2);   //hehehe, that won't crash this game
+
     bag[0] = new MeepleBag(MeepleColor::WHITE);
     bag[1] = new MeepleBag(MeepleColor::BLACK);
     board = new Board();
@@ -34,9 +36,10 @@ void Game::reset(){
     bag[0]->reset();
     bag[1]->reset();
 
-    board->reset();
-    player1.reset();
-    player2.reset();
+	board->reset();
+    
+	player1->reset();
+    player2->reset();
 }
 
 
@@ -46,24 +49,24 @@ GameWinner::Enum Game::runGame(){
     for (;;){
         runGameCycle(player1, player2, *gameStatePlayer1, *gameStatePlayer2 ,0);
         if (board->checkWinSituation()){    //player2 won
-            if (PRINT_WINNER_PER_ROUND){
+            #if PRINT_WINNER_PER_ROUND
                 cout << "Player 2 wins!" << endl;
-            }
+            #endif
             return GameWinner::PLAYER_2;
         }
 
         runGameCycle(player2, player1, *gameStatePlayer2, *gameStatePlayer1, 1);
         if (board->checkWinSituation()){    //player1 won
-            if (PRINT_WINNER_PER_ROUND){
+            #if PRINT_WINNER_PER_ROUND
                 cout << "Player 1 wins!" << endl;
-            }
+            #endif
             return GameWinner::PLAYER_1;
         }
 
         if (board->isFull()){
-            if (PRINT_WINNER_PER_ROUND){
+            #if PRINT_WINNER_PER_ROUND
                 cout << "Tie! There is no winner." << endl;
-            }
+            #endif
             return GameWinner::TIE;
         }
     }
@@ -71,12 +74,12 @@ GameWinner::Enum Game::runGame(){
 
 
 //a have round cycle, where a player chooses a meeple, and the other player sets it
-void Game::runGameCycle(I_Player& player, I_Player& opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr){
+void Game::runGameCycle(I_Player* player, I_Player* opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr){
 
-    const Meeple& toSet = player.selectOpponentsMeeple(gameStateForPlayer);    //player selects a meeple
+    const Meeple& toSet = player->selectOpponentsMeeple(gameStateForPlayer);    //player selects a meeple
     Meeple* meeple = bag[(playerNr + 1) % 2]->removeMeeple(toSet);              //remove meeple from opponent's bag          
     
-    BoardPos pos = opponent.selectMeeplePosition(gameStateForOpponent, *meeple); //select a position
+    BoardPos pos = opponent->selectMeeplePosition(gameStateForOpponent, *meeple); //select a position
     assert(pos.x < 4 && pos.y < 4);
     board->setMeeple(pos, *meeple);                                             //set the meeple
     
@@ -94,10 +97,10 @@ void Game::runGameCycle(I_Player& player, I_Player& opponent, GameState& gameSta
 void Game::pollEvents(){
 	sf::Event event;
 	while (window->pollEvent(event)){
-		sf::Vector2i mousepos = sf::Mouse::getPosition(window);
-		sf::Vector2f converted = window.mapPixelToCoords(mousepos);
+		sf::Vector2i mousepos = sf::Mouse::getPosition(*window);
+		sf::Vector2f converted = window->mapPixelToCoords(mousepos);
 
-		if (event.type == sf::Event::Closed){ window.close(); }
+		if (event.type == sf::Event::Closed){ window->close(); }
 
 		//if (event.type == sf::Event::KeyPressed){
 		//if (event.key.code == sf::Keyboard::K){	}

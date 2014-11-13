@@ -84,14 +84,11 @@
     <ClCompile Include="Board.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="RMeeple.cpp">
-      <Filter>Source Files\REntities</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderable_Board.cpp">
-      <Filter>Source Files\REntities</Filter>
+    <ClCompile Include="GameSimulator.cpp">
+      <Filter>Source Files\Game</Filter>
     </ClCompile>
     <ClCompile Include="Menu.cpp">
-      <Filter>Source Files\Menu</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -137,11 +134,11 @@
     <ClInclude Include="RMeeple.h">
       <Filter>Header Files\REntities</Filter>
     </ClInclude>
-    <ClInclude Include="Renderable_Board.h">
-      <Filter>Header Files\REntities</Filter>
+    <ClInclude Include="GameSimulator.h">
+      <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
-      <Filter>Header Files\Menu</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

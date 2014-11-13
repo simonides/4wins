@@ -22,6 +22,7 @@ MeepleProperty Meeple::getProperty(MeepleProperty::Type type) const{
     return property;
 }
 
+
 MeepleProperty::Type Meeple::getPropertyType(unsigned int propIdx) const{
     assert(propIdx < 4);
     switch (propIdx){
@@ -30,6 +31,7 @@ MeepleProperty::Type Meeple::getPropertyType(unsigned int propIdx) const{
         case 2: return MeepleProperty::MEEPLE_SHAPE;
         case 3: return MeepleProperty::MEEPLE_DETAIL;
     }
+    throw new std::exception("unable to return type");
 }
 
 unsigned int Meeple::getIndexFprPropertyType(MeepleProperty::Type type) const{
@@ -39,6 +41,7 @@ unsigned int Meeple::getIndexFprPropertyType(MeepleProperty::Type type) const{
         case MeepleProperty::MEEPLE_SHAPE:  return 2;
         case MeepleProperty::MEEPLE_DETAIL: return 3;
     }
+    throw new std::exception("unable to return index");
 }
 
 MeepleProperty Meeple::getProperty(unsigned int propIdx) const{

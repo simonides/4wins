@@ -11,11 +11,6 @@
 
 
 
-/* Implemented in ThinkingAI: */
-//    int getMaximum(int* intArray, unsigned int length);         //Returns the max. value within an int-array
-//    float getAverage(int* intArray, unsigned int length);       //Returns the averaage value within an int-array
-/* ~ ~ ~ ~ ~ ~*/
-
 
 IntelAI::IntelAI(bool intelligentMeepleChoosing, bool intelligentMeeplePositioning) : ThinkingAI(intelligentMeepleChoosing, intelligentMeeplePositioning){
 }
@@ -40,8 +35,12 @@ int IntelAI::getPointsForCombination(const GameState& gameState, const WinCombin
     }
 
     float reduction = getPointsForCombination_blockOpponent(gameState, winCombination, meepleToSet);
+    if (points > 0){
+        return static_cast<int>(points * (100.f - reduction) / 100.f);      //Remove 0-100% from the already calculated points
+    }else{
+        return static_cast<int>(points *reduction / 100.f);                    
+    }
     
-    return points * (100.f - reduction) / 100.f;       //Remove 0-100% from the already calculated points
 }
 
 
@@ -56,9 +55,9 @@ int IntelAI::getPointsForCombination_combineMeeples(const GameState& gameState, 
     //  if the numer is 2: check, if the opponent has meeples which could win the combination. return a low number, depending on the amount of meeples the opponent has
     //  if 1: return a small number
 
-    int m;
+    int m, p;
     //The following values store the number of meeples, who share the same property as the meepleToSet
-    uint8_t match[4] = { 0 };    
+    uint8_t match[4] = { 0 };
     uint8_t empty = 0;
 
     for (m = 0; m < 4; ++m){
@@ -66,13 +65,19 @@ int IntelAI::getPointsForCombination_combineMeeples(const GameState& gameState, 
             empty++;
             continue;
         }
-        for (int p = 0; p < 4; ++p){    //for each property
+        for (p = 0; p < 4; ++p){    //for each property
             if (winCombination.meeples[m]->getProperty(p) == meepleToSet.getProperty(p)){
                 match[p]++;
-            }
+            }/*else{
+                match[p] = 100;     //this property can never match -> mark it (we set it later to 0)
+            }*/
         }
     }
-
+    /*for (p = 0; p < 4; ++p){
+        if (match[p] >= 100){
+            match[p] = 0;
+        }
+    }*/
     if (empty == 4 || empty == 0){  //Nothing todo
         return 0;
     }
@@ -86,15 +91,19 @@ int IntelAI::getPointsForCombination_combineMeeples(const GameState& gameState, 
         if (match[m] == 2){         //we MUST NOT set the meeple there, if the opponent has a meeple that could win the game
             //Set the points, depending on how many of the opponent's meeples don't match
             //If all the opponent's meeples match this property --> never set here!                
+            unsigned int opponentMeepleCount = gameState.opponentBag.getMeepleCount();
+            if (opponentMeepleCount == 0){
+                ++points;
+                continue;
+            }
+            unsigned int opponentMatches = gameState.opponentBag.getSimilarMeepleCount(meepleToSet.getProperty(m));
+            opponentMatches /= opponentMeepleCount;     //percent-value
 
-            unsigned int oppnentMatches = gameState.opponentBag.getSimilarMeepleCount(meepleToSet.getProperty(m));
-            oppnentMatches /= gameState.opponentBag.getMeepleCount();     //percent-value
-
-            points -= static_cast<int>(oppnentMatches / static_cast<float>(gameState.opponentBag.getMeepleCount()) * 50.f); //worst case: happens at 11 properties (4*2 + 3). The 12 property could lead to a win. --> the value must not exceed HIGHEST_SINGLE_POINTS/11 (=90)
+            points -= static_cast<int>(opponentMatches / static_cast<float>(opponentMeepleCount) * 50.f); //worst case: happens at 11 properties (4*2 + 3). The 12 property could lead to a win. --> the value must not exceed HIGHEST_SINGLE_POINTS/11 (=90)
 
         }
         if (match[m] == 1){         //best case: happens at 11 properties (4*2 + 3). The 12. property could be a "never set there" --> the value therefore must be < 50/11 (=4)
-            points++;
+            ++points;
         }
     }
     return points;
@@ -104,20 +113,15 @@ int IntelAI::getPointsForCombination_combineMeeples(const GameState& gameState, 
 
 
 float IntelAI::getPointsForCombination_blockOpponent(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{
-    //THIS FUNCTION IS SUICIDAL
-    //--> it does what it should - we can block the opponent from forming combinations - BUT only caring about one single property
-    // HOWEVER, it is possible that another property is an advantage for the enemy!
-    //
-    //TODO: check, if we can ACUTUALLY BLOCK the specific property with out meepleToSet!
-    //
-
-
-    //Returns points, if we can avoid that our opponent creates similarities
-    
+    //Returns points, if we can avoid that our opponent creates combinations / combines similar meeples
+    //  (the return-value is actually in percent: 100% = block it! now!   0% -->  can't block anything    
     // --> check, if the meeples on the board share any property (every meeple has the same property)
-    // --> If yes: check, if the opponent has meeples, which also have the same property
+    // --> If the meeples share a property: 
+    //          check if the meeple we have to set is able to block the property WITHOUT helping the opponent
+    // --> if we can block the opponent: check, if the opponent has meeples, which also have the same property
     // --> If also yes: return points, depending on how many meeples share the same property, and on how many meeples the opponent has with this property
         
+    
     int8_t match[4] = { 0 };           //stores the number of meeples in the combination, who share the same property
     const Meeple* ancestor = nullptr;   //The meeple, with which we compare the properties
     uint8_t empty = 0;                  //Number of empty fields in the combination
@@ -131,6 +135,7 @@ float IntelAI::getPointsForCombination_blockOpponent(const GameState& gameState,
         }
         if (ancestor == nullptr){
             ancestor = winCombination.meeples[m];
+
             for (p = 0; p < 4; p++){
                 match[p] = 1;
             }
@@ -147,17 +152,34 @@ float IntelAI::getPointsForCombination_blockOpponent(const GameState& gameState,
             }
         }
     }
+    if (empty == 0 || empty == 4){      //nothing todo (we can't block anything, if there are no meeples/no empty fields to set)
+        return 0;
+    }
+    uint8_t blockProp = 0;
+    uint8_t helpProp = 0;
     for (p = 0; p < 4; p++){
         if (match[p] < 0){
             match[p] = 0;
         }
+        if (ancestor->getProperty(p) == meepleToSet.getProperty(p)){        //we can't block the opponent with our meeple
+            if (match[p] == 2){     //NEVER EVER set the meeple here - we would allow the enemy to win
+                //todo: only aborthere, if the enemy has still meeples that could help him to win here
+                return 0;
+            }
+            if (match[p] % 2 == 0){
+                ++helpProp;
+            }
+            match[p] = 0;
+        }else{
+            if (match[p] % 2 == 1){
+                ++blockProp;
+            }
+        }
     }
-
-    if (empty == 0 || empty == 4){      //nothing todo
+    if (helpProp >= blockProp){     //It makes no sense to block the player here, because we are helping him with much more properties
         return 0;
     }
-
-
+    
 
     //Current situation:
     //  ancestor = contains the 4 Properties

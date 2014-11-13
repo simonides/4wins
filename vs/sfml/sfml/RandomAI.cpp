@@ -6,7 +6,10 @@
 
 #include "Game.h"
 #include "Board.h"
-#include "MeepleBag.h"     
+#include "MeepleBag.h"
+
+#pragma warning( disable: 4100 )
+
 
 RandomAI::RandomAI(){
     srand(static_cast<unsigned int>(time(NULL)));
