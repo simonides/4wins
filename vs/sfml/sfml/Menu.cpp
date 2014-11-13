@@ -1,7 +1,7 @@
 #include "Menu.h"
 
 #include <SFML/Graphics.hpp>
-
+#include "config.h"
 #include "ThinkingAI.h"
 
 
@@ -66,8 +66,14 @@ GameSettings Menu::loop(){
 	}
 
 
+
+	
 	I_Player* thinking = new ThinkingAI(true, true);
-	return GameSettings(thinking, thinking);
+
+	GameSettings settings ;
+	settings.playerOne = thinking;
+
+	return settings;
 }
 
 void Menu::pollEvents(){

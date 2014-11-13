@@ -3,6 +3,8 @@
 
 #define WORKING_DIR std::string("Resources/")
 
+extern const unsigned int WINDOW_HEIGHT;
+extern const unsigned int WINDOW_WIDTH;
 
 //#define PRINT_ALL
 

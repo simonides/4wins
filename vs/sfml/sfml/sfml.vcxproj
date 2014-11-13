@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="GameSimulator.cpp" />
     <ClCompile Include="IntelAI.cpp" />
     <ClCompile Include="Board.cpp" />

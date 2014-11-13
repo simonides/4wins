@@ -17,10 +17,11 @@
 
 //using namespace std;
 
-#define WINDOW_HEIGHT 690
-#define WINDOW_WIDTH 1350
 
 #define GAME_TITLE "4 Wins"
+
+
+
 
 //+++++++++++++++++++++
 #define MEEPLE_HIGHT 90
@@ -60,20 +61,27 @@ void AI_testFunction(){
 
 int main(){
 
+	//AI_testFunction();
+	
 	sf::RenderWindow* window = setupWindow();
+	
 	Menu* menu = new Menu(window);
 	
 	while (window->isOpen()){
 		
 		GameSettings gamesettings = menu->loop();
-		system("pause");
+		//system("pause");
 		
 		Game* game = new Game(*window, *gamesettings.playerOne,*gamesettings.playerTwo);
 		game->runGame();
 
+		delete game;
+
 	}
-	delete window;
+
 	delete menu;
+	delete window;
+
 	return 0;
 }
 
