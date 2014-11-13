@@ -21,6 +21,7 @@ private:
     I_Player& player1;
     I_Player& player2;
 
+    GameSimulator& operator = (const GameSimulator&);
     void runGameCycle(I_Player& player, I_Player& opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr);
 public:
     GameSimulator(I_Player& player1, I_Player& player2); //Initialises the game with 2 players

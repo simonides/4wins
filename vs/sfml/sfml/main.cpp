@@ -63,6 +63,9 @@ int main(){
 
 	AI_testFunction();
 
+
+
+
 	//--------------------
 	//membervars
 	bool dragme = false;
