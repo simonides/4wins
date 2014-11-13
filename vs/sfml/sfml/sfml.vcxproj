@@ -93,6 +93,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Meeple.cpp" />
     <ClCompile Include="MeepleBag.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RandomAI.cpp" />
     <ClCompile Include="Renderable_Board.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="I_Player.h" />
     <ClInclude Include="Meeple.h" />
     <ClInclude Include="MeepleBag.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RandomAI.h" />
     <ClInclude Include="Renderable_Board.h" />

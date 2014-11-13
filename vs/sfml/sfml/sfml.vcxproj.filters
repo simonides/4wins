@@ -43,6 +43,12 @@
     <Filter Include="Source Files\REntities">
       <UniqueIdentifier>{0e82b7ca-b6a4-415e-a2a0-b95d6ded47ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Menu">
+      <UniqueIdentifier>{a72cba36-ca77-4365-a120-a595e8d94d00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Menu">
+      <UniqueIdentifier>{ad006007-0ed7-43ae-b100-00ebd8a6f333}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MeepleBag.cpp">
@@ -83,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="Renderable_Board.cpp">
       <Filter>Source Files\REntities</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files\Menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="Renderable_Board.h">
       <Filter>Header Files\REntities</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files\Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

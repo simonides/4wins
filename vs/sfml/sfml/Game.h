@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 class MeepleBag;
 class Board;
 class I_Player;
@@ -28,6 +29,8 @@ struct GameState{
 class Game
 {
 private:
+	sf::RenderWindow* window;
+
     MeepleBag* bag[2];
     Board* board;
 
@@ -39,10 +42,12 @@ private:
 
     void runGameCycle(I_Player& player, I_Player& opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr);
 public:
-    Game(I_Player& player1, I_Player& player2); //Initialises the game with 2 players
-    void reset();                               //Reinitialises the object
+    Game(sf::RenderWindow* window, I_Player* player1, I_Player* player2); //Initialises the game with 2 players
+	virtual ~Game();
+	void reset();                               //Reinitialises the object
 
     GameWinner::Enum runGame();                 //Runs the game, until it is over; returns the winner
-    virtual ~Game();
+  
+	void pollEvents();
 };
 
