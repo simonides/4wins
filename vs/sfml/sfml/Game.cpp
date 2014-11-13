@@ -53,24 +53,24 @@ GameWinner::Enum Game::runGame(){
     for (;;){
         runGameCycle(player1, player2, *gameStatePlayer1, *gameStatePlayer2 ,0);
         if (board->checkWinSituation()){    //player2 won
-            if (PRINT_WINNER_PER_ROUND){
+            #if PRINT_WINNER_PER_ROUND
                 cout << "Player 2 wins!" << endl;
-            }
+            #endif
             return GameWinner::PLAYER_2;
         }
 
         runGameCycle(player2, player1, *gameStatePlayer2, *gameStatePlayer1, 1);
         if (board->checkWinSituation()){    //player1 won
-            if (PRINT_WINNER_PER_ROUND){
+            #if PRINT_WINNER_PER_ROUND
                 cout << "Player 1 wins!" << endl;
-            }
+            #endif
             return GameWinner::PLAYER_1;
         }
 
         if (board->isFull()){
-            if (PRINT_WINNER_PER_ROUND){
+            #if PRINT_WINNER_PER_ROUND
                 cout << "Tie! There is no winner." << endl;
-            }
+            #endif
             return GameWinner::TIE;
         }
     }

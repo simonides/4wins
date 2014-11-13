@@ -78,9 +78,9 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const GameState& gameState) {
 
         points[f].points = best * 8 + (int)(avg * 2.f);  //The higher this score, the better for the opponent
 
-        if (PRINT_THINK_MAP){
+        #if PRINT_THINK_MAP
             std::cout << points[f].meeple->toString() << ":  Score = " << points[f].points << " (max: " << best << ", avg: " << avg << ")" << std::endl;
-        }
+        #endif
     }
 
     //Select the lowest score:
@@ -111,29 +111,6 @@ BoardPos ThinkingAI::selectMeeplePosition(const GameState& gameState, const Meep
     delete[] scoreMap;
     return pos;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

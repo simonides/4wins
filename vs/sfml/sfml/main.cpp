@@ -41,7 +41,7 @@ void AI_testFunction(){
     unsigned int pw1 = 0, pw2 = 0, ties = 0;
 
     
-    I_Player* p1 = new ThinkingAI(true, true);
+    I_Player* p1 = new ThinkingAI(true, true); //ThinkingAI(true, true);
     I_Player* p2 = new IntelAI(true, true); //RandomAI();// StupidAI();   //Player(
     Game* game = new Game(*p1, *p2);
 
