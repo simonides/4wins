@@ -12,7 +12,9 @@
 
 using namespace std;
 
-Game::Game(I_Player& player1, I_Player& player2) : player1(player1), player2(player2) {
+Game::Game(I_Player& player1, I_Player& player2) : player1(&player1), player2(&player2) {
+    assert(&player1 != &player2);   //hehehe, that won't crash this game
+
     bag[0] = new MeepleBag(MeepleColor::WHITE);
     bag[1] = new MeepleBag(MeepleColor::BLACK);
     board = new Board();
@@ -33,17 +35,10 @@ Game::~Game(){
 void Game::reset(){
     bag[0]->reset();
     bag[1]->reset();
-
-    /*delete bag[1];
-    delete bag[0];
-    bag[0] = new MeepleBag(MeepleColor::WHITE);
-    bag[1] = new MeepleBag(MeepleColor::BLACK);
-    gameStatePlayer1 = new GameState(*bag[0], *bag[1], *board);
-    gameStatePlayer2 = new GameState(*bag[1], *bag[0], *board);*/
-
+    
     board->reset();
-    player1.reset();
-    player2.reset();
+    player1->reset();
+    player2->reset();
 }
 
 
@@ -78,12 +73,12 @@ GameWinner::Enum Game::runGame(){
 
 
 //a have round cycle, where a player chooses a meeple, and the other player sets it
-void Game::runGameCycle(I_Player& player, I_Player& opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr){
+void Game::runGameCycle(I_Player* player, I_Player* opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr){
 
-    const Meeple& toSet = player.selectOpponentsMeeple(gameStateForPlayer);    //player selects a meeple
+    const Meeple& toSet = player->selectOpponentsMeeple(gameStateForPlayer);    //player selects a meeple
     Meeple* meeple = bag[(playerNr + 1) % 2]->removeMeeple(toSet);              //remove meeple from opponent's bag          
     
-    BoardPos pos = opponent.selectMeeplePosition(gameStateForOpponent, *meeple); //select a position
+    BoardPos pos = opponent->selectMeeplePosition(gameStateForOpponent, *meeple); //select a position
     assert(pos.x < 4 && pos.y < 4);
     board->setMeeple(pos, *meeple);                                             //set the meeple
     

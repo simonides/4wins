@@ -34,13 +34,12 @@ private:
 
     GameState* gameStatePlayer1;                //stores the gamestate for player 1 (buffered)
     GameState* gameStatePlayer2;
+        
+    I_Player* player1;
+    I_Player* player2;
 
-    //TODO: keine referenzen
-    I_Player& player1;
-    I_Player& player2;
 
-    Game& operator = (const Game&);
-    void runGameCycle(I_Player& player, I_Player& opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr);
+    void runGameCycle(I_Player* player, I_Player* opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr);
 public:
     Game(I_Player& player1, I_Player& player2); //Initialises the game with 2 players
     void reset();                               //Reinitialises the object
