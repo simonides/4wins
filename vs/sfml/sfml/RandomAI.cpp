@@ -16,9 +16,9 @@ RandomAI::RandomAI(){
 }
 
 const Meeple& RandomAI::selectOpponentsMeeple(const GameState& gameState){
-    return *(gameState.opponentBag.getMeeple(rand() % gameState.opponentBag.getMeepleCount()));
+    return *(gameState.opponentBag->getMeeple(rand() % gameState.opponentBag->getMeepleCount()));
 }
 
 BoardPos RandomAI::selectMeeplePosition(const GameState& gameState, const Meeple& meepleToSet){
-    return gameState.board.getRandomEmptyField();
+    return gameState.board->getRandomEmptyField();
 }

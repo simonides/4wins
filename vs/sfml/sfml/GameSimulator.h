@@ -15,8 +15,8 @@ private:
     MeepleBag* bag[2];
     Board* board;
 
-    GameState* gameStatePlayer1;                //stores the gamestate for player 1 (buffered)
-    GameState* gameStatePlayer2;
+    GameState gameStatePlayer1;                //stores the gamestate for player 1 (buffered)
+    GameState gameStatePlayer2;
 
     I_Player* player1;
     I_Player* player2;

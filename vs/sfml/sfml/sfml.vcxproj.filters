@@ -78,9 +78,6 @@
     <ClCompile Include="ThinkingAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
     </ClCompile>
-    <ClCompile Include="IntelAI.cpp">
-      <Filter>Source Files\Player\AI</Filter>
-    </ClCompile>
     <ClCompile Include="Board.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
@@ -92,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="SmartAI.cpp">
+      <Filter>Source Files\Player\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -128,9 +128,6 @@
     <ClInclude Include="ThinkingAI.h">
       <Filter>Header Files\Player\AI</Filter>
     </ClInclude>
-    <ClInclude Include="IntelAI.h">
-      <Filter>Header Files\Player\AI</Filter>
-    </ClInclude>
     <ClInclude Include="Board.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
@@ -142,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Header Files\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="SmartAI.h">
+      <Filter>Header Files\Player\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-#include "IntelAI.h"
+#include "SmartAI.h"
 
 #include "Game.h"
 #include "Board.h"
@@ -12,7 +12,7 @@
 
 
 
-IntelAI::IntelAI(bool intelligentMeepleChoosing, bool intelligentMeeplePositioning) : ThinkingAI(intelligentMeepleChoosing, intelligentMeeplePositioning){
+SmartAI::SmartAI(bool intelligentMeepleChoosing, bool intelligentMeeplePositioning) : ThinkingAI(intelligentMeepleChoosing, intelligentMeeplePositioning){
 }
 
 
@@ -26,7 +26,7 @@ IntelAI::IntelAI(bool intelligentMeepleChoosing, bool intelligentMeeplePositioni
 #define HIGHEST_SINGLE_POINTS 1000
 
 
-int IntelAI::getPointsForCombination(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{    
+int SmartAI::getPointsForCombination(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{
     int points = getPointsForCombination_combineMeeples(gameState, winCombination, meepleToSet);
     assert(points <= HIGHEST_SINGLE_POINTS);
     
@@ -47,7 +47,7 @@ int IntelAI::getPointsForCombination(const GameState& gameState, const WinCombin
 
 
 
-int IntelAI::getPointsForCombination_combineMeeples(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{
+int SmartAI::getPointsForCombination_combineMeeples(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{
     //Returns points, if we can form similarities by placing a meeple
     //take each property of the meepleToSet
     //count the number of meeples in the combination, which have the same property
@@ -91,12 +91,12 @@ int IntelAI::getPointsForCombination_combineMeeples(const GameState& gameState, 
         if (match[m] == 2){         //we MUST NOT set the meeple there, if the opponent has a meeple that could win the game
             //Set the points, depending on how many of the opponent's meeples don't match
             //If all the opponent's meeples match this property --> never set here!                
-            unsigned int opponentMeepleCount = gameState.opponentBag.getMeepleCount();
+            unsigned int opponentMeepleCount = gameState.opponentBag->getMeepleCount();
             if (opponentMeepleCount == 0){
                 ++points;
                 continue;
             }
-            unsigned int opponentMatches = gameState.opponentBag.getSimilarMeepleCount(meepleToSet.getProperty(m));
+            unsigned int opponentMatches = gameState.opponentBag->getSimilarMeepleCount(meepleToSet.getProperty(m));
             opponentMatches /= opponentMeepleCount;     //percent-value
 
             points -= static_cast<int>(opponentMatches / static_cast<float>(opponentMeepleCount) * 50.f); //worst case: happens at 11 properties (4*2 + 3). The 12 property could lead to a win. --> the value must not exceed HIGHEST_SINGLE_POINTS/11 (=90)
@@ -112,7 +112,7 @@ int IntelAI::getPointsForCombination_combineMeeples(const GameState& gameState, 
 
 
 
-float IntelAI::getPointsForCombination_blockOpponent(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{
+float SmartAI::getPointsForCombination_blockOpponent(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{
     //Returns points, if we can avoid that our opponent creates combinations / combines similar meeples
     //  (the return-value is actually in percent: 100% = block it! now!   0% -->  can't block anything    
     // --> check, if the meeples on the board share any property (every meeple has the same property)
@@ -190,11 +190,11 @@ float IntelAI::getPointsForCombination_blockOpponent(const GameState& gameState,
     // --> calculate the importance: the more matches we had (max. 3), the higher the importance (3 meeples = 100%, 0 meeples = 0%)
     // --> find the highest importance
 
-    unsigned int meepleCount = gameState.opponentBag.getMeepleCount();
+    unsigned int meepleCount = gameState.opponentBag->getMeepleCount();
     float highestImportance = 0.f;     //highest importance
 
     for (p = 0; p < 4; ++p){
-        float similarMeeplesInBag = 100.f * gameState.opponentBag.getSimilarMeepleCount(ancestor->getProperty(p)) / static_cast<float>(meepleCount);   //how much percent of the opponents meeple's match this property? 
+        float similarMeeplesInBag = 100.f * gameState.opponentBag->getSimilarMeepleCount(ancestor->getProperty(p)) / static_cast<float>(meepleCount);   //how much percent of the opponents meeple's match this property? 
 
         float importance = similarMeeplesInBag * match[p] / 3;   
         //  Importance:

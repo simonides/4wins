@@ -11,7 +11,7 @@
 #include "StupidAI.h"
 #include "Player.h"
 #include "ThinkingAI.h"
-#include "IntelAI.h"
+#include "SmartAI.h"
 
 #include "Menu.h"
 
@@ -40,8 +40,8 @@ sf::RenderWindow* setupWindow();
 
 
 void AI_testFunction(){     
-    I_Player* p1 = new ThinkingAI(true, true); //ThinkingAI(true, true);
-    I_Player* p2 = new IntelAI(true, true); //RandomAI();// StupidAI();   //Player(
+    I_Player* p1 = new StupidAI();// (true, true); //ThinkingAI(true, true);
+    I_Player* p2 = new RandomAI();// (true, true); //RandomAI();// StupidAI();   //Player(
     GameSimulator* game = new GameSimulator(*p1, *p2);
 
     GameWinner::Enum winner = game->runManyGames(10000, true);
@@ -61,7 +61,7 @@ void AI_testFunction(){
 
 int main(){
 
-	//AI_testFunction();
+	AI_testFunction();
 	
 	sf::RenderWindow* window = setupWindow();
 	

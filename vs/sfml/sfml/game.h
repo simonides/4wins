@@ -17,11 +17,9 @@ struct GameWinner{
 
 //This data is given to the players/AIs, to calculate their next moves
 struct GameState{              
-    const MeepleBag& ownBag;            //The meeples which are owned by the AI
-    const MeepleBag& opponentBag;       //The meeples which are owned by the oppnent's AI
-    const Board& board;                 //The current state of the board (and the meeples on the board)
-    GameState(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Board& board) : ownBag(ownBag), opponentBag(opponentBag), board(board){}     //needed to initialise the referneces
-private: GameState& operator = (const GameState&);  //should be solved differently: no references, use pointers insread
+    const MeepleBag* ownBag;            //The meeples which are owned by the AI
+    const MeepleBag* opponentBag;       //The meeples which are owned by the oppnent's AI
+    const Board* board;                 //The current state of the board (and the meeples on the board)
 };
 
 
@@ -35,8 +33,8 @@ private:
     MeepleBag* bag[2];
     Board* board;
 
-    GameState* gameStatePlayer1;                //stores the gamestate for player 1 (buffered)
-    GameState* gameStatePlayer2;
+    GameState gameStatePlayer1;                //stores the gamestate for player 1 (buffered)
+    GameState gameStatePlayer2;
         
     I_Player* player1;
     I_Player* player2;

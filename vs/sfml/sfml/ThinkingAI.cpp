@@ -43,7 +43,7 @@ struct MeeplePoints{ //Internal structure, which is needed during the computatio
 
 const Meeple& ThinkingAI::selectOpponentsMeeple(const GameState& gameState) {
     if (!intelligentMeepleChoosing){
-        return *gameState.opponentBag.getMeeple(0);
+        return *gameState.opponentBag->getMeeple(0);
     }
         
     /* We take one meeple after another from the opponent's bag
@@ -54,7 +54,7 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const GameState& gameState) {
     Afterwards, select the meeple with the lowest points
     */
   
-    unsigned int meepleCount = gameState.opponentBag.getMeepleCount();
+    unsigned int meepleCount = gameState.opponentBag->getMeepleCount();
 
     MeeplePoints* points = new MeeplePoints[meepleCount];                       //Each meeple in the opponents bag will get an entry .. soon
     
@@ -66,7 +66,7 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const GameState& gameState) {
     int* scoreMap;
     int f = 0;
     for (; f < static_cast<int>(meepleCount); ++f){
-        points[f].meeple = gameState.opponentBag.getMeeple(f);
+        points[f].meeple = gameState.opponentBag->getMeeple(f);
         
         scoreMap = buildScoreMap(gameState, *points[f].meeple);          //The opponent gets this map, if this meeple is chosen
         
@@ -101,7 +101,7 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const GameState& gameState) {
 
 BoardPos ThinkingAI::selectMeeplePosition(const GameState& gameState, const Meeple& meepleToSet){
     if (!intelligentMeeplePositioning){
-        return gameState.board.getRandomEmptyField();
+        return gameState.board->getRandomEmptyField();
     }
 
     int* scoreMap = buildScoreMap(gameState, meepleToSet);
@@ -132,7 +132,7 @@ int* ThinkingAI::buildScoreMap(const GameState& gameState, const Meeple& meepleT
     //  --> add the matching-points to all fields in the combination, where no meeple is currently placed
     //(Afterwards, go through the scoreMap, and choose the field with the most points)
 
-    const WinCombinationSet* allCombinations = gameState.board.getWinCombinations();
+    const WinCombinationSet* allCombinations = gameState.board->getWinCombinations();
     for (std::set<WinCombination*>::const_iterator it = allCombinations->combination.begin(); it != allCombinations->combination.end(); ++it){
         WinCombination* comb = *it;
         int points = getPointsForCombination(gameState, *comb, meepleToSet);

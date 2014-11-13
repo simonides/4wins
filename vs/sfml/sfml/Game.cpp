@@ -18,14 +18,12 @@ Game::Game(sf::RenderWindow& window,I_Player& player1, I_Player& player2) : wind
     bag[0] = new MeepleBag(MeepleColor::WHITE);
     bag[1] = new MeepleBag(MeepleColor::BLACK);
     board = new Board();
-    gameStatePlayer1 = new GameState(*bag[0], *bag[1], *board);
-    gameStatePlayer2 = new GameState(*bag[1], *bag[0], *board);
+    gameStatePlayer1 = { bag[0], bag[1], board };
+    gameStatePlayer2 = { bag[1], bag[0], board };
 }
 
 
 Game::~Game(){
-    delete gameStatePlayer2;
-    delete gameStatePlayer1;
     delete board;
     delete bag[1];
     delete bag[0];
@@ -47,7 +45,7 @@ void Game::reset(){
 //Game Loop for one game, until there is a winner or the board is full
 GameWinner::Enum Game::runGame(){
     for (;;){
-        runGameCycle(player1, player2, *gameStatePlayer1, *gameStatePlayer2 ,0);
+        runGameCycle(player1, player2, gameStatePlayer1, gameStatePlayer2 ,0);
         if (board->checkWinSituation()){    //player2 won
             #if PRINT_WINNER_PER_ROUND
                 cout << "Player 2 wins!" << endl;
@@ -55,7 +53,7 @@ GameWinner::Enum Game::runGame(){
             return GameWinner::PLAYER_2;
         }
 
-        runGameCycle(player2, player1, *gameStatePlayer2, *gameStatePlayer1, 1);
+        runGameCycle(player2, player1, gameStatePlayer2, gameStatePlayer1, 1);
         if (board->checkWinSituation()){    //player1 won
             #if PRINT_WINNER_PER_ROUND
                 cout << "Player 1 wins!" << endl;
