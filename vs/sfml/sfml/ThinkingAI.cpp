@@ -8,6 +8,7 @@
 #include "MeepleBag.h"
 #include "config.h"
 
+#pragma warning( disable: 4100 )
 
 
 int getMaximum(int* intArray, unsigned int length){
@@ -52,9 +53,7 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const GameState& gameState) {
     --> store the meeple and its points in a MeeplePoints-set
     Afterwards, select the meeple with the lowest points
     */
-    
-    const WinCombinationSet* allCombinations = gameState.board.getWinCombinations();
-    //const std::set<const Meeple*>* meeples = opponentBag.getMeeples();      //we have to choose one of these meeples
+  
     unsigned int meepleCount = gameState.opponentBag.getMeepleCount();
 
     MeeplePoints* points = new MeeplePoints[meepleCount];                       //Each meeple in the opponents bag will get an entry .. soon
@@ -122,6 +121,9 @@ int* ThinkingAI::buildScoreMap(const GameState& gameState, const Meeple& meepleT
     for (int i = 0; i < 4 * 4; ++i){
         scoreMap[i] = 0;
     }
+
+//HIER{ 0 }
+
 
     //go through the whole map, and add points if the meeple should be set there
     //  --> check all possible combinations, which can lead to a victory (4 in a row/col/diagonal)

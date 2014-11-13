@@ -15,11 +15,11 @@ Board::Board(){
     //populate the winCombinations-positions:
 
     //rows and columns:    
-        for (int rc = 0; rc < 4; ++rc){     //Row or column (depending)
+        for (uint8_t rc = 0; rc < 4; ++rc){     //Row or column (depending)
             WinCombination *row = new WinCombination();
             WinCombination *col = new WinCombination();
 
-            for (int o = 0; o < 4; ++o){    //opposite axis
+            for (uint8_t o = 0; o < 4; ++o){    //opposite axis
                 row->positions[o] = { o, rc };
                 col->positions[o] = { rc, o };
                 row->meeples[o] = nullptr;          //no meeples set yet
@@ -32,7 +32,7 @@ Board::Board(){
         WinCombination *diaTL = new WinCombination();   //diagonal top-left to bottom-right
         WinCombination *diaTR = new WinCombination();   //diagonal top-right to bottom-left
             
-        for (int d = 0; d < 4; ++d){
+        for (uint8_t d = 0; d < 4; ++d){
             diaTL->positions[d] = { d, d };
             diaTR->positions[d] = { 3 - d, d };
             diaTL->meeples[d] = nullptr;          //no meeples set yet
@@ -103,8 +103,8 @@ Meeple* Board::removeMeeple(BoardPos position){
 }
 
 bool Board::isFull() const{
-    for (int y = 0; y < 4; ++y){
-        for (int x = 0; x < 4; ++x){
+    for (uint8_t y = 0; y < 4; ++y){
+        for (uint8_t x = 0; x < 4; ++x){
             if (isFieldEmpty({ x, y })){
                 return false;
             }
@@ -166,13 +166,16 @@ bool Board::checkSimpleWinCombination(const WinCombination* comb) const{
 void Board::print(std::ostream& output) const{
     //This function is just for debugging purposes.
     //Therefore it is allowed that it's ugly (and that it uses c-casts).
-    
+#pragma warning( push )
+#pragma warning( disable: 4310)
+
     output << (char)201 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)187 << std::endl;
-        
-    for (int y = 0; y < 4; ++y){
+  
+
+    for (uint8_t y = 0; y < 4; ++y){
         for (int l = 0; l < 2; ++l){
             output << (char)186 << ' ';
-            for (int x = 0; x < 4; ++x){
+            for (uint8_t x = 0; x < 4; ++x){
                 if (isFieldEmpty({ x, y })){
                     output << "   ";
                     continue;
@@ -196,5 +199,7 @@ void Board::print(std::ostream& output) const{
 
     output << (char)200 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)205 << (char)188 << std::endl;
         
+#pragma warning( pop )
+
     return;
 }

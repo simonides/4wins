@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Game.h"
+#include "GameSimulator.h"
 #include "config.h"
 #include "RandomAI.h"
 #include "StupidAI.h"
@@ -37,33 +38,18 @@ using namespace std;
 
 
 
-void AI_testFunction(){
-    unsigned int pw1 = 0, pw2 = 0, ties = 0;
-
-    
+void AI_testFunction(){     
     I_Player* p1 = new ThinkingAI(true, true); //ThinkingAI(true, true);
     I_Player* p2 = new IntelAI(true, true); //RandomAI();// StupidAI();   //Player(
-    Game* game = new Game(*p1, *p2);
+    GameSimulator* game = new GameSimulator(*p1, *p2);
 
-    std::cout << "Calculating..." << std::endl;
-    for (int g = 0; g<10000; ++g){
-        
-        GameWinner::Enum winner = game->runGame();      //DIESE METHODE darf umgeschrieben werden, damit es mit sfml kompatibel wird
-        switch (winner){
-            case GameWinner::PLAYER_1: pw1++; break;
-            case GameWinner::PLAYER_2: pw2++; break;
-            case GameWinner::TIE: ties++;  break;
-        }
-        game->reset();
-        if (g % 100 == 0){
-            std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties.\r";
-        }
-    }
+    GameWinner::Enum winner = game->runManyGames(10000, true);
+   
     delete game;
     delete p2;
     delete p1;
 
-    std::cout << "Player 1 won " << pw1 << " times, and Player 2 won " << pw2 << " times. There were " << ties << " Ties." << std::endl;
+    std::cout << "And the winner is: " << (winner == GameWinner::TIE ? "NOONE - TIE!" : (winner == GameWinner::PLAYER_1 ? "Player 1" : "Player 2")) << std::endl;
     cin.ignore();   //wait for keypress
     exit(0);
 }
@@ -211,8 +197,8 @@ int main(){
 							
 							//squares[i].getGlobalBounds().left
 							//oldPos= dragmeVect;
-							oldPos = sf::Vector2f(meeple.getGlobalBounds().left, meeple.getGlobalBounds().top);
-								//oldPos = sf::Vector2f(squares[i].getGlobalBounds().left+ MEEPLE_SNAP_OFFSET_X, squares[i].getGlobalBounds().top- MEEPLE_SNAP_OFFSET_Y);
+							//oldPos = sf::Vector2f(meeple.getGlobalBounds().left, meeple.getGlobalBounds().top);
+								oldPos = sf::Vector2f(squares[i].getGlobalBounds().left+ MEEPLE_SNAP_OFFSET_X, squares[i].getGlobalBounds().top- MEEPLE_SNAP_OFFSET_Y);
 						
 						}
 						
