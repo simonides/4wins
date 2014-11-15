@@ -84,7 +84,7 @@ void Game::runGameCycle(I_Player* player, I_Player* opponent, GameState& gameSta
     //Debug:
     #if PRINT_BOARD_TO_CONSOLE
         cout << "Player " << playerNr + 1 << " chose meeple \"" << toSet.toString() << '\"' << endl;
-        cout << "Player " << (playerNr + 1) % 2 + 1 << " sets meeple to (" << static_cast<int>(pos.x) << 'x' << static_cast<int>(pos.y) << ')' << endl;
+        cout << "Player " << (playerNr + 1) % 2 + 1 << " sets meeple to " << pos.toString() << endl;
         board->print(cout);
     #endif
     #if STEP_BY_STEP

@@ -100,6 +100,8 @@
     <ClCompile Include="RandomAI.cpp" />
     <ClCompile Include="StupidAI.cpp" />
     <ClCompile Include="ThinkingAI.cpp" />
+    <ClCompile Include="ThreadController.cpp" />
+    <ClCompile Include="ThreadedGameSimulator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameSimulator.h" />
@@ -117,6 +119,8 @@
     <ClInclude Include="RMeeple.h" />
     <ClInclude Include="StupidAI.h" />
     <ClInclude Include="ThinkingAI.h" />
+    <ClInclude Include="ThreadController.h" />
+    <ClInclude Include="ThreadedGameSimulator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />

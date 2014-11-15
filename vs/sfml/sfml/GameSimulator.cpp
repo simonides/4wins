@@ -12,14 +12,15 @@
 
 using namespace std;
 
-GameSimulator::GameSimulator(I_Player& player1, I_Player& player2) : player1(&player1), player2(&player2) {
-    assert(&player1 != &player2);   //hehehe, that won't crash this game
+GameSimulator::GameSimulator(I_Player& player1, I_Player& player2) : board(new Board()), 
+                                                                     player1(&player1), 
+                                                                     player2(&player2){
+    assert(&player1 != &player2);   //hehehe, never try to crash my game
     bag[0] = new MeepleBag(MeepleColor::WHITE);
     bag[1] = new MeepleBag(MeepleColor::BLACK);
-    board = new Board();
     gameStatePlayer1 = { bag[0], bag[1], board };
     gameStatePlayer2 = { bag[1], bag[0], board };
-}
+} 
 
 
 GameSimulator::~GameSimulator(){
@@ -33,21 +34,18 @@ void GameSimulator::reset(){
     bag[0]->reset();
     bag[1]->reset();
     board->reset();
-    player1->reset();
-    player2->reset();
+    /*player1->reset();
+    player2->reset();*/
 }
 
 
 GameWinner::Enum GameSimulator::runManyGames(unsigned int cycles, bool printState){
     unsigned int pw1 = 0, pw2 = 0, ties = 0;
-
-
    
     if (printState){
         std::cout << "Calculating..." << std::endl;
     }
     for (unsigned int g = 0; g<cycles; ++g){
-
         GameWinner::Enum winner = runGame();
         switch (winner){
             case GameWinner::PLAYER_1: pw1++; break;
@@ -115,7 +113,7 @@ void GameSimulator::runGameCycle(I_Player* player, I_Player* opponent, GameState
     //Debug:
     #if PRINT_BOARD_TO_CONSOLE
         cout << "Player " << playerNr + 1 << " chose meeple \"" << toSet.toString() << '\"' << endl;
-        cout << "Player " << (playerNr + 1) % 2 + 1 << " sets meeple to (" << static_cast<int>(pos.x) << 'x' << static_cast<int>(pos.y) << ')' << endl;
+        cout << "Player " << (playerNr + 1) % 2 + 1 << " sets meeple to " << pos.toString() << endl;
         board->print(cout);
     #endif
     #if STEP_BY_STEP

@@ -6,6 +6,7 @@
 
 #include "Game.h"
 #include "GameSimulator.h"
+#include "ThreadedGameSimulator.h"
 #include "config.h"
 #include "RandomAI.h"
 #include "StupidAI.h"
@@ -40,9 +41,9 @@ sf::RenderWindow* setupWindow();
 
 
 void AI_testFunction(){     
-    I_Player* p1 = new StupidAI();// (true, true); //ThinkingAI(true, true);
-    I_Player* p2 = new RandomAI();// (true, true); //RandomAI();// StupidAI();   //Player(
-    GameSimulator* game = new GameSimulator(*p1, *p2);
+    I_Player* p1 = new SmartAI();// (true, true); //ThinkingAI(true, true);
+    I_Player* p2 = new ThinkingAI();// (true, true); //RandomAI();// StupidAI();   //Player(
+    GameSimulator* game = new ThreadedGameSimulator(*p1, *p2);//GameSimulator(*p1, *p2);
 
     GameWinner::Enum winner = game->runManyGames(10000, true);
    
@@ -57,10 +58,28 @@ void AI_testFunction(){
 
 
 
-
+#include "ThreadController.h"
+#include "Meeple.h"
 
 int main(){
+    /*I_Player* p = new RandomAI();
+    ThreadController* tc = new ThreadController(*p);
+    GameState gs;
+    
+    tc->run_selectMeeplePosition(gs, *new Meeple(MeepleColor::BLACK, MeepleSize::SMALL, MeepleShape::ROUND, MeepleDetail::HOLE));
+    std::cout << "waiting for result";
+    while (!tc->isResultAvailable()){
+        std::cout << "."; std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+    std::cout << std::endl;
+    tc->getMeeplePosition();
+    std::cout << "COMPLETED - destroy everything" << std::endl;
+    delete tc;
 
+
+
+    std::cin.ignore();
+    exit(0);*/
 	AI_testFunction();
 	
 	sf::RenderWindow* window = setupWindow();

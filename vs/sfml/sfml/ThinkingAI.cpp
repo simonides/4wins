@@ -117,13 +117,7 @@ BoardPos ThinkingAI::selectMeeplePosition(const GameState& gameState, const Meep
 
 
 int* ThinkingAI::buildScoreMap(const GameState& gameState, const Meeple& meepleToSet) const{
-    int* scoreMap = new int[4 * 4];//   todo: does initialising also work with this, instead of the loop?: {0};
-    for (int i = 0; i < 4 * 4; ++i){
-        scoreMap[i] = 0;
-    }
-
-//HIER{ 0 }
-
+    int* scoreMap = new int[4 * 4]{0};
 
     //go through the whole map, and add points if the meeple should be set there
     //  --> check all possible combinations, which can lead to a victory (4 in a row/col/diagonal)
@@ -187,7 +181,7 @@ BoardPos ThinkingAI::getOptimalScoreMapPosition(int* scoreMap, bool printScoreMa
     BoardPos position = { pos % 4, pos / 4 };   //convert value [0,15] into 2D coordinates [0-3][0-3]
 
     if (printScoreMap){
-        std::cout << "pos = " << (int)position.x << "x" << (int)position.y << std::endl << std::endl;
+        std::cout << "pos = " << position.toString() << std::endl << std::endl;
     }
     return position;
 }

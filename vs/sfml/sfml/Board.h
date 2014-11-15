@@ -3,12 +3,14 @@
 #include <string>
 #include <set>
 
-
 class Meeple;
 
 struct BoardPos{
     uint8_t x;
     uint8_t y;
+    std::string toString(){
+        return "(" + static_cast<int>(x) + 'x' + static_cast<int>(y) + ')';    //TODO: THIS DOESNT WORK
+    }
 };
 
 struct WinCombination{      //Contains 4 meeples, that are either in a row, column, or diagonal. If these meeples are similar, a player won the game
@@ -21,8 +23,7 @@ struct WinCombinationSet{   //Contains all possible combinations, that can lead 
 };
 
 
-class Board
-{
+class Board{
 private:
     Meeple* board[4][4];   
 

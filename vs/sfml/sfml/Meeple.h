@@ -51,10 +51,8 @@ struct MeepleProperty{
         MEEPLE_SIZE,
         MEEPLE_SHAPE,
         MEEPLE_DETAIL
-    };
-
-    Type type;
-
+    } type;
+    
     union {
         MeepleColor::Enum color;
         MeepleSize::Enum size;

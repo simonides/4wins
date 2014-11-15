@@ -46,7 +46,6 @@ int SmartAI::getPointsForCombination(const GameState& gameState, const WinCombin
 
 
 
-
 int SmartAI::getPointsForCombination_combineMeeples(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{
     //Returns points, if we can form similarities by placing a meeple
     //take each property of the meepleToSet

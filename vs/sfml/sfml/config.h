@@ -11,7 +11,8 @@ extern const unsigned int WINDOW_WIDTH;
        
 
 
-
+#define THREAD_DEBUGGING 0                  //prints messages regarding multithreading within the main thread
+#define THREAD_DEBUG_MESSAGES 0             //prints messages within other threads; might destroy the output due to concurrency (no flush is used)
 
 
 #ifdef PRINT_ALL
