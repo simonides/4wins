@@ -3,6 +3,9 @@
 
 #define WORKING_DIR std::string("Resources/")
 
+extern const unsigned int WINDOW_HEIGHT_TO_CALCULATE;
+extern const unsigned int WINDOW_WIDTH_TO_CALCULATE;
+
 extern const unsigned int WINDOW_HEIGHT;
 extern const unsigned int WINDOW_WIDTH;
 

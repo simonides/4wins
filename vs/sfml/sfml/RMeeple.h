@@ -9,24 +9,37 @@ class RMeeple
 {
 private:
 
-	bool isdragged;
+	const Meeple* logicalMeeple;
 
-	sf::Vector2f* mouseOffsetToGlobalBounds;
-	sf::Vector2f* lastValidPosition;
+	sf::RectangleShape shape; //pos is in there
+	sf::RectangleShape glowShape;
+	
+	sf::Vector2f moveToPosition;
 
-	sf::RectangleShape* graficRepresentation;
+	bool isDragged;
+	bool glow;
+	bool isLocked;
 
 public:
-	
-	RMeeple(const Meeple& logicalMeeple, sf::RectangleShape* graficRepresentation);
-	
+	RMeeple(const Meeple& logicalMeeple, sf::Texture& shapeTex, sf::IntRect& shapeTexRect, sf::Texture& glowTexShape, sf::IntRect& glowTexShapeRect, sf::Vector2f& initPos);
 	~RMeeple();
+	
+	void updatePosition(const sf::Vector2f& newPosition);
+	void draw(sf::RenderWindow& window);
 
-	bool GetIsDragged();
-	void SetIsDragged(bool isDragged);
+	bool getIsDragged();
+	void setIsDragged(bool isDragged);
 
+	bool getGlow();
+	void setGlow(bool glow);
 
-	 
+	sf::Vector2f* getMoveToPosition();
+	void setMoveToPosition(sf::Vector2f& moveToPosition);
 
+	void shouldGlow(sf::Vector2f& converted);
+
+	bool containsMousePos(sf::Vector2f& converted);
+
+	sf::FloatRect getGlobalBounds();
 };
 

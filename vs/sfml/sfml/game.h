@@ -1,8 +1,13 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+//#include <list>
+
+#include "RMeeple.h"
+#include "Board.h"
+
 class MeepleBag;
-class Board;
+//class Board;
 class I_Player;
 
 
@@ -27,11 +32,29 @@ struct GameState{
 //A Game-object is usable for exacly one round
 class Game
 {
+
 private:
 	sf::RenderWindow* window;
+	
+	sf::RectangleShape leftPanel;
+	sf::RectangleShape rightPanel;
+	sf::RectangleShape boardPanel;
 
-    MeepleBag* bag[2];
-    Board* board;
+	std::vector<sf::CircleShape*> fields;
+
+	
+	std::vector<RMeeple*> meeples;
+	sf::Vector2f mousePosRelativeToMeepleBoundary;
+	//sf::Vector2f lastValidPosition;
+
+	sf::Texture meepleSprite;
+	sf::Texture glowSprite;
+
+	sf::Texture boardTexture;
+    
+
+	MeepleBag* bag[2];
+    Board board;
 
     GameState gameStatePlayer1;                //stores the gamestate for player 1 (buffered)
     GameState gameStatePlayer2;
@@ -41,6 +64,13 @@ private:
 
 
     void runGameCycle(I_Player* player, I_Player* opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr);
+	void setUp();
+	void initFields();
+	void initMeeples();
+	void loadTextures();
+	sf::IntRect getTextRectForPos(const Meeple& meeple);
+	sf::IntRect getGlowTextRectForPos(const Meeple& meeple);
+
 public:
     Game(sf::RenderWindow& window, I_Player& player1, I_Player& player2); //Initialises the game with 2 players
 	virtual ~Game();
@@ -49,5 +79,7 @@ public:
     GameWinner::Enum runGame();                 //Runs the game, until it is over; returns the winner
   
 	void pollEvents();
+
+
 };
 
