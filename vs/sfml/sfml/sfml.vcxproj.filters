@@ -93,6 +93,12 @@
     <ClCompile Include="SmartAI.cpp">
       <Filter>Source Files\Player\AI</Filter>
     </ClCompile>
+    <ClCompile Include="Helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RMeeple.cpp">
+      <Filter>Source Files\REntities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">

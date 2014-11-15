@@ -88,6 +88,8 @@
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="GameSimulator.cpp" />
+    <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="RMeeple.cpp" />
     <ClCompile Include="SmartAI.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Game.cpp" />
