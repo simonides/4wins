@@ -60,7 +60,9 @@ public:
     bool isResultAvailable();               //Checks, if the thread finished its task
 
 //Start thread-tasks:
+	//ai selects meeple for opponent (player)
     void run_selectOpponentsMeeple(const GameState& gameState);
+	//tells where to place the meeple chosen by the opponent
     void run_selectMeeplePosition(const GameState& gameState, const Meeple& meepleToSet);
     void run_resetPlayer();
 //Get the results of the thread-tasks:

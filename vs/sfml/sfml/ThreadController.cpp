@@ -120,6 +120,7 @@ void ThreadController::threadMainRoutine(ThreadController* controller){
 bool ThreadController::isResultAvailable(){
     lock.lock();
         bool available = resultAvailable;
+		assert(available || commandAvailable);
     lock.unlock();
     return available;
 }

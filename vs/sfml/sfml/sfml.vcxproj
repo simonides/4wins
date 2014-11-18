@@ -89,6 +89,9 @@
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="GameSimulator.cpp" />
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="RBag.cpp" />
+    <ClCompile Include="RBoard.cpp" />
+    <ClCompile Include="RField.cpp" />
     <ClCompile Include="RMeeple.cpp" />
     <ClCompile Include="SmartAI.cpp" />
     <ClCompile Include="Board.cpp" />
@@ -98,7 +101,6 @@
     <ClCompile Include="Meeple.cpp" />
     <ClCompile Include="MeepleBag.cpp" />
     <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RandomAI.cpp" />
     <ClCompile Include="StupidAI.cpp" />
     <ClCompile Include="ThinkingAI.cpp" />
@@ -107,6 +109,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameSimulator.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="RBag.h" />
+    <ClInclude Include="RBoard.h" />
+    <ClInclude Include="RField.h" />
     <ClInclude Include="SmartAI.h" />
     <ClInclude Include="I_AI.h" />
     <ClInclude Include="Board.h" />
@@ -116,7 +122,6 @@
     <ClInclude Include="Meeple.h" />
     <ClInclude Include="MeepleBag.h" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="RandomAI.h" />
     <ClInclude Include="RMeeple.h" />
     <ClInclude Include="StupidAI.h" />

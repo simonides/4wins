@@ -2,9 +2,9 @@
 
 #include <assert.h>
 
-#include "Game.h"
 #include "Board.h"
 #include "MeepleBag.h"
+#include "GameState.h"
 
 #pragma warning( disable: 4100 )
 

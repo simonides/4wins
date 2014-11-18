@@ -3,13 +3,13 @@
 
 #define WORKING_DIR std::string("Resources/")
 
-extern const unsigned int WINDOW_HEIGHT_TO_CALCULATE;
+extern const unsigned int WINDOW_HEIGHT_TO_CALCULATE; // to this all pixel values are calculated so better don't alter it
 extern const unsigned int WINDOW_WIDTH_TO_CALCULATE;
 
-extern const unsigned int WINDOW_HEIGHT;
+extern const unsigned int WINDOW_HEIGHT; // standard display res setting
 extern const unsigned int WINDOW_WIDTH;
 
-//#define PRINT_ALL
+#define PRINT_ALL
 
        
 

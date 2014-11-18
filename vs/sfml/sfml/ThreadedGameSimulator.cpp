@@ -31,9 +31,10 @@ void ThreadedGameSimulator::reset(){
 
 
 
-#pragma warning(once: 4100)
+
 
 //a have round cycle, where a player chooses a meeple, and the other player sets it
+#pragma warning(once: 4100)
 void ThreadedGameSimulator::runGameCycle(I_Player* player, I_Player* opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr){
 
     ThreadController *playerController, *opponentController;

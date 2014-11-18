@@ -1,9 +1,9 @@
 #include "SmartAI.h"
 
-#include "Game.h"
 #include "Board.h"
 #include "MeepleBag.h"
 #include "config.h"
+#include "GameState.h"
 
 #include <iostream>
 #include <assert.h>

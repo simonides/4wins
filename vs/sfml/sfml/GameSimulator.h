@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Game.h"
 #include "ThreadController.h"
+#include "GameState.h"
 
 class MeepleBag;
 class Board;

@@ -3,7 +3,6 @@
 
 
 class Meeple;
-class I_Player;
 
 class RMeeple
 {
@@ -14,32 +13,31 @@ private:
 	sf::RectangleShape shape; //pos is in there
 	sf::RectangleShape glowShape;
 	
-	sf::Vector2f moveToPosition;
+	sf::Color* glowColor;
 
-	bool isDragged;
-	bool glow;
-	bool isLocked;
+	void initTextRects(sf::Texture& meepleSprites, sf::Texture& meepleGlowSprites);
 
 public:
-	RMeeple(const Meeple& logicalMeeple, sf::Texture& shapeTex, sf::IntRect& shapeTexRect, sf::Texture& glowTexShape, sf::IntRect& glowTexShapeRect, sf::Vector2f& initPos);
+	RMeeple(const Meeple& logicalMeeple, sf::Texture& shapeTex, sf::Texture& glowTexShape, sf::Vector2f& initPos);
 	~RMeeple();
 	
-	void updatePosition(const sf::Vector2f& newPosition);
-	void draw(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window) const;
 
-	bool getIsDragged();
-	void setIsDragged(bool isDragged);
+	void setPosition(const sf::Vector2f& newPosition);
+	const sf::Vector2f& getPosition() const;
 
-	bool getGlow();
-	void setGlow(bool glow);
+	void setGlow(const sf::Color* color);
 
-	sf::Vector2f* getMoveToPosition();
-	void setMoveToPosition(sf::Vector2f& moveToPosition);
+	bool isGlowing() const;
 
-	void shouldGlow(sf::Vector2f& converted);
+	bool containsPosition(sf::Vector2f& position) const;
+	sf::Vector2f getMousePosRelativeToMeepleBoundary(sf::Vector2f& mousePosition) const;
 
-	bool containsMousePos(sf::Vector2f& converted);
+	bool representsPassedMeeple(const Meeple* meeple) const;
 
-	sf::FloatRect getGlobalBounds();
+	const Meeple* getLogicalMeeple() const;
+
+	sf::Vector2f RMeeple::getAnchorPoint() const;
+	
 };
 

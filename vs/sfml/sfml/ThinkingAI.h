@@ -6,7 +6,6 @@ struct WinCombination;
     int getMaximum(int* intArray, unsigned int length);         //Returns the max. value within an int-array
     float getAverage(int* intArray, unsigned int length);       //Returns the averaage value within an int-array
 // ~ ~ ~ ~ ~ ~
-
 class ThinkingAI : public I_AI{
 private:
     const bool intelligentMeepleChoosing;

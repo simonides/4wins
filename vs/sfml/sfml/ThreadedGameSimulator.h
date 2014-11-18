@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GameSimulator.h"
-#include "Game.h"
 #include "ThreadController.h"
 
 class MeepleBag;

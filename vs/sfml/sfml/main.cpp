@@ -10,7 +10,6 @@
 #include "config.h"
 #include "RandomAI.h"
 #include "StupidAI.h"
-#include "Player.h"
 #include "ThinkingAI.h"
 #include "SmartAI.h"
 
@@ -45,7 +44,7 @@ void AI_testFunction(){
 
 
 int main(){
-	AI_testFunction();
+	//AI_testFunction();
 	
 	sf::RenderWindow* window = setupWindow();
 	Menu* menu = new Menu(window);
@@ -55,12 +54,28 @@ int main(){
 		//system("pause");
 		
 		I_Player* test =	new ThinkingAI(true, true);
-		I_Player* test2 = new ThinkingAI(true, true);
+		ThreadController* tc = new ThreadController(*test);
+		//I_Player* test2 =	new Player();
 
-		Game* game = new Game(*window, *test,*test2);
+		Player* p1 = new Player();
+		p1->type = Player::HUMAN;
+		p1->player = nullptr;
+
+		Player* p2 = new Player();
+		p2->type = Player::TC;
+		p2->controller = tc;
+		//p1.player
+
+		//ThreadController* test3 = new ThreadController(*test2);
+
+
+
+		Game* game = new Game(*window, *p1, *p2);
 		game->runGame();
 
 		delete game;
+		delete p2;
+		delete p1;
 		break; // or start new game .. 
 
 	}

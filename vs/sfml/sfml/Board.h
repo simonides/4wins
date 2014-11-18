@@ -9,7 +9,7 @@ struct BoardPos{
     uint8_t x;
     uint8_t y;
     std::string toString(){
-        return "(" + static_cast<int>(x) + 'x' + static_cast<int>(y) + ')';    //TODO: THIS DOESNT WORK
+		return std::string('(' + std::to_string(x+1) + '|' + std::to_string(y+1) + ')');
     }
 };
 

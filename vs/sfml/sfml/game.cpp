@@ -1,214 +1,386 @@
 #include "Game.h"
 #include "Meeple.h"
 #include "MeepleBag.h"
+
 #include "Board.h"
+#include "RBoard.h"
+
 #include "I_Player.h"
 #include "config.h"
 #include "helper.h"
+
 #include <SFML/System.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include "RMeeple.h"
 
-//#include <list>
+#include "ThreadController.h"
+
 #include <vector>
-//#include <string>//eventuell wieder löschen
 
 #include <assert.h>
 #include <string>
 #include <iostream>
 
+#include <math.h>
+
 
 using namespace std;
 
-const unsigned int BOARD_X_OFFSET = 675;
-const unsigned int BOARD_Y_OFFSET = 150;
 
-const unsigned int BOARD_X_SPACEING = 240;
-const unsigned int BOARD_Y_SPACEING = 75;
+//TODO verschieben???
+//const unsigned int BOARD_X_OFFSET = 675;
+//const unsigned int BOARD_Y_OFFSET = 150;
+//
+//const unsigned int BOARD_X_SPACEING = 240;
+//const unsigned int BOARD_Y_SPACEING = 75;
+//
+//const unsigned int MEEPLE_SNAP_X = 22;
+//const unsigned int MEEPLE_SNAP_Y = 65;
+//
+//const unsigned int MEEPLE_SNAP_OFFSET_X = 12;
+//const unsigned int MEEPLE_SNAP_OFFSET_Y = 30;
+
+const sf::Color STANDARD_GLOW = sf::Color::Yellow;
+const sf::Color SELECTED_GLOW = sf::Color::Red;
+//TODO players[] mit meeplebags in ein struct um verwechselung zu vermeiden
 
 
-const unsigned int MEEPLE_SNAP_X = 22;
-const unsigned int MEEPLE_SNAP_Y = 65;
 
-const unsigned int MEEPLE_SNAP_OFFSET_X = 12;
-const unsigned int MEEPLE_SNAP_OFFSET_Y = 30;
+enum LoopState{
+	INIT_STATE,
+	//Select Meeple for opponent
+	I_PLAYER_SELECT_MEEPLE, 
+	HUMAN_SELECT_MEEPLE,
+	TC_START_SELECT_MEEPLE, TC_WAIT_FOR_SELECTED_MEEPLE, HIGHLIGHT_SELECTED_MEEPLE,
+	//Select Meeple position
+	I_PLAYER_SELECT_MEEPLE_POSITION,
+	HUMAN_SELECT_MEEPLE_POSITION,
+	TC_START_SELECT_MEEPLE_POSITION, TC_WAIT_FOR_SELECTED_MEEPLE_POSITION, MOVE_MEEPLE_TO_SELECTED_POSITION,
+	//check win /tie 
+	CHECK_END_CONDITION, DISPLAY_END_SCREEN
+};
 
-Game::Game(sf::RenderWindow& window,I_Player& player1, I_Player& player2) : window(&window), player1(&player1), player2(&player2) {
+
+
+
+
+Game::Game(sf::RenderWindow& window,Player& player1,  Player& player2) : window(&window) {
     assert(&player1 != &player2);   //hehehe, that won't crash this game
 
-    bag[0] = new MeepleBag(MeepleColor::WHITE);
-    bag[1] = new MeepleBag(MeepleColor::BLACK);
-
-	gameStatePlayer1 = { bag[0], bag[1], &board };
-    gameStatePlayer2 = { bag[1], bag[0], &board };
+	players[0] = &player1;
+	players[0]->logicalMeepleBag = new MeepleBag(MeepleColor::WHITE);
 	
-	setUp();
+	players[1] = &player2;
+	players[1]->logicalMeepleBag = new MeepleBag(MeepleColor::BLACK);
+	logicalBoard = new Board();
+
+	loadTextures();
+	
+
+	board = new RBoard(boardTexture, fieldTexture, fieldTextureOccupied);
+
+	gameStatePlayer[0] = { players[0]->logicalMeepleBag, players[1]->logicalMeepleBag, logicalBoard };
+	gameStatePlayer[1] = { players[1]->logicalMeepleBag, players[0]->logicalMeepleBag, logicalBoard };
+
+	//setUp();
+	initMeeples();
 }
 
 
 Game::~Game(){
-    delete bag[1];
-    delete bag[0];
-	for (vector<sf::CircleShape*>::iterator it = fields.begin(); it != fields.end(); ++it){
+	delete players[1]->logicalMeepleBag;
+	delete players[0]->logicalMeepleBag;
+	delete logicalBoard;
+	delete board;
+
+	/*for (vector<RField*>::iterator it = fields.begin(); it != fields.end(); ++it){
 		delete *it;
+	}*/
+
+	for (uint8_t i = 0; i < 2; ++i){
+		for (vector<RMeeple*>::iterator it = players[i]->rMeeples.begin(); it != players[i]->rMeeples.end(); ++it){
+			delete *it;
+		}
+		//players[i]->rMeeples.clear();
+		for (vector<RMeeple*>::iterator it = players[i]->usedRMeeples.begin(); it != players[i]->usedRMeeples.end(); ++it){
+			delete *it;
+		}
+		//players[i]->usedRMeeples.clear();
 	}
 	//fields.clear();
 }
 
 
 void Game::reset(){
-    bag[0]->reset();
-    bag[1]->reset();
+	players[0]->logicalMeepleBag->reset();
+	players[1]->logicalMeepleBag->reset();
 
-	board.reset();
+	logicalBoard->reset();
     
-	player1->reset();
-    player2->reset();
+	//players1->reset();
+ //   player2->reset();
+	//TODO reset players.. inkl ifs.. 
+	//players[0].controller->run_resetPlayer()
 }
 
-//sf::Clock clock;
-//float lastTime = 0;
-//while (Window.IsOpen())
-//{
-//	...
-//	float currentTime = clock.Restart().AsSeconds();
-//	float fps = 1.f / (currentTime - lastTime);
-//	lastTime = currentTime;
-//}
-//
+
+
 
 //Game Loop for one game, until there is a winner or the board is full
 GameWinner::Enum Game::runGame(){
-	//sf::Clock /*clock;
-	//float lastTime */= 0;
+	sf::Clock clock;
+	//clock.restart();
+
+	const Meeple* meepleToSet = nullptr;
+	rMeepleToSet = nullptr;
+	BoardPos posMeepleTo;
+	bool dragMeeple = false;
+
+
+	//uint8_t activePlayerIndex = 0; //switch player in control here
+
+	LoopState loopState = INIT_STATE;
 
 	while (window->isOpen()){
+
+	    float fps = 1 / clock.getElapsedTime().asSeconds();
+		clock.restart();
+
+
 		pollEvents();
-		
+
+		switch (loopState)
+		{
+		case INIT_STATE:
+			//todo das stimmt no ned ganz human iplayer und tc !!!!
+			loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
+				//goto ?
+			break;
+
+		case I_PLAYER_SELECT_MEEPLE:
+			assert(players[activePlayerIndex]->type == Player::I_PLAYER);
+			meepleToSet = &players[activePlayerIndex]->player->selectOpponentsMeeple(gameStatePlayer[activePlayerIndex]);
+			loopState = HIGHLIGHT_SELECTED_MEEPLE;
+			//todo: goto??
+			break;
+
+		case HUMAN_SELECT_MEEPLE:
+			assert(players[activePlayerIndex]->type == Player::HUMAN);
+			//human code
+			{
+				if (releasedLeftMouse){
+					for (vector<RMeeple*>::iterator it = players[(activePlayerIndex + 1) % 2]->rMeeples.begin(); it != players[(activePlayerIndex + 1) % 2]->rMeeples.end(); ++it){
+						if ((*it)->containsPosition(convertedMousePos)){
+							(*it)->setGlow(&SELECTED_GLOW);
+
+							rMeepleToSet = *it;
+							meepleToSet = rMeepleToSet->getLogicalMeeple();
+
+							switchPlayers();
+							loopState = (players[activePlayerIndex]->type == Player::TC) ? TC_START_SELECT_MEEPLE_POSITION : I_PLAYER_SELECT_MEEPLE_POSITION;
+							break;
+						}
+					}
+				}
+				for (vector<RMeeple*>::iterator it = players[(activePlayerIndex + 1) % 2]->rMeeples.begin(); it != players[(activePlayerIndex + 1) % 2]->rMeeples.end(); ++it){
+					if ((*it)->containsPosition(convertedMousePos)){
+						(*it)->setGlow(&STANDARD_GLOW);
+					}
+					else{
+						(*it)->setGlow(nullptr);
+					}
+				}
+				break;
+			}
+		case TC_START_SELECT_MEEPLE:
+			assert(players[activePlayerIndex]->type == Player::TC);
+			players[activePlayerIndex]->controller->run_selectOpponentsMeeple(gameStatePlayer[activePlayerIndex]);
+			loopState = TC_WAIT_FOR_SELECTED_MEEPLE;
+			break;
+
+		case TC_WAIT_FOR_SELECTED_MEEPLE:
+			assert(players[activePlayerIndex]->type == Player::TC);
+			if (!players[activePlayerIndex]->controller->isResultAvailable()){
+				break;
+			}
+			meepleToSet = &players[activePlayerIndex]->controller->getOpponentsMeeple();
+			
+			loopState = HIGHLIGHT_SELECTED_MEEPLE;
+			//intentional fall through
+
+		case HIGHLIGHT_SELECTED_MEEPLE:
+			assert(players[activePlayerIndex]->type == Player::TC);
+			
+			switchPlayers(); // ohoh überprüfen ob eh ein switch angebracht ist bzw der state richtig gecallt wird!!
+
+			for (vector<RMeeple*>::iterator it = players[activePlayerIndex]->rMeeples.begin(); it != players[activePlayerIndex]->rMeeples.end(); ++it){
+				if ((*it)->representsPassedMeeple(meepleToSet)){
+					rMeepleToSet = *it;
+					break;
+				}
+			}
+			assert(rMeepleToSet != nullptr);
+			rMeepleToSet->setGlow(&SELECTED_GLOW);
+			//rMeepleToSet->selectThisMeeple();
+			//highlight meeple (with glow animation? light -> heavy glow)
+			//search meeple in meeplebag  -> glow
+			
+			//todo auf 
+			loopState = players[activePlayerIndex ]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE_POSITION : TC_START_SELECT_MEEPLE_POSITION;
+			
+			break;
+
+		case I_PLAYER_SELECT_MEEPLE_POSITION:
+			assert(players[activePlayerIndex]->type == Player::I_PLAYER);
+			posMeepleTo = players[activePlayerIndex]->player->selectMeeplePosition(gameStatePlayer[activePlayerIndex], *meepleToSet);
+			loopState = MOVE_MEEPLE_TO_SELECTED_POSITION;
+			//todo: goto??
+			break;
+
+		case HUMAN_SELECT_MEEPLE_POSITION:
+			assert(players[activePlayerIndex]->type == Player::HUMAN);
+			assert(rMeepleToSet != nullptr);
+			//human code
+			//move my fucking meeple :)
+			if (pressedLeftMouse && rMeepleToSet->containsPosition(convertedMousePos)){
+				lastValidPosition = rMeepleToSet->getPosition();
+				mousePosRelativeToMeepleBoundary = rMeepleToSet->getMousePosRelativeToMeepleBoundary(convertedMousePos);
+				dragMeeple = true;
+			}
+
+			if (dragMeeple){ // todo checken ob !releaseleftmous braucht
+				sf::Vector2f test(convertedMousePos.x - mousePosRelativeToMeepleBoundary.x, convertedMousePos.y - mousePosRelativeToMeepleBoundary.y);
+				rMeepleToSet->setPosition(test);
+				board->setHoveredField(board->getBoardPosForPosititon(convertedMousePos));
+			}
+
+			if (releasedLeftMouse && dragMeeple){
+				dragMeeple = false;
+				BoardPos pos;
+				pos = board->getBoardPosForPosititon(convertedMousePos);
+				if ((pos.x < 4 && pos.y < 4) && logicalBoard->isFieldEmpty(pos)){
+					Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*meepleToSet);
+					logicalBoard->setMeeple(pos, *placeMe);
+					rMeepleToSet->setGlow(nullptr);
+					//todo einrasten machen snap meeeple
+					loopState = CHECK_END_CONDITION;
+				}
+				else{
+					rMeepleToSet->setPosition(lastValidPosition);
+				}
+			}
+			break;
+
+		case TC_START_SELECT_MEEPLE_POSITION:
+			assert(players[activePlayerIndex]->type == Player::TC);
+			players[activePlayerIndex]->controller->run_selectMeeplePosition(gameStatePlayer[activePlayerIndex], *meepleToSet);
+			loopState = TC_WAIT_FOR_SELECTED_MEEPLE_POSITION;
+			//fall through?
+			break;
+
+		case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:
+			assert(players[activePlayerIndex]->type == Player::TC);
+			if (!players[activePlayerIndex]->controller->isResultAvailable()){
+				break;
+			}
+			posMeepleTo = players[activePlayerIndex]->controller->getMeeplePosition();
+			
+
+			loopState = MOVE_MEEPLE_TO_SELECTED_POSITION;
+			//intentional fall through
+
+		case MOVE_MEEPLE_TO_SELECTED_POSITION:
+		{
+			assert(players[activePlayerIndex]->type == Player::TC);
+			assert(rMeepleToSet != nullptr);
+
+			//uint8_t indexInVect = (posMeepleTo.x) +4 * posMeepleTo.y;
+
+			//const sf::Vector2f* rMeeplePos = board->getFieldBounds(posMeepleTo);
+
+			sf::FloatRect fieldBounds =  board->getFieldBounds(posMeepleTo);
+			sf::Vector2f newPosition(
+				fieldBounds.left,
+				fieldBounds.top - 95.f); //todo magic num meepleheight
+
+			rMeepleToSet->setPosition(newPosition);
+			rMeepleToSet->setGlow(nullptr);
+
+			Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*meepleToSet);
+			logicalBoard->setMeeple(posMeepleTo, *placeMe);
+
+			players[activePlayerIndex]->rMeeples.erase(std::remove(players[activePlayerIndex]->rMeeples.begin(), 
+														players[activePlayerIndex]->rMeeples.end(), rMeepleToSet));
+
+			//todo sort rmeeple in y direction
+			players[activePlayerIndex]->usedRMeeples.push_back(rMeepleToSet);
+			//todo if pos fertig :)
+			//switchPlayers();
+			loopState = CHECK_END_CONDITION;
+			break;
+		}
+
+		case CHECK_END_CONDITION:
+				#if PRINT_BOARD_TO_CONSOLE
+					cout << "Player " << activePlayerIndex + 1 << " chose meeple \"" << meepleToSet->toString() << '\"' << endl;
+					cout << "Player " << (activePlayerIndex + 1) % 2 + 1 << " sets meeple to " << meepleToSet->toString() << endl;
+					logicalBoard->print(cout);
+				#endif
+					meepleToSet = nullptr;
+					rMeepleToSet = nullptr;
+					if (logicalBoard->checkWinSituation()){    //player2 won
+			        #if PRINT_WINNER_PER_ROUND
+			            cout << "Player "<< activePlayerIndex+1 << " wins!" << endl;
+			        #endif
+					loopState = DISPLAY_END_SCREEN;
+				}
+					else if (activePlayerIndex == 1 && logicalBoard->isFull()){
+			        #if PRINT_WINNER_PER_ROUND
+			            cout << "Tie! There is no winner." << endl;
+			        #endif
+					loopState = DISPLAY_END_SCREEN;
+				}
+				else{
+					//switchPlayers();
+					loopState = INIT_STATE;
+					break;
+				}
+				//intentional fall through
+
+		case DISPLAY_END_SCREEN:
+
+			// ein button für menü und ein button für restart
+
+			// glow winning combination in rainbowcolor -> nyan cat -> nyan song
+
+
+			//TODO player .. state resettten jakob? 
+			break;
+
+		}
+
 		window->clear(sf::Color::White);
-
-		window->draw(boardPanel);
-		window->draw(leftPanel);
-		window->draw(rightPanel);
-		
-		for (vector<sf::CircleShape*>::iterator it = fields.begin(); it != fields.end(); ++it){
-			window->draw(**it);
+		board->draw(*window);
+		for (uint8_t i = 0; i < 2; ++i){
+			for (vector<RMeeple*>::iterator it = players[i]->rMeeples.begin(); it != players[i]->rMeeples.end(); ++it){
+				(*it)->draw(*window);
+			}
+			for (vector<RMeeple*>::iterator it = players[i]->usedRMeeples.begin(); it != players[i]->usedRMeeples.end(); ++it){
+				(*it)->draw(*window);
+			}
 		}
+		std::string title("4Wins by Jakob M, Sebastian S and Simon D: @");
+		title.append(std::to_string(fps));
+		title.append(" fps");
 
-		for (vector<RMeeple*>::iterator it = meeples.begin(); it != meeples.end(); ++it){
-			(*it)->draw(*window);
-		}
-
-
-		//float currentTime = clock.restart().asSeconds();
-		//float fps = 1.f / (currentTime - lastTime);
-		//lastTime = currentTime;
-
-		//std::string title("test: ");
-		//title.append();
-		
-		//window->setTitle(std::to_string(fps));
+		window->setTitle(title);
 		window->display();
 	}
 
-    //for (;;){
-    //    runGameCycle(player1, player2, gameStatePlayer1, gameStatePlayer2 ,0);
-    //    if (board->checkWinSituation()){    //player2 won
-    //        #if PRINT_WINNER_PER_ROUND
-    //            cout << "Player 2 wins!" << endl;
-    //        #endif
-    //        return GameWinner::PLAYER_2;
-    //    }
-
-    //    runGameCycle(player2, player1, gameStatePlayer2, gameStatePlayer1, 1);
-    //    if (board->checkWinSituation()){    //player1 won
-    //        #if PRINT_WINNER_PER_ROUND
-    //            cout << "Player 1 wins!" << endl;
-    //        #endif
-    //        return GameWinner::PLAYER_1;
-    //    }
-
-    //    if (board->isFull()){
-    //        #if PRINT_WINNER_PER_ROUND
-    //            cout << "Tie! There is no winner." << endl;
-    //        #endif
-    //        return GameWinner::TIE;
-    //    }
-    //}
 	return GameWinner::PLAYER_1;
 }
 
-
-//a have round cycle, where a player chooses a meeple, and the other player sets it
-void Game::runGameCycle(I_Player* player, I_Player* opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr){
-
-    const Meeple& toSet = player->selectOpponentsMeeple(gameStateForPlayer);    //player selects a meeple
-    Meeple* meeple = bag[(playerNr + 1) % 2]->removeMeeple(toSet);              //remove meeple from opponent's bag          
-    
-
-	//for (vector<RMeeple*>::iterator it = meeples.begin(); it != meeples.end(); ++it){
-	//	(*it)->draw(*window);
-	//}
-
-    BoardPos pos = opponent->selectMeeplePosition(gameStateForOpponent, *meeple); //select a position
-    assert(pos.x < 4 && pos.y < 4);
-    board.setMeeple(pos, *meeple);                                             //set the meeple
-    
-    //Debug:
-    #if PRINT_BOARD_TO_CONSOLE
-        cout << "Player " << playerNr + 1 << " chose meeple \"" << toSet.toString() << '\"' << endl;
-        cout << "Player " << (playerNr + 1) % 2 + 1 << " sets meeple to " << pos.toString() << endl;
-        board->print(cout);
-    #endif
-    #if STEP_BY_STEP
-        cin.ignore();
-    #endif
-}
-
-void Game::setUp(){
-	loadTextures();
-	leftPanel.setSize(sf::Vector2f(200.f, 690.f));
-	leftPanel.setPosition(sf::Vector2f(0.f, 0.f));
-	leftPanel.setFillColor(sf::Color::Green);
-
-	rightPanel.setSize(sf::Vector2f(200.f, 690.f));
-	rightPanel.setPosition(sf::Vector2f(1150.f, 0.f));
-	rightPanel.setFillColor(sf::Color::Magenta);
-
-
-	
-	
-	boardPanel.setSize(sf::Vector2f(620.f*1.615f, 620.f)); //TODO make constants or calc
-	boardPanel.setFillColor(sf::Color::White);
-	boardPanel.setPosition(sf::Vector2f(180, 70));							//TODO calc
-	boardPanel.setTexture(&boardTexture);
-	
-	initFields();
-	initMeeples();
-}
-
-void Game::initFields(){
-	//fields = new sf::CircleShape[16]();
-
-	int counter = 0;
-	for (unsigned int y = 0; y < 7; ++y){
-		//cout << "counter in loop: " << counter << endl;
-		int times = (y + 1) > 3 ? 7 - y : y + 1;
-		//cout << "times: " << times << endl;
-		float calcX = BOARD_X_OFFSET - ((times - 1) / 2.f *BOARD_X_SPACEING);
-		for (int x = 0; x < times; ++x){
-			sf::CircleShape* field = new sf::CircleShape();
-			field->setOrigin(sf::Vector2f(40.f, 40.f));
-			field->setFillColor(sf::Color::Black);
-			field->setRadius(40);
-			field->setPointCount(6);
-			field->setPosition(sf::Vector2f(calcX, static_cast<float>(y * BOARD_Y_SPACEING + BOARD_Y_OFFSET)));
-			calcX += BOARD_X_SPACEING;
-			fields.push_back(field);
-			++counter;
-		}
-	}
-}
 
 void Game::initMeeples(){
 	//mylist.insert()
@@ -229,8 +401,7 @@ void Game::initMeeples(){
 			meepleIndex = i - 8;
 			bagInd = 1;
 		}
-
-		const Meeple* meeple = bag[bagInd]->getMeeple(meepleIndex);
+		const Meeple* meeple = players[bagInd]->logicalMeepleBag->getMeeple(meepleIndex);
 
 		float xCoord = 20.f;
 		float yCoord = 0.f;
@@ -259,145 +430,76 @@ void Game::initMeeples(){
 			yCoord = 510.f;
 		}
 
-		sf::IntRect texRec = getTextRectForPos(*meeple);
-		sf::IntRect glowTexRec = getGlowTextRectForPos(*meeple);
-		//cout << endl;
 		sf::Vector2f initPos(xCoord, yCoord);
-		RMeeple* rmeeple = new RMeeple(*meeple, meepleSprite, texRec, glowSprite, glowTexRec, initPos);
+		RMeeple* rmeeple = new RMeeple(*meeple, meepleSprite, glowSprite, initPos);
 		
-		meeples.push_back(rmeeple);
-		
+		players[bagInd]->rMeeples.push_back(rmeeple);
 	}
 }
 
-sf::IntRect Game::getTextRectForPos(const Meeple& meeple){
-
-	unsigned int sizeX = meepleSprite.getSize().x;
-	unsigned int sizeY = meepleSprite.getSize().y;
-	
-	unsigned int row = 0;
-	unsigned int column = 0;
-	if (meeple.getColor() == MeepleColor::BLACK){
-		row = 1;
-	}
-	if (meeple.getShape() == MeepleShape::ROUND){
-		column += 4;
-	}
-	if (meeple.getSize() == MeepleSize::SMALL){
-		column += 1;
-	}
-	if (meeple.getDetail() == MeepleDetail::HOLE){
-		column += 2;
-	}
-
-
-	//std::cout << "size x|y: " << sizeX << "|" << sizeY << endl;
-	unsigned int rectWidth = sizeX / 8;				//8 meeples in the sprite
-	unsigned int rectHeight = sizeY / 2;			// two rows in the sprite
-	unsigned int rectLeft = column * rectWidth;
-	unsigned int rectTop = row * rectHeight;
-
-	//cout << "tex row|column: " << row << "|" << column << endl;
-
-	//std::cout << "rectWidth|rectHeight: " << rectWidth << "|" << rectHeight << endl;
-	//std::cout << "rectLeft|rectTop: " << rectLeft << "|" << rectTop << endl << endl;
-	return sf::IntRect (rectLeft, rectTop, rectWidth, rectHeight);
-}
-
-sf::IntRect Game::getGlowTextRectForPos(const Meeple& meeple){
-	unsigned int row = 0;
-	unsigned int column = 0;
-	if (meeple.getShape() == MeepleShape::ROUND){
-		row = 1;
-
-	}
-	if (meeple.getSize() == MeepleSize::SMALL){
-		column = 1;
-	}
-
-	//unsigned int pos = 0;
-
-	unsigned int sizeX = glowSprite.getSize().x;
-	unsigned int sizeY = glowSprite.getSize().y;
-	//std::cout << "size x|y: " << sizeX << "|" << sizeY << endl;
-	unsigned int rectWidth = sizeX / 2;				//2 meeple columns in the sprite
-	unsigned int rectHeight = sizeY / 2;			//2 meeple rows in the sprite
-	
-	unsigned int rectLeft = column * rectWidth;
-	unsigned int rectTop = row * rectHeight;
-	//std::cout << "rectWidth|rectHeight: " << rectWidth << "|" << rectHeight << endl;
-	//std::cout << "rectLeft|rectTop: " << rectLeft << "|" << rectTop << endl << endl;
-	cout << "glow row|column: " << row << "|" << column << endl;
-	return sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
-}
 
 void Game::loadTextures(){
 	if (!meepleSprite.loadFromFile(WORKING_DIR + "pencilStyle.png")){
-		std::cout << "couldn't load the texture: meepleSprites" << endl;
+		std::cerr << "couldn't load the texture: meepleSprites" << endl;
 		// error...
 	}
 	if (!glowSprite.loadFromFile(WORKING_DIR + "glow.png")){
-		std::cout << "couldn't load the texture: glow" << endl;
+		std::cerr << "couldn't load the texture: glow" << endl;
 		// error...
 	}
 	if (!boardTexture.loadFromFile(WORKING_DIR + "board.png")){ 
+		std::cerr << "couldn't load the texture: board" << endl;
 		/*error */ 
+	}
+	if (!fieldTexture.loadFromFile(WORKING_DIR + "holz.png")){
+		std::cerr << "couldn't load the texture: holz" << endl;
+		/*error */
+	}
+	if (!fieldTextureOccupied.loadFromFile(WORKING_DIR + "holz_occ.png")){
+		std::cerr << "couldn't load the texture: holz_occ" << endl;
+		/*error */
 	}
 }
 
 void Game::pollEvents(){
+	pressedLeftMouse = false;
+	releasedLeftMouse = false;
+
 	sf::Event event;
+	sf::Vector2i mousepos = sf::Mouse::getPosition(*window);
+	convertedMousePos = window->mapPixelToCoords(mousepos);
 	while (window->pollEvent(event)){
-		sf::Vector2i mousepos = sf::Mouse::getPosition(*window);
-		sf::Vector2f converted = window->mapPixelToCoords(mousepos);
 		switch (event.type){
-			case sf::Event::Resized:
-				handleResizeWindowEvent(window);
-				break;
-			case sf::Event::Closed:
-				window->close();
-				break;
+
 			case sf::Event::MouseButtonPressed:
-				for (vector<RMeeple*>::iterator it = meeples.begin(); it != meeples.end(); ++it){
-					if ((*it)->containsMousePos(converted)){
-						(*it)->setIsDragged(true);
-						
-						mousePosRelativeToMeepleBoundary.x = converted.x - (*it)->getGlobalBounds().left;
-						mousePosRelativeToMeepleBoundary.y = converted.y - (*it)->getGlobalBounds().top;
-
-						break;
-					}
-					//else{
-						//(*it)->setIsDragged(false);
-					//}
-
+				if (event.mouseButton.button == sf::Mouse::Left){
+					pressedLeftMouse = true;
 				}
 				break;
+
 			case sf::Event::MouseButtonReleased:
 				switch (event.mouseButton.button){
 				case sf::Mouse::Left:
-					for (vector<RMeeple*>::iterator it = meeples.begin(); it != meeples.end(); ++it){
-						//if ((*it)->containsMousePos(converted)){
-							(*it)->setIsDragged(false);
-						//}
-						//else{
-							//(*it)->setIsDragged(true);
-						//}
-					}
+					releasedLeftMouse = true;
 					break;
 
 				default:
 					break;
 				}
 				break;
+
 			case sf::Event::MouseMoved:
-				for (vector<RMeeple*>::iterator it = meeples.begin(); it != meeples.end(); ++it){
-					(*it)->shouldGlow(converted);
-					if ((*it)->getIsDragged()){
-						(*it)->updatePosition(sf::Vector2f(converted.x - mousePosRelativeToMeepleBoundary.x, converted.y - mousePosRelativeToMeepleBoundary.y));
-					}
-				}
+				convertedMousePos = window->mapPixelToCoords(mousepos);
 				break;
+
+			case sf::Event::Resized:
+				handleResizeWindowEvent(window);
+				break;
+
+			case sf::Event::Closed:
+				window->close();
+				break;
+
 			default:
 				break;
 		}
@@ -406,3 +508,10 @@ void Game::pollEvents(){
 
 	
 }
+
+
+void Game::switchPlayers(){
+	++activePlayerIndex;
+	activePlayerIndex %= 2;
+}
+
