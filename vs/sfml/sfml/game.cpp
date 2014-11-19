@@ -28,23 +28,12 @@
 using namespace std;
 
 
-//TODO verschieben???
-//const unsigned int BOARD_X_OFFSET = 675;
-//const unsigned int BOARD_Y_OFFSET = 150;
-//
-//const unsigned int BOARD_X_SPACEING = 240;
-//const unsigned int BOARD_Y_SPACEING = 75;
-//
-//const unsigned int MEEPLE_SNAP_X = 22;
-//const unsigned int MEEPLE_SNAP_Y = 65;
-//
-//const unsigned int MEEPLE_SNAP_OFFSET_X = 12;
-//const unsigned int MEEPLE_SNAP_OFFSET_Y = 30;
-
 const sf::Color STANDARD_GLOW = sf::Color::Yellow;
 const sf::Color SELECTED_GLOW = sf::Color::Red;
-//TODO players[] mit meeplebags in ein struct um verwechselung zu vermeiden
-
+//green, yellow, red, magenta, blue 
+const sf::Color RAINBOW_COLOR[12] = {	sf::Color(0, 31, 255, 255), sf::Color(116, 4, 255, 255), sf::Color(203, 0, 255, 255), sf::Color(255, 5, 144, 255),
+										sf::Color(255, 0, 10, 255), sf::Color(255, 75, 0, 255), sf::Color(255, 138, 0, 255), sf::Color(255, 200, 0, 255), 
+										sf::Color(247, 255, 0, 255), sf::Color(122, 255, 10, 255), sf::Color(0, 255, 7, 255), sf::Color(0, 255, 126, 255) };
 
 
 enum LoopState{
@@ -65,7 +54,7 @@ enum LoopState{
 
 
 
-Game::Game(sf::RenderWindow& window,Player& player1,  Player& player2) : window(&window) {
+Game::Game(sf::RenderWindow& window,Player& player1,  Player& player2) : window(&window),drawEndScreen(false){
     assert(&player1 != &player2);   //hehehe, that won't crash this game
 
 	players[0] = &player1;
@@ -85,6 +74,15 @@ Game::Game(sf::RenderWindow& window,Player& player1,  Player& player2) : window(
 
 	//setUp();
 	initMeeples();
+
+	endscreenPanel.setFillColor(sf::Color(128,128,0,100));
+	endscreenPanel.setSize(sf::Vector2f(1500.f, 800.f));
+	endscreenPanel.setPosition(sf::Vector2f(0, 0));
+	color4MGlow[0] = 0.1f;
+	color4MGlow[1] = 0.25f;
+	color4MGlow[2] = 0.35f;
+	color4MGlow[3] = 0.45f;
+	//endscreenPanel.set
 }
 
 
@@ -126,7 +124,6 @@ void Game::reset(){
 
 
 
-
 //Game Loop for one game, until there is a winner or the board is full
 GameWinner::Enum Game::runGame(){
 	sf::Clock clock;
@@ -134,7 +131,7 @@ GameWinner::Enum Game::runGame(){
 
 	const Meeple* meepleToSet = nullptr;
 	rMeepleToSet = nullptr;
-	BoardPos posMeepleTo;
+	BoardPos posMeepleTo{ 42, 42 };
 	bool dragMeeple = false;
 
 
@@ -178,7 +175,15 @@ GameWinner::Enum Game::runGame(){
 							meepleToSet = rMeepleToSet->getLogicalMeeple();
 
 							switchPlayers();
-							loopState = (players[activePlayerIndex]->type == Player::TC) ? TC_START_SELECT_MEEPLE_POSITION : I_PLAYER_SELECT_MEEPLE_POSITION;
+							if (players[activePlayerIndex]->type == Player::TC){
+								loopState = TC_START_SELECT_MEEPLE_POSITION;
+							}
+							else if (players[activePlayerIndex]->type == Player::HUMAN) {
+								loopState = HUMAN_SELECT_MEEPLE_POSITION;
+							}
+							else{
+								loopState = I_PLAYER_SELECT_MEEPLE_POSITION;
+							}
 							break;
 						}
 					}
@@ -295,11 +300,7 @@ GameWinner::Enum Game::runGame(){
 			assert(players[activePlayerIndex]->type == Player::TC);
 			assert(rMeepleToSet != nullptr);
 
-			//uint8_t indexInVect = (posMeepleTo.x) +4 * posMeepleTo.y;
-
-			//const sf::Vector2f* rMeeplePos = board->getFieldBounds(posMeepleTo);
-
-			sf::FloatRect fieldBounds =  board->getFieldBounds(posMeepleTo);
+			sf::FloatRect fieldBounds = board->getFieldBounds(posMeepleTo);
 			sf::Vector2f newPosition(
 				fieldBounds.left,
 				fieldBounds.top - 95.f); //todo magic num meepleheight
@@ -322,37 +323,77 @@ GameWinner::Enum Game::runGame(){
 		}
 
 		case CHECK_END_CONDITION:
-				#if PRINT_BOARD_TO_CONSOLE
-					cout << "Player " << activePlayerIndex + 1 << " chose meeple \"" << meepleToSet->toString() << '\"' << endl;
-					cout << "Player " << (activePlayerIndex + 1) % 2 + 1 << " sets meeple to " << meepleToSet->toString() << endl;
-					logicalBoard->print(cout);
+		{
+			#if PRINT_BOARD_TO_CONSOLE
+				cout << "Player " << activePlayerIndex + 1 << " chose meeple \"" << meepleToSet->toString() << '\"' << endl;
+				cout << "Player " << (activePlayerIndex + 1) % 2 + 1 << " sets meeple to " << meepleToSet->toString() << endl;
+				logicalBoard->print(cout);
+			#endif
+			meepleToSet = nullptr;
+			rMeepleToSet = nullptr;
+
+			const WinCombination* combi = logicalBoard->checkWinSituation();
+			if (combi != nullptr){    //player2 won
+				#if PRINT_WINNER_PER_ROUND
+					cout << "Player " << activePlayerIndex + 1 << " wins!" << endl;
 				#endif
-					meepleToSet = nullptr;
-					rMeepleToSet = nullptr;
-					if (logicalBoard->checkWinSituation()){    //player2 won
-			        #if PRINT_WINNER_PER_ROUND
-			            cout << "Player "<< activePlayerIndex+1 << " wins!" << endl;
-			        #endif
-					loopState = DISPLAY_END_SCREEN;
+				loopState = DISPLAY_END_SCREEN;
+				
+				for (uint8_t i = 0; i < 4; ++i){
+					//board->
+					for (vector<RMeeple*>::iterator it = players[activePlayerIndex]->usedRMeeples.begin(); it != players[activePlayerIndex]->usedRMeeples.end(); ++it){
+						if ((*it)->representsPassedMeeple(combi->meeples[i])){
+							winningCombiRMeeples[i] = *it;
+							break;
+						}
+					}
+					for (vector<RMeeple*>::iterator it = players[(activePlayerIndex + 1) % 2]->usedRMeeples.begin(); it != players[(activePlayerIndex + 1) % 2]->usedRMeeples.end(); ++it){
+						if ((*it)->representsPassedMeeple(combi->meeples[i])){
+							winningCombiRMeeples[i] = *it;
+							break;
+						}
+					}
 				}
-					else if (activePlayerIndex == 1 && logicalBoard->isFull()){
-			        #if PRINT_WINNER_PER_ROUND
-			            cout << "Tie! There is no winner." << endl;
-			        #endif
-					loopState = DISPLAY_END_SCREEN;
-				}
-				else{
-					//switchPlayers();
-					loopState = INIT_STATE;
-					break;
-				}
-				//intentional fall through
 
+
+
+				//combi->positions[0] bitte sehr, du bist dran :D
+				//das if lass ma so? nein oder? besser.
+			}
+			else if (activePlayerIndex == 1 && logicalBoard->isFull()){
+				#if PRINT_WINNER_PER_ROUND
+					cout << "Tie! There is no winner." << endl;
+				#endif
+				loopState = DISPLAY_END_SCREEN;
+			}
+			else{
+				//switchPlayers();
+				loopState = INIT_STATE;
+				break;
+			}
+			//intentional fall through
+		}
 		case DISPLAY_END_SCREEN:
+			drawEndScreen = true;
+			if (meepleGlowAnimationClock.getElapsedTime().asSeconds() > 0.03f){
 
-			// ein button für menü und ein button für restart
+				//color4MGlow[] = 0.f;
+				for (uint8_t i = 0; i < 4; ++i){
+				sf::Color c=	rainbow(color4MGlow[i]);
+					winningCombiRMeeples[i]->setGlow(&c);
+
+					color4MGlow[i] += 0.01f;
+					if (color4MGlow[i] > 1){
+						color4MGlow[i] = 0;
+					}
+				}
+				meepleGlowAnimationClock.restart();
+			}
+			
+			// ein button für menü und ein button für wrestart
 
 			// glow winning combination in rainbowcolor -> nyan cat -> nyan song
+
 
 
 			//TODO player .. state resettten jakob? 
@@ -370,15 +411,49 @@ GameWinner::Enum Game::runGame(){
 				(*it)->draw(*window);
 			}
 		}
-		std::string title("4Wins by Jakob M, Sebastian S and Simon D: @");
+		std::string title("4Wins by Jakob M., Sebastian S. and Simon D.   @");
 		title.append(std::to_string(fps));
 		title.append(" fps");
+
+		if (drawEndScreen){
+			window->draw(endscreenPanel);
+		}
 
 		window->setTitle(title);
 		window->display();
 	}
 
 	return GameWinner::PLAYER_1;
+}
+
+sf::Color Game::rainbow(float progress) const
+{
+	/*convert to rainbow RGB*/
+	float a = (1.f - progress) / 0.2f;
+	uint8_t X = static_cast<uint8_t>(floor(a));
+	float Y = floor(255 * (a - X));
+	switch (X)
+	{
+	case 0:
+		return sf::Color(255, static_cast<uint8_t>( Y), 0, 255);
+
+	case 1:
+		return sf::Color(static_cast<uint8_t>(255 - Y) , 255, 0, 255);
+
+	case 2:
+		return sf::Color(0, 255, static_cast<uint8_t>(Y), 255);
+
+	case 3:
+		return	sf::Color(0, static_cast<uint8_t>(255 - Y), 255, 255);
+
+	case 4:
+		return sf::Color(static_cast<uint8_t>(Y), 0, 255, 255);
+
+	case 5:
+		return sf::Color(255, 0, 255, 255);
+	default:
+		return sf::Color::Blue;
+	}
 }
 
 
@@ -443,7 +518,7 @@ void Game::loadTextures(){
 		std::cerr << "couldn't load the texture: meepleSprites" << endl;
 		// error...
 	}
-	if (!glowSprite.loadFromFile(WORKING_DIR + "glow.png")){
+	if (!glowSprite.loadFromFile(WORKING_DIR + "glow_grey.png")){
 		std::cerr << "couldn't load the texture: glow" << endl;
 		// error...
 	}

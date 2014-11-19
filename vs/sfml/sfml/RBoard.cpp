@@ -73,7 +73,7 @@ const sf::FloatRect RBoard::getFieldBounds(const BoardPos boardPos) const{
 
 void RBoard::initFields(sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied){
 
-	int counter = 0;
+	uint8_t counter = 0;
 
 	for (uint8_t y = 0; y < 7; ++y){
 		//cout << "counter in loop: " << counter << endl;
@@ -129,5 +129,7 @@ BoardPos RBoard::getBoardPosforCounter(uint8_t counter){
 		return{ 2, 3 };
 	case 15:
 		return{ 3, 3 };
+	default:
+		return{ 42, 42 };
 	}
 }

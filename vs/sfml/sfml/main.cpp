@@ -21,7 +21,7 @@ sf::RenderWindow* setupWindow(){
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE), GAME_TITLE);
 	window->setPosition(sf::Vector2i(0, 0));
 	window->setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
-	//window->setFramerateLimit(30);
+	//window->setFramerateLimit(2);
 	window->setSize(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));// 16:9
 	return window;
 }
@@ -53,17 +53,21 @@ int main(){
 		//GameSettings gamesettings = menu->loop();
 		//system("pause");
 		
-		I_Player* test =	new ThinkingAI(true, true);
+		I_Player* test = new ThinkingAI(true, true);
+		I_Player* test2 =	new SmartAI(true, true);
 		ThreadController* tc = new ThreadController(*test);
+		ThreadController* tc2 = new ThreadController(*test2);
 		//I_Player* test2 =	new Player();
 
 		Player* p1 = new Player();
-		p1->type = Player::HUMAN;
-		p1->player = nullptr;
+		p1->type = Player::TC;
+		p1->controller = tc;
+		//p1->player = nullptr;
 
 		Player* p2 = new Player();
 		p2->type = Player::TC;
-		p2->controller = tc;
+		p2->player = nullptr;
+		p2->controller = tc2;
 		//p1.player
 
 		//ThreadController* test3 = new ThreadController(*test2);
