@@ -170,11 +170,11 @@
     <ClInclude Include="RBag.h">
       <Filter>Header Files\REntities</Filter>
     </ClInclude>
-    <ClInclude Include="RBoard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RBoard.h">
+      <Filter>Header Files\REntities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,6 @@
 #include "GameState.h"
 
 #include <cstdint>
-
 #include <vector>
 
 class ThreadController;
@@ -37,6 +36,9 @@ struct Player{
 class Game
 {
 private:
+
+
+
 	sf::RenderWindow* window;
 
 	sf::Vector2f mousePosRelativeToMeepleBoundary;
@@ -60,14 +62,23 @@ private:
 	
 	uint8_t activePlayerIndex;
 
+	sf::Clock meepleGlowAnimationClock;
+	sf::RectangleShape endscreenPanel;
+	RMeeple* winningCombiRMeeples[4];
+	bool drawEndScreen;
+	float color4MGlow[4];
+
 	void switchPlayers();
 	void initMeeples();
 	void loadTextures();
 	sf::IntRect getTextRectForPos(const Meeple& meeple);
 	sf::IntRect getGlowTextRectForPos(const Meeple& meeple);
-
+	sf::Color rainbow(float progress) const ;
 
 	RMeeple* rMeepleToSet;
+
+
+
 
 public:
     Game(sf::RenderWindow& window, Player& player1, Player& player2); //Initialises the game with 2 players
