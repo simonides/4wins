@@ -5,6 +5,11 @@
 #include "Meeple.h"
 
 
+std::string BoardPos::toString(){
+    return std::string('(' + std::to_string(x + 1) + '|' + std::to_string(y + 1) + ')');
+}
+
+
 Board::Board(){
     for (int y = 0; y < 4; ++y){
         for (int x = 0; x < 4; ++x){

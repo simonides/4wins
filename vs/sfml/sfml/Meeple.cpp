@@ -3,11 +3,46 @@
 #include <iostream>
 
 
-Meeple::Meeple(MeepleColor::Enum color, MeepleSize::Enum size, MeepleShape::Enum shape, MeepleDetail::Enum detail){
-    this->color = color;
-    this->size = size;
-    this->shape = shape;
-    this->detail = detail;
+
+std::string MeepleColor::toString(Enum color){
+    return color == WHITE ? "white" : "black";
+}
+
+std::string MeepleSize::toString(Enum size){
+    return size == BIG ? "big" : "small";
+}
+
+std::string MeepleShape::toString(Enum shape){
+    return shape == ROUND ? "round" : "square";
+}
+
+std::string MeepleDetail::toString(Enum detail){
+    return detail == HOLE ? "hole" : "solid";
+}
+
+
+bool MeepleProperty::operator == (const MeepleProperty& prop){
+    assert(type == prop.type);
+    switch (type){
+        case MEEPLE_COLOR:	return value.color == prop.value.color;
+        case MEEPLE_SIZE:	return value.size == prop.value.size;
+        case MEEPLE_SHAPE:	return value.shape == prop.value.shape;
+        case MEEPLE_DETAIL:	return value.detail == prop.value.detail;
+    }
+    throw new std::exception("unable to compare");
+}
+
+bool MeepleProperty::operator != (const MeepleProperty& prop){
+    assert(type == prop.type);
+    return !(*this == prop);
+}
+
+
+
+
+
+Meeple::Meeple(MeepleColor::Enum color, MeepleSize::Enum size, MeepleShape::Enum shape, MeepleDetail::Enum detail) :
+    color(color), size(size), shape(shape), detail(detail){
 }
 
 MeepleProperty Meeple::getProperty(MeepleProperty::Type type) const{

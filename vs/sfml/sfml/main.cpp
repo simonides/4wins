@@ -53,13 +53,19 @@ int main(){
 		//GameSettings gamesettings = menu->loop();
 		//system("pause");
 		
-		I_Player* test =	new ThinkingAI(true, true);
+		I_Player* test =	new RandomAI();
 		ThreadController* tc = new ThreadController(*test);
 		//I_Player* test2 =	new Player();
 
+        I_Player* test2 = new ThinkingAI(false, false);
+        ThreadController* tc2 = new ThreadController(*test2);
 		Player* p1 = new Player();
+        p1->type = Player::TC;
+        p1->controller = tc2;
+        
+        /*
 		p1->type = Player::HUMAN;
-		p1->player = nullptr;
+		p1->player = nullptr;*/
 
 		Player* p2 = new Player();
 		p2->type = Player::TC;

@@ -11,36 +11,28 @@ struct MeepleColor{
         WHITE,
         BLACK
     };
-    static std::string toString(Enum color){
-        return color == WHITE ? "white" : "black";
-    }
+    static std::string toString(Enum color);
 };
 struct MeepleSize{
     enum Enum{
         BIG,
         SMALL
     };
-    static std::string toString(Enum size){
-        return size == BIG ? "big" : "small";
-    }
+    static std::string toString(Enum size);
 };
 struct MeepleShape{
     enum Enum{
         ROUND,
         SQUARE
     };
-    static std::string toString(Enum shape){
-        return shape == ROUND ? "round" : "square";
-    }
+    static std::string toString(Enum shape);
 };
 struct MeepleDetail{
     enum Enum{
         HOLE,
         NO_HOLE
     };
-    static std::string toString(Enum detail){
-        return detail == HOLE ? "hole" : "solid";
-    }
+    static std::string toString(Enum detail);
 };
 
 
@@ -60,21 +52,8 @@ struct MeepleProperty{
         MeepleDetail::Enum detail;
     } value;
     
-    bool operator == (const MeepleProperty& prop){
-        assert(type == prop.type);
-        switch (type){
-            case MEEPLE_COLOR:	return value.color == prop.value.color;
-            case MEEPLE_SIZE:	return value.size == prop.value.size;
-            case MEEPLE_SHAPE:	return value.shape == prop.value.shape;
-            case MEEPLE_DETAIL:	return value.detail == prop.value.detail;
-        }
-        throw new std::exception("unable to compare");
-    }
-
-    bool operator != (const MeepleProperty& prop){
-        assert(type == prop.type);
-        return !(*this == prop);
-    }
+    bool operator == (const MeepleProperty& prop);
+    bool operator != (const MeepleProperty& prop);
 };
 
 
