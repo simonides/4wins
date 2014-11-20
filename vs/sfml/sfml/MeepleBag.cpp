@@ -68,7 +68,8 @@ Meeple* MeepleBag::removeMeeple(const Meeple& meeple){
             return m;
         }
     }
-    throw new std::exception("unable to remove meeple from bag");
+    assert(false);
+    return nullptr;
 }
 
 Meeple* MeepleBag::removeMeeple(unsigned int index){

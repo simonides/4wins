@@ -28,8 +28,8 @@ bool MeepleProperty::operator == (const MeepleProperty& prop){
         case MEEPLE_SIZE:	return value.size == prop.value.size;
         case MEEPLE_SHAPE:	return value.shape == prop.value.shape;
         case MEEPLE_DETAIL:	return value.detail == prop.value.detail;
+        default: assert(false); return false;
     }
-    throw new std::exception("unable to compare");
 }
 
 bool MeepleProperty::operator != (const MeepleProperty& prop){
@@ -68,8 +68,8 @@ MeepleProperty::Type Meeple::getPropertyType(unsigned int propIdx) const{
         case 1: return MeepleProperty::MEEPLE_SIZE;
         case 2: return MeepleProperty::MEEPLE_SHAPE;
         case 3: return MeepleProperty::MEEPLE_DETAIL;
+        default: assert(false); return MeepleProperty::MEEPLE_COLOR;
     }
-    throw new std::exception("unable to return type");
 }
 
 unsigned int Meeple::getIndexFprPropertyType(MeepleProperty::Type type) const{
@@ -78,8 +78,8 @@ unsigned int Meeple::getIndexFprPropertyType(MeepleProperty::Type type) const{
         case MeepleProperty::MEEPLE_SIZE:   return 1;
         case MeepleProperty::MEEPLE_SHAPE:  return 2;
         case MeepleProperty::MEEPLE_DETAIL: return 3;
+        default: assert(false); return 0;
     }
-    throw new std::exception("unable to return index");
 }
 
 MeepleProperty Meeple::getProperty(unsigned int propIdx) const{
@@ -111,8 +111,8 @@ bool Meeple::hasSameProperty(MeepleProperty prop) const{
         case MeepleProperty::MEEPLE_SIZE:   return size == prop.value.size;
         case MeepleProperty::MEEPLE_SHAPE:  return shape == prop.value.shape;
         case MeepleProperty::MEEPLE_DETAIL: return detail == prop.value.detail;
+        default: assert(false); return false;
     }
-    throw new std::exception("unable to compare");
 }
 
 
