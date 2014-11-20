@@ -484,28 +484,28 @@ void Game::initMeeples(){
 
 
 void Game::loadTextures(){
-	if (!meepleSprite.loadFromFile(WORKING_DIR + "pencilStyle.png")){
+	if (!meepleSprite.loadFromFile("Resources\\pencilStyle.png")){
 		std::cerr << "couldn't load the texture: meepleSprites" << std::endl;
 		assert(false);
 	}
-	if (!glowSprite.loadFromFile(WORKING_DIR + "glow_grey.png")){
+	if (!glowSprite.loadFromFile("Resources\\glow.png")){
 		std::cerr << "couldn't load the texture: glow" << std::endl;
 		assert(false);
 	}
-	if (!boardTexture.loadFromFile(WORKING_DIR + "board.png")){ 
+	if (!boardTexture.loadFromFile("Resources\\board.png")){ 
 		std::cerr << "couldn't load the texture: board" << std::endl;
 		assert(false);
 	}
-	if (!fieldTexture.loadFromFile(WORKING_DIR + "holz.png")){
+	if (!fieldTexture.loadFromFile("Resources\\holz.png")){
 		std::cerr << "couldn't load the texture: holz" << std::endl;
 		assert(false);
 	}
-	if (!fieldTextureOccupied.loadFromFile(WORKING_DIR + "holz_occ.png")){
+	if (!fieldTextureOccupied.loadFromFile("Resources\\holz_occ.png")){
 		std::cerr << "couldn't load the texture: holz_occ" << std::endl;
 		assert(false);
 	}
 
-	if (!font.loadFromFile(WORKING_DIR + "Fonts/roboto/roboto-black.ttf"))
+	if (!font.loadFromFile("Resources\\Fonts\\roboto\\roboto-black.ttf"))
 	{
 		std::cerr << "Couldn't load the Font: roboto-black.ttf" << std::endl;
 		assert(false);
@@ -515,27 +515,12 @@ void Game::loadTextures(){
 
 void Game::setString(std::string message)
 {
+	text.setString(message);
 
 	sf::FloatRect textRect = text.getLocalBounds();
 	text.setOrigin(textRect.left + textRect.width / 2.0f,
-		textRect.top + textRect.height / 2.0f);
-
-	text.setString(message);
-	//text.setOrigin(0, 0);
-
-
-	textRect = text.getLocalBounds();
-	text.setOrigin(textRect.left + textRect.width / 2.0f,
 		25.0f);
-	//window->mapCoordsToPixel( window->getSize())
-	//text.getLocalBounds().width
-	text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2.0f, 0.0f));
-
-	//float xPostext = (window->getSize().x / 2.f);
-	//std::cout << "windowsize /2: " << xPostext << std::endl;
-	//float test2 = (text.getGlobalBounds().width / 2);
-	//std::cout << "test2 /2: " << test2 << std::endl;
-	//text.setPosition(sf::Vector2f(xPostext + test2, 10.f));
+	text.setPosition(sf::Vector2f(WINDOW_WIDTH_TO_CALCULATE / 2.0f, 35.0f));
 
 
 }

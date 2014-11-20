@@ -32,7 +32,7 @@ void AI_testFunction(){
     I_Player* p2 = new ThinkingAI();// (true, true); //RandomAI();// StupidAI();   //Player(
     GameSimulator* game = new ThreadedGameSimulator(*p1, *p2);//GameSimulator(*p1, *p2);
 
-    GameWinner::Enum winner = game->runManyGames(10000, true);
+    GameWinner::Enum winner = game->runManyGames(15000, true);
    
     delete game;
     delete p2;
@@ -48,7 +48,7 @@ int main(){
 	AI_testFunction();
 	
 	sf::RenderWindow* window = setupWindow();
-	Menu* menu = new Menu(window);
+	//Menu* menu = new Menu(window);
 	while (window->isOpen()){
 		
 		//GameSettings gamesettings = menu->loop();
@@ -88,7 +88,7 @@ int main(){
 		assert(tc3 != nullptr);
 
 
-		Game* game = new Game(*window, *human, *human2);
+		Game* game = new Game(*window, *human, *p1);
 		game->runGame();
 
 
@@ -103,7 +103,7 @@ int main(){
 
 	}
 
-	delete menu;
+	//delete menu;
 	delete window;
 
 	return 0;

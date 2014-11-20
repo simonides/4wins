@@ -12,7 +12,7 @@ RField::RField(const BoardPos& posOnBoard, sf::Vector2f& initPos, sf::Texture& f
 	fieldShape.setPosition(initPos);
 	fieldShape.setTexture(&fieldShapeTex);
 
-	sf::IntRect textRec(0, 0, 100, 100);
+	sf::IntRect textRec(0, 0, 342, 342);
 	fieldShape.setTextureRect(textRec);
 
 	occupiedShape.setOrigin(sf::Vector2f(WIDTH / 2, HEIGHT / 2));
