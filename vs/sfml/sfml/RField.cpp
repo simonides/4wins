@@ -11,8 +11,9 @@ RField::RField(const BoardPos& posOnBoard, sf::Vector2f& initPos, sf::Texture& f
 	fieldShape.setSize(sf::Vector2f(WIDTH, HEIGHT));
 	fieldShape.setPosition(initPos);
 	fieldShape.setTexture(&fieldShapeTex);
+	fieldShape.setFillColor(sf::Color::Yellow);
 
-	sf::IntRect textRec(0, 0, 342, 342);
+	sf::IntRect textRec(0, 0, fieldShapeTex.getSize().x, fieldShapeTex.getSize().y);
 	fieldShape.setTextureRect(textRec);
 
 	occupiedShape.setOrigin(sf::Vector2f(WIDTH / 2, HEIGHT / 2));
@@ -20,6 +21,7 @@ RField::RField(const BoardPos& posOnBoard, sf::Vector2f& initPos, sf::Texture& f
 	occupiedShape.setPosition(initPos);
 	occupiedShape.setTexture(&occupiedShapeTex);
 	occupiedShape.setTextureRect(textRec);
+	occupiedShape.setFillColor(sf::Color::Magenta);
 
 	shapePtr = &fieldShape;
 
@@ -43,25 +45,14 @@ bool RField::containsPosition(sf::Vector2f& position) const{
 
 
 void RField::setShape(Shape shape){
-	
 	this->shape = shape;
-	shapePtr = shape == Shape::OCCUPIED ? &occupiedShape : &fieldShape;
+	shapePtr = (shape == OCCUPIED) ? &occupiedShape : &fieldShape;
 }
 
-const sf::FloatRect RField::getGlobalBounds() const{
-	//TODO eventuell schon die bereinigten(meeple einbeziehen) koords zurückgeben
-
+sf::FloatRect RField::getGlobalBounds() const{
 	return shapePtr->getGlobalBounds();
 }
 
 BoardPos RField::getBoardPos() const{
 	return posOnBoard;
 }
-
-//removes hover effect only if shape is flase too
-//void RField::setHoverEffect(bool setEffect){
-//	shapePtr = &occupiedShape;
-//	if (!setEffect && shape == Shape::NOT_OCCUPIED){
-//		shapePtr =  &fieldShape;
-//	}
-//}

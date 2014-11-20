@@ -44,6 +44,11 @@ private:
 	sf::Texture boardTexture;
 	sf::Texture fieldTexture;
 	sf::Texture fieldTextureOccupied;
+	sf::Texture backgroundTexture;
+
+	sf::RectangleShape background;
+	std::vector<RMeeple*> meeplesToDrawAndSort;
+
 	sf::Font font;
 
 	sf::Vector2f convertedMousePos;

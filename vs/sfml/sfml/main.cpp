@@ -14,7 +14,7 @@
 #include "ThinkingAI.h"
 #include "SmartAI.h"
 
-#include "Menu.h"
+#include "Menu/Menu.h"
 
 const std::string GAME_TITLE = "4 Wins by ...";
 
@@ -44,28 +44,37 @@ void AI_testFunction(){
 }
 
 
+
+using namespace FourWins;
 int main(){
-	AI_testFunction();
+	//AI_testFunction();
 	
 	sf::RenderWindow* window = setupWindow();
-	//Menu* menu = new Menu(window);
+
+	Menu::MainMenu* menu = new Menu::MainMenu(*window);
+	menu->init();
+
 	while (window->isOpen()){
 		
-		//GameSettings gamesettings = menu->loop();
+		GameSettings gamesettings = menu->loop();
 		//system("pause");
+		if (!window->isOpen())
+		{
+			break;
+		}
 		
 
-		I_Player* test =    new ThinkingAI(true, true);
-		I_Player* test2 =	new ThinkingAI(true, true);
+		I_Player* test =    new StupidAI( );
+		I_Player* test2 =	new SmartAI(true, true);
 
-		ThreadController* tc3 = new ThreadController(*test);
+		ThreadController* tc1 = new ThreadController(*test2);
 		ThreadController* tc2 = new ThreadController(*test2);
 		//I_Player* test2 =	new Player();
 
 		Player* p1 = new Player();
 		p1->type = Player::TC;
 		p1->player = nullptr;
-		p1->controller = tc3;
+		p1->controller = tc1;
 
 		Player* p2 = new Player();
 		p2->type = Player::TC;
@@ -85,7 +94,7 @@ int main(){
 		assert(human != nullptr);
 		assert(human2 != nullptr);
 		assert(tc2 != nullptr);
-		assert(tc3 != nullptr);
+		assert(tc1 != nullptr);
 
 
 		Game* game = new Game(*window, *human, *p1);
@@ -97,7 +106,7 @@ int main(){
 		delete p1;
 		delete test;
 		delete test2;
-		delete tc3;
+		delete tc1;
 		delete tc2;
 		break; // or start new game .. 
 
@@ -108,9 +117,6 @@ int main(){
 
 	return 0;
 }
-
-
-
 
 /*
 sf::Music music;
@@ -124,91 +130,3 @@ cin.ignore();   //wait for keypress
 music.stop();
 return 0;
 */
-
-
-//--------------------
-//membervars
-/*	bool dragme = false;
-sf::Vector2f dragmeVect(0, 0);
-sf::Vector2f oldPos(30, 30);
-*///--------------------
-
-//		if (event.type == sf::Event::MouseButtonReleased){
-//			if (event.mouseButton.button == sf::Mouse::Left){
-//				dragme = false;
-//				sf::Vector2f meeplePos(meeple.getGlobalBounds().left + MEEPLE_SNAP_X, meeple.getGlobalBounds().top +MEEPLE_SNAP_Y);
-//				for (int i = 0; i < 16; ++i){
-//
-//					if (squares[i].getGlobalBounds().contains(meeplePos)){
-//						cout << "snap to: " << i << endl;
-//						
-//						//squares[i].getGlobalBounds().left
-//						//oldPos= dragmeVect;
-//						oldPos = sf::Vector2f(meeple.getGlobalBounds().left, meeple.getGlobalBounds().top);
-//							//oldPos = sf::Vector2f(squares[i].getGlobalBounds().left+ MEEPLE_SNAP_OFFSET_X, squares[i].getGlobalBounds().top- MEEPLE_SNAP_OFFSET_Y);
-//					
-//					}
-//				}
-//				//if ( meeple.getGlobalBounds())
-//				meeple.setPosition(oldPos);
-//			}
-//		}
-
-//		if (event.type == sf::Event::MouseButtonPressed)
-//		{
-//			if (event.mouseButton.button == sf::Mouse::Left)
-//			{
-//				sf::Vector2i mousepos = sf::Mouse::getPosition(*window);
-//				sf::Vector2f converted = window->mapPixelToCoords(mousepos);
-
-//				std::cout << "the left button was pressed" << std::endl;
-
-//				if (meeple.getGlobalBounds().contains(converted)){
-//					dragme = true;
-//					cout << "globalbounds x|y : " << meeple.getGlobalBounds().left << "|" << meeple.getGlobalBounds().top << endl;
-//					cout << "converted x|y : " << converted.x << "|" << converted.y << endl <<endl;
-//					dragmeVect.x = converted.x - meeple.getGlobalBounds().left;
-//					dragmeVect.y = converted.y - meeple.getGlobalBounds().top;
-
-//					oldPos.x = meeple.getGlobalBounds().left;
-//					oldPos.y = meeple.getGlobalBounds().top;
-//					
-//				}
-
-
-//				//std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-//				//std::cout << "mouse y: " << event.mouseButton.y << std::endl;
-//			}
-//		if (event.type == sf::Event::MouseMoved)
-//		{
-//			sf::Vector2i mousepos = sf::Mouse::getPosition(*window);
-//			sf::Vector2f converted = window->mapPixelToCoords(mousepos);
-
-//			for (int i = 0; i < 16; ++i){
-//				if (squares[i].getGlobalBounds().contains(converted)){
-//					squares[i].setFillColor(sf::Color::Red);
-//				}
-//				else{
-//					squares[i].setFillColor(sf::Color::Yellow);
-//				}
-//				//window.draw(squares[i]);
-//				//squares[i].setPointCount(5);
-//			}
-
-//			if (meeple.getGlobalBounds().contains(converted)){
-//				//meeple.setFillColor(sf::Color::Red);
-//			}
-//			else{
-//				//meeple.setFillColor(sf::Color::Blue);
-//			}
-
-//			if (dragme){
-//				meeple.setPosition(converted-dragmeVect);
-//			}
-
-//			//cout << "converted.x " << converted.x << "|| converted.y " << converted.y << endl;
-//			//glow = square.getGlobalBounds().contains(converted);
-
-//			//std::cout << "new mouse x: " << event.mouseMove.x << std::endl;
-//			//std::cout << "new mouse y: " << event.mouseMove.y << std::endl << endl;
-

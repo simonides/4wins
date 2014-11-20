@@ -238,6 +238,7 @@ GameWinner::Enum Game::runGame(){
 			assert(rMeepleToSet != nullptr);
 			//human code
 			//move my fucking meeple :)
+			//clicked meeple -> start to drag
 			if (pressedLeftMouse && rMeepleToSet->containsPosition(convertedMousePos)){
 				lastValidPosition = rMeepleToSet->getPosition();
 				mousePosRelativeToMeepleBoundary = rMeepleToSet->getMousePosRelativeToMeepleBoundary(convertedMousePos);
@@ -247,21 +248,28 @@ GameWinner::Enum Game::runGame(){
 			if (dragMeeple){ // todo checken ob !releaseleftmous braucht
 				sf::Vector2f test(convertedMousePos.x - mousePosRelativeToMeepleBoundary.x, convertedMousePos.y - mousePosRelativeToMeepleBoundary.y);
 				rMeepleToSet->setPosition(test);
-				board->setHoveredField(board->getBoardPosForPosititon(convertedMousePos));
+				sf::Vector2f lookupPos = rMeepleToSet->getGlobalOrigin();
+				board->setHoveredField(board->getBoardPosForPosititon(lookupPos));
 			}
 
 			if (releasedLeftMouse && dragMeeple){
 				dragMeeple = false;
-				BoardPos pos;
-				pos = board->getBoardPosForPosititon(convertedMousePos);
+				sf::Vector2f lookupPos = rMeepleToSet->getGlobalOrigin();
+				BoardPos pos = board->getBoardPosForPosititon(lookupPos);
 				if ((pos.x < 4 && pos.y < 4) && logicalBoard->isFieldEmpty(pos)){
+
+					sf::FloatRect fieldBounds = board->getFieldGlobalBounds(pos);
+					sf::Vector2f newPosition(fieldBounds.left + fieldBounds.width / 2.f, fieldBounds.top + fieldBounds.height / 2.f);
+					rMeepleToSet->setPosition(newPosition);
+
 
 					players[activePlayerIndex]->rbag->changeRMeepleToUsed(*rMeepleToSet);
 
 					Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*meepleToSet);
 					logicalBoard->setMeeple(pos, *placeMe);
 					rMeepleToSet->setGlow(nullptr);
-					//todo einrasten machen snap meeeple
+					rMeepleToSet = nullptr;
+					board->setHoveredField({ 42, 42 });
 					loopState = CHECK_END_CONDITION;
 				}
 				else{
@@ -294,10 +302,8 @@ GameWinner::Enum Game::runGame(){
 			assert(players[activePlayerIndex]->type == Player::TC);
 			assert(rMeepleToSet != nullptr);
 
-			sf::FloatRect fieldBounds = board->getFieldBounds(posMeepleTo);
-			sf::Vector2f newPosition(
-				fieldBounds.left,
-				fieldBounds.top - 95.f); //todo magic num meepleheight
+			sf::FloatRect fieldBounds = board->getFieldGlobalBounds(posMeepleTo);
+			sf::Vector2f newPosition(fieldBounds.left + fieldBounds.width / 2.f, fieldBounds.top + fieldBounds.height / 2.f);
 
 			rMeepleToSet->setPosition(newPosition);
 			rMeepleToSet->setGlow(nullptr);
@@ -383,19 +389,37 @@ GameWinner::Enum Game::runGame(){
 
 		}
 
+		sf::RectangleShape test;
+		test.setSize(sf::Vector2f(250, 250));
+		test.setPosition(0, 0);
+		test.setFillColor(sf::Color(228,128,128,98));
+
+		background.setTexture(&backgroundTexture);
+		background.setSize(sf::Vector2f(static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE)));
+		background.setPosition(0, 0);
+
 		std::string title("4Wins by Jakob M., Sebastian S. and Simon D.   @");
 		title.append(std::to_string(fps));
 		title.append(" fps");
 		window->setTitle(title);
 
 		window->clear(sf::Color::White);
+		window->draw(background);
 		
 		board->draw(*window);
 
-		players[0]->rbag->draw(*window);
-		players[1]->rbag->draw(*window);
+		//players[0]->rbag->draw(*window);
+		//players[1]->rbag->draw(*window);
 
 		window->draw(text);
+		//window->draw(test);
+
+
+		std::sort(meeplesToDrawAndSort.begin(), meeplesToDrawAndSort.end(), [](RMeeple* a, RMeeple* b){return a->getYPos() < b->getYPos(); });
+		for (std::vector<RMeeple*>::iterator it = meeplesToDrawAndSort.begin(); it != meeplesToDrawAndSort.end(); ++it){
+			(*it)->draw(*window);
+		}
+
 		window->display();
 	}
 
@@ -448,36 +472,49 @@ void Game::initMeeples(){
 		}
 		const Meeple* meeple = players[bagInd]->logicalMeepleBag->getMeeple(meepleIndex);
 
-		float xCoord = 20.f;
-		float yCoord = 0.f;
+		float xCoord = 70.f;
+		float yCoord = 130.f;
 
-		if (meeple->getColor() == MeepleColor::BLACK){
-			xCoord += 1150.f;
+
+		if (meeple->getShape() == MeepleShape::ROUND && meeple->getDetail() == MeepleDetail::HOLE)
+		{
+			xCoord += 250.f;
+			yCoord += 55.f;
+		}
+		if (meeple->getShape() == MeepleShape::ROUND && meeple->getDetail() == MeepleDetail::NO_HOLE)
+		{
+			xCoord += 340.f;
+			yCoord += 110.f;
+		}
+		if (meeple->getShape() == MeepleShape::SQUARE && meeple->getDetail() == MeepleDetail::HOLE)
+		{
+			xCoord += 430.f;
+			yCoord += 170.f;
+		}
+		if (meeple->getShape() == MeepleShape::SQUARE && meeple->getDetail() == MeepleDetail::NO_HOLE)
+		{
+			xCoord += 520.f;
+			yCoord += 220.f;
 		}
 
-		if (meeple->getSize() == MeepleSize::SMALL){
-			xCoord += 90.f;
-		}
-		
-		if (meeple->getShape() == MeepleShape::SQUARE && meeple->getDetail() == MeepleDetail::NO_HOLE){
-			yCoord = 10.f;
+		if (meeple->getSize() == MeepleSize::SMALL)
+		{
+			xCoord += -20.f;
+			yCoord += 25.f;
 		}
 
-		if (meeple->getShape() == MeepleShape::SQUARE && meeple->getDetail() == MeepleDetail::HOLE){
-			yCoord = 180.f;
+		if (meeple->getColor() == MeepleColor::WHITE)
+		{
+			xCoord = WINDOW_WIDTH_TO_CALCULATE / 2.f - xCoord;
+		} else
+		{
+			xCoord += WINDOW_WIDTH_TO_CALCULATE / 2.f;
 		}
-
-		if (meeple->getShape() == MeepleShape::ROUND && meeple->getDetail() == MeepleDetail::NO_HOLE){
-			yCoord = 350.f;
-		}
-
-		if (meeple->getShape() == MeepleShape::ROUND && meeple->getDetail() == MeepleDetail::HOLE){
-			yCoord = 510.f;
-		}
-
 		sf::Vector2f initPos(xCoord, yCoord);
+
 		RMeeple* rmeeple = new RMeeple(*meeple, meepleSprite, glowSprite, initPos);
-		
+
+		meeplesToDrawAndSort.push_back(rmeeple);
 		players[bagInd]->rbag->addRMeeple(rmeeple);
 	}
 }
@@ -496,14 +533,20 @@ void Game::loadTextures(){
 		std::cerr << "couldn't load the texture: board" << std::endl;
 		assert(false);
 	}
-	if (!fieldTexture.loadFromFile("Resources\\holz.png")){
-		std::cerr << "couldn't load the texture: holz" << std::endl;
+	if (!fieldTexture.loadFromFile("Resources\\field.png")){
+		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
-	if (!fieldTextureOccupied.loadFromFile("Resources\\holz_occ.png")){
-		std::cerr << "couldn't load the texture: holz_occ" << std::endl;
+	if (!fieldTextureOccupied.loadFromFile("Resources\\field.png")){
+		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
+
+	if (!backgroundTexture.loadFromFile("Resources\\background.png")){
+		std::cerr << "couldn't load the texture: field" << std::endl;
+		assert(false);
+	}
+	backgroundTexture.setSmooth(true);
 
 	if (!font.loadFromFile("Resources\\Fonts\\roboto\\roboto-black.ttf"))
 	{

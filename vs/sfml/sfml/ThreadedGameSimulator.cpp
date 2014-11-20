@@ -38,12 +38,10 @@ void ThreadedGameSimulator::reset(){
 
 
 
-
-
 //a have round cycle, where a player chooses a meeple, and the other player sets it
-#pragma warning(once: 4100)
-void ThreadedGameSimulator::runGameCycle(I_Player* player, I_Player* opponent, const GameState& gameStateForPlayer, const GameState& gameStateForOpponent, int playerNr){
 
+void ThreadedGameSimulator::runGameCycle(I_Player* player, I_Player*, const GameState& gameStateForPlayer, const GameState& gameStateForOpponent, int playerNr){
+    //(void)opponent;       
     ThreadController *playerController, *opponentController;
     if (player == controller1.getAssociatedPlayer()){
         playerController = &controller1;
