@@ -13,7 +13,7 @@
 #include "ThinkingAI.h"
 #include "IntelAI.h"
 
-#include "Menu.h"
+#include "Menu/Menu.h"
 
 //using namespace std;
 
@@ -57,7 +57,7 @@ void AI_testFunction(){
 
 
 
-
+using namespace FourWins;
 
 int main(){
 
@@ -65,12 +65,17 @@ int main(){
 	
 	sf::RenderWindow* window = setupWindow();
 	
-	Menu* menu = new Menu(window);
+	Menu::MainMenu* menu = new Menu::MainMenu(*window);
+	menu->init();
 	
 	while (window->isOpen()){
 		
 		GameSettings gamesettings = menu->loop();
 		//system("pause");
+		if (!window->isOpen())
+		{
+			break;
+		}
 		
 		Game* game = new Game(*window, *gamesettings.playerOne,*gamesettings.playerTwo);
 		game->runGame();
