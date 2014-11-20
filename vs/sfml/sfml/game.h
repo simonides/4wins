@@ -1,27 +1,32 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
+
+#include "RMeeple.h"
+#include "GameState.h"
+
+#include <cstdint>
+#include <vector>
+
+class ThreadController;
 class MeepleBag;
-class Board;
 class I_Player;
+class RBoard;
+class Board;
+class RBag;
 
-
-struct GameWinner{
-    enum Enum{
-        PLAYER_1,
-        PLAYER_2,
-        TIE
-    };
-};
-
-
-//This data is given to the players/AIs, to calculate their next moves
-struct GameState{              
-    const MeepleBag& ownBag;            //The meeples which are owned by the AI
-    const MeepleBag& opponentBag;       //The meeples which are owned by the oppnent's AI
-    const Board& board;                 //The current state of the board (and the meeples on the board)
-    GameState(const MeepleBag& ownBag, const MeepleBag& opponentBag, const Board& board) : ownBag(ownBag), opponentBag(opponentBag), board(board){}     //needed to initialise the referneces
-private: GameState& operator = (const GameState&);  //should be solved differently: no references, use pointers insread
+struct Player{
+	enum{
+		HUMAN,
+		I_PLAYER,
+		TC
+	} type;
+	
+	union{
+		ThreadController* controller;
+		I_Player* player;
+	};
+	RBag* rbag;
+	MeepleBag* logicalMeepleBag;
 };
 
 
@@ -32,19 +37,44 @@ class Game
 private:
 	sf::RenderWindow* window;
 
-    MeepleBag* bag[2];
-    Board* board;
+	sf::Vector2f mousePosRelativeToMeepleBoundary;
 
-    GameState* gameStatePlayer1;                //stores the gamestate for player 1 (buffered)
-    GameState* gameStatePlayer2;
-        
-    I_Player* player1;
-    I_Player* player2;
+	sf::Texture meepleSprite;
+	sf::Texture glowSprite;
+	sf::Texture boardTexture;
+	sf::Texture fieldTexture;
+	sf::Texture fieldTextureOccupied;
+	sf::Font font;
 
+	sf::Vector2f convertedMousePos;
+	sf::Vector2f lastValidPosition;
+	bool pressedLeftMouse;
+	bool releasedLeftMouse;
 
-    void runGameCycle(I_Player* player, I_Player* opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr);
+	Board* logicalBoard;
+	RBoard* board;
+
+	Player* players[2];
+    GameState* gameStates[2];                //stores the gamestate for player 1 (buffered)
+	
+	uint8_t activePlayerIndex;
+
+	sf::Clock meepleGlowAnimationClock;
+	RMeeple* winningCombiRMeeples[4];
+	bool drawEndScreen;
+	float color4MGlow[4];
+
+	void switchPlayers();
+	void initMeeples();
+	void loadTextures();
+	void setString(std::string message);
+	sf::Color rainbow(float progress) const ;
+
+	RMeeple* rMeepleToSet;
+	sf::Text text;
+    
 public:
-    Game(sf::RenderWindow& window, I_Player& player1, I_Player& player2); //Initialises the game with 2 players
+    Game(sf::RenderWindow& window, Player& player1, Player& player2); //Initialises the game with 2 players
 	virtual ~Game();
 	void reset();                               //Reinitialises the object
 

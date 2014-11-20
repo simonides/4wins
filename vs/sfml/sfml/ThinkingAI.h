@@ -2,11 +2,6 @@
 #include "I_AI.h"
 struct WinCombination;
 
-//The following functions are used to select the opponent's meeple:
-    int getMaximum(int* intArray, unsigned int length);         //Returns the max. value within an int-array
-    float getAverage(int* intArray, unsigned int length);       //Returns the averaage value within an int-array
-// ~ ~ ~ ~ ~ ~
-
 class ThinkingAI : public I_AI{
 private:
     const bool intelligentMeepleChoosing;

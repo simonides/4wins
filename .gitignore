@@ -15,6 +15,7 @@ vs/sfml/[Rr]elease/*.ilk
 ./vs/sfml/Debug/sfml.pdb
 ./vs/sfml/Release/sfml.pdb
 ./vs/sfml/sfml.sdf
+./vs/sfml/sfml/Debug/sfml.idb
 ./vs/sfml/sfml/Debug/sfml.log
 ./vs/sfml/sfml/Debug/sfml.tlog/CL.read.1.tlog
 ./vs/sfml/sfml/Debug/sfml.tlog/CL.write.1.tlog
@@ -23,6 +24,7 @@ vs/sfml/[Rr]elease/*.ilk
 ./vs/sfml/sfml/Debug/vc120.idb
 ./vs/sfml/sfml/Debug/vc120.pdb
 ./vs/sfml/sfml/Release/sfml.log
+./vs/sfml/sfml/Release/sfml.idb
 ./vs/sfml/sfml/Release/sfml.tlog/cl.read.1.tlog
 ./vs/sfml/sfml/Release/sfml.tlog/cl.write.1.tlog
 ./vs/sfml/sfml/Release/sfml.tlog/link.read.1.tlog

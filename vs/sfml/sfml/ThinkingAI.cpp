@@ -3,36 +3,18 @@
 #include <iostream>
 #include <assert.h>
 
-#include "Game.h"
 #include "Board.h"
 #include "MeepleBag.h"
 #include "config.h"
+#include "GameState.h"
+#include "helper.h"
 
 #pragma warning( disable: 4100 )
 
 
-int getMaximum(int* intArray, unsigned int length){
-    assert(length > 0);
-    int max = intArray[0];
-    for (unsigned int i = 1; i < length; ++i){
-        if (intArray[i] > max){
-            max = intArray[i];
-        }
-    }
-    return max;
-}
 
-float getAverage(int* intArray, unsigned int length){
-    assert(length > 0);
-    long sum = 0;
-    for (unsigned int i = 0; i < length; ++i){
-        sum += intArray[i];
-    }
-    return sum / (float)length;
-}
-
-
-ThinkingAI::ThinkingAI(bool intelligentMeepleChoosing, bool intelligentMeeplePositioning) : intelligentMeepleChoosing(intelligentMeepleChoosing), intelligentMeeplePositioning(intelligentMeeplePositioning){
+ThinkingAI::ThinkingAI(bool intelligentMeepleChoosing, bool intelligentMeeplePositioning) : 
+    intelligentMeepleChoosing(intelligentMeepleChoosing), intelligentMeeplePositioning(intelligentMeeplePositioning){
 }
 
 struct MeeplePoints{ //Internal structure, which is needed during the computation of the meeple to be chosen
@@ -43,7 +25,7 @@ struct MeeplePoints{ //Internal structure, which is needed during the computatio
 
 const Meeple& ThinkingAI::selectOpponentsMeeple(const GameState& gameState) {
     if (!intelligentMeepleChoosing){
-        return *gameState.opponentBag.getMeeple(0);
+        return *gameState.opponentBag->getMeeple(0);
     }
         
     /* We take one meeple after another from the opponent's bag
@@ -54,7 +36,7 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const GameState& gameState) {
     Afterwards, select the meeple with the lowest points
     */
   
-    unsigned int meepleCount = gameState.opponentBag.getMeepleCount();
+    unsigned int meepleCount = gameState.opponentBag->getMeepleCount();
 
     MeeplePoints* points = new MeeplePoints[meepleCount];                       //Each meeple in the opponents bag will get an entry .. soon
     
@@ -66,7 +48,7 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const GameState& gameState) {
     int* scoreMap;
     int f = 0;
     for (; f < static_cast<int>(meepleCount); ++f){
-        points[f].meeple = gameState.opponentBag.getMeeple(f);
+        points[f].meeple = gameState.opponentBag->getMeeple(f);
         
         scoreMap = buildScoreMap(gameState, *points[f].meeple);          //The opponent gets this map, if this meeple is chosen
         
@@ -101,7 +83,7 @@ const Meeple& ThinkingAI::selectOpponentsMeeple(const GameState& gameState) {
 
 BoardPos ThinkingAI::selectMeeplePosition(const GameState& gameState, const Meeple& meepleToSet){
     if (!intelligentMeeplePositioning){
-        return gameState.board.getRandomEmptyField();
+        return gameState.board->getRandomEmptyField();
     }
 
     int* scoreMap = buildScoreMap(gameState, meepleToSet);
@@ -117,13 +99,7 @@ BoardPos ThinkingAI::selectMeeplePosition(const GameState& gameState, const Meep
 
 
 int* ThinkingAI::buildScoreMap(const GameState& gameState, const Meeple& meepleToSet) const{
-    int* scoreMap = new int[4 * 4];//   todo: does initialising also work with this, instead of the loop?: {0};
-    for (int i = 0; i < 4 * 4; ++i){
-        scoreMap[i] = 0;
-    }
-
-//HIER{ 0 }
-
+    int* scoreMap = new int[4 * 4]{0};
 
     //go through the whole map, and add points if the meeple should be set there
     //  --> check all possible combinations, which can lead to a victory (4 in a row/col/diagonal)
@@ -132,7 +108,7 @@ int* ThinkingAI::buildScoreMap(const GameState& gameState, const Meeple& meepleT
     //  --> add the matching-points to all fields in the combination, where no meeple is currently placed
     //(Afterwards, go through the scoreMap, and choose the field with the most points)
 
-    const WinCombinationSet* allCombinations = gameState.board.getWinCombinations();
+    const WinCombinationSet* allCombinations = gameState.board->getWinCombinations();
     for (std::set<WinCombination*>::const_iterator it = allCombinations->combination.begin(); it != allCombinations->combination.end(); ++it){
         WinCombination* comb = *it;
         int points = getPointsForCombination(gameState, *comb, meepleToSet);
@@ -187,7 +163,7 @@ BoardPos ThinkingAI::getOptimalScoreMapPosition(int* scoreMap, bool printScoreMa
     BoardPos position = { pos % 4, pos / 4 };   //convert value [0,15] into 2D coordinates [0-3][0-3]
 
     if (printScoreMap){
-        std::cout << "pos = " << (int)position.x << "x" << (int)position.y << std::endl << std::endl;
+        std::cout << "pos = " << position.toString() << std::endl << std::endl;
     }
     return position;
 }

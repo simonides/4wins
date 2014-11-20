@@ -1,5 +1,7 @@
 #include "MeepleBag.h"
 #include <algorithm>
+#include <stdint.h>
+
 
 MeepleBag::MeepleBag(MeepleColor::Enum color){       //creates a new bag with 8 brand new meeples
     meeples.push_back(new Meeple(color, MeepleSize::SMALL, MeepleShape::SQUARE, MeepleDetail::NO_HOLE));
@@ -21,7 +23,25 @@ MeepleBag::~MeepleBag(){
         delete *(it);
     }
 } 
+
+Meeple* MeepleBag::getUsedMeepleRepresentation(const Meeple& original) const{
+    for (std::vector<Meeple*>::const_iterator it = usedMeeples.begin(); it != usedMeeples.end(); ++it){
+        if (**it == original){
+            return *it;
+        }
+    }
+    return nullptr;
+}
  
+MeepleBag::MeepleBag(const MeepleBag& base){
+    for (std::vector<Meeple*>::const_iterator it = base.meeples.begin(); it != base.meeples.end(); ++it){
+        meeples.push_back(new Meeple(**it));
+    }
+    for (std::vector<Meeple*>::const_iterator it = base.usedMeeples.begin(); it != base.usedMeeples.end(); ++it){
+        usedMeeples.push_back(new Meeple(**it));
+    }
+}
+
 
 
 void MeepleBag::reset(){
@@ -86,4 +106,12 @@ unsigned int MeepleBag::getSimilarMeepleCount(MeepleProperty prop) const{
         }
     }
     return count;
+}
+
+MeepleColor::Enum MeepleBag::getBagColor() const{
+    std::vector<Meeple*>::const_iterator it = meeples.begin();
+    if (it != meeples.end()){
+        return (*it)->getColor();
+    }
+    return (*usedMeeples.begin())->getColor();
 }

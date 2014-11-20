@@ -1,6 +1,6 @@
 #pragma once
 
-struct GameState;
+class GameState;
 class Board;
 class MeepleBag;
 class Meeple;

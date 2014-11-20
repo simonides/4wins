@@ -3,7 +3,10 @@
 
 #define WORKING_DIR std::string("Resources/")
 
-extern const unsigned int WINDOW_HEIGHT;
+extern const unsigned int WINDOW_HEIGHT_TO_CALCULATE; // to this all pixel values are calculated so better don't alter it
+extern const unsigned int WINDOW_WIDTH_TO_CALCULATE;
+
+extern const unsigned int WINDOW_HEIGHT; // standard display res setting
 extern const unsigned int WINDOW_WIDTH;
 
 //#define PRINT_ALL
@@ -11,7 +14,8 @@ extern const unsigned int WINDOW_WIDTH;
        
 
 
-
+#define THREAD_DEBUGGING 0                  //prints messages regarding multithreading within the main thread
+#define THREAD_DEBUG_MESSAGES 0             //prints messages within other threads; might destroy the output due to concurrency (no flush is used)
 
 
 #ifdef PRINT_ALL
@@ -27,9 +31,3 @@ extern const unsigned int WINDOW_WIDTH;
 
     #define PRINT_THINK_MAP 0               //prints the throughts of the AI's to the console
 #endif
-
-
-//Weitere improvements:
-//
-//  - gegnerische felder blockieren, wenn der Gegner mit dem nächsten zug gewinnen könnte!
-//
