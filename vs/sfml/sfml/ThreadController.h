@@ -7,7 +7,7 @@
 #include "Board.h"
 #include "I_Player.h"
 
-struct GameState;
+class GameState;
     
 
 struct ThreadCommand{                       //A command that is transmitted from the main thread to the player thread in order to tell him what to do

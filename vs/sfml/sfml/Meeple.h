@@ -69,6 +69,7 @@ private:
 
 public:
     Meeple(MeepleColor::Enum color, MeepleSize::Enum size, MeepleShape::Enum shape, MeepleDetail::Enum detail);
+    explicit Meeple(const Meeple& base);
    
     MeepleColor::Enum getColor() const;
     MeepleSize::Enum getSize() const;
@@ -85,7 +86,7 @@ public:
 
     std::string toString() const;
       
-    bool equals(Meeple& meeple) const;
-    bool operator == (Meeple& meeple) const;
+    bool equals(const Meeple& meeple) const;
+    bool operator == (const Meeple& meeple) const;
 };
 

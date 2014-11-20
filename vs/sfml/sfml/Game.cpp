@@ -355,8 +355,6 @@ GameWinner::Enum Game::runGame(){
 					}
 				}
 
-
-
 				//combi->positions[0] bitte sehr, du bist dran :D
 				//das if lass ma so? nein oder? besser.
 			}

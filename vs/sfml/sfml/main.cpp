@@ -44,7 +44,7 @@ void AI_testFunction(){
 
 
 int main(){
-	//AI_testFunction();
+	AI_testFunction();
 	
 	sf::RenderWindow* window = setupWindow();
 	Menu* menu = new Menu(window);
@@ -79,7 +79,7 @@ int main(){
         human2->type = Player::HUMAN;
         human2->player = nullptr;
 
-		Game* game = new Game(*window, *p1, *p2);
+		Game* game = new Game(*window, *human, *human2);
 		game->runGame();
 
 		delete game;

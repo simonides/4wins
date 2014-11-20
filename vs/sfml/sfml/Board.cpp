@@ -3,10 +3,20 @@
 #include <assert.h>
 #include <iostream>
 #include "Meeple.h"
-
+#include "MeepleBag.h"
 
 std::string BoardPos::toString(){
     return std::string('(' + std::to_string(x + 1) + '|' + std::to_string(y + 1) + ')');
+}
+
+WinCombination::WinCombination(){
+}
+
+WinCombination::WinCombination(const WinCombination& base){
+    for (int m = 0; m < 4; ++m){
+        meeples[m] = nullptr;
+        positions[m] = base.positions[m];
+    }
 }
 
 
@@ -47,6 +57,28 @@ Board::Board(){
         }
     isWinCombinationSetUp2Date = true;
 }
+
+
+Board::Board(const Board& base, const MeepleBag* bag1, const MeepleBag* bag2){
+    for (int y = 0; y < 4; ++y){
+        for (int x = 0; x < 4; ++x){
+            if (base.board[x][y] == nullptr){
+                board[x][y] = nullptr;
+                continue;
+            }
+            const MeepleBag* correctBag = (bag1->getBagColor() == base.board[x][y]->getColor()) ? bag1 : bag2;      //Only search in the correct bag
+            Meeple* correctMeeple = correctBag->getUsedMeepleRepresentation(*base.board[x][y]);
+            assert(correctMeeple != nullptr);
+            board[x][y] = correctMeeple;
+        }
+    }
+    for (std::set<WinCombination*>::const_iterator it = base.winCombinations.combination.begin(); it != base.winCombinations.combination.end(); ++it){
+       winCombinations.combination.insert(new WinCombination(**it));     //Make a copy   (meeplepointers are nullptr --> upToDate = false)
+    }
+    isWinCombinationSetUp2Date = false;
+}
+
+
 
 
 Board::~Board(){
@@ -208,3 +240,4 @@ void Board::print(std::ostream& output) const{
 
     return;
 }
+

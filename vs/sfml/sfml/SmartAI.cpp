@@ -162,7 +162,7 @@ float SmartAI::getPointsForCombination_blockOpponent(const GameState& gameState,
         }
         if (ancestor->getProperty(p) == meepleToSet.getProperty(p)){        //we can't block the opponent with our meeple
             if (match[p] == 2){     //NEVER EVER set the meeple here - we would allow the enemy to win
-                //todo: only aborthere, if the enemy has still meeples that could help him to win here
+                //todo: only abort here, if the enemy has still meeples that could help him to win here
                 return 0;
             }
             if (match[p] % 2 == 0){

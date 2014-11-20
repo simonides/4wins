@@ -40,9 +40,12 @@ bool MeepleProperty::operator != (const MeepleProperty& prop){
 
 
 
-
 Meeple::Meeple(MeepleColor::Enum color, MeepleSize::Enum size, MeepleShape::Enum shape, MeepleDetail::Enum detail) :
     color(color), size(size), shape(shape), detail(detail){
+}
+
+Meeple::Meeple(const Meeple& base) :
+    color(base.color), size(base.size), shape(base.shape), detail(base.detail){
 }
 
 MeepleProperty Meeple::getProperty(MeepleProperty::Type type) const{
@@ -117,7 +120,7 @@ std::string Meeple::toString() const{
     return MeepleColor::toString(color) + ' ' + MeepleSize::toString(size) + ' ' + MeepleShape::toString(shape) + ' ' + MeepleDetail::toString(detail);
 }
 
-bool Meeple::equals(Meeple& meeple) const{
+bool Meeple::equals(const Meeple& meeple) const{
     if (meeple.getColor() == color &&
         meeple.getSize() == size &&
         meeple.getShape() == shape &&
@@ -127,6 +130,6 @@ bool Meeple::equals(Meeple& meeple) const{
     return false;
 }
 
-bool Meeple::operator == (Meeple& meeple) const{
+bool Meeple::operator == (const Meeple& meeple) const{
     return equals(meeple);
 }

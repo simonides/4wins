@@ -17,13 +17,10 @@ protected:
     MeepleBag* bag[2];
     Board* board;
 
-    GameState gameStatePlayer1;                //stores the gamestate for player 1 (buffered)
-    GameState gameStatePlayer2;
-
-    I_Player* player1;
-    I_Player* player2;
+    GameState* gameStates[2];                //stores the gamestate for the players  (each player has a differen gameState (own/opponent)  
+    I_Player* player[2];
     
-    virtual void runGameCycle(I_Player* player, I_Player* opponent, GameState& gameStateForPlayer, GameState& gameStateForOpponent, int playerNr);
+    virtual void runGameCycle(uint8_t playerNr);
 public:
     GameSimulator(I_Player& player1, I_Player& player2); //Initialises the game with 2 players
     virtual void reset();                               //Reinitialises the object

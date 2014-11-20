@@ -3,6 +3,7 @@
 #include <string>
 #include <set>
 
+class MeepleBag;
 class Meeple;
 
 struct BoardPos{
@@ -14,6 +15,8 @@ struct BoardPos{
 struct WinCombination{      //Contains 4 meeples, that are either in a row, column, or diagonal. If these meeples are similar, a player won the game
     const Meeple *meeples[4];
     BoardPos positions[4];   //Position of the meeples
+    WinCombination();
+    WinCombination(const WinCombination& base); //Creates a copy. (!) The meeple-pointers are set tu nullptr (!)
 };
 
 struct WinCombinationSet{   //Contains all possible combinations, that can lead to a victory
@@ -30,8 +33,10 @@ private:
     
     bool checkSimpleWinCombination(const WinCombination* comb) const;  //Checks 4 meeples for similarity
     void updateWinCombinations() const;                         //updates the winCombination-field (sets the meeple-pointers to the current board-state)
+    explicit Board(const Board& base);
 public:
     Board();
+    Board(const Board& base, const MeepleBag* bag1, const MeepleBag* bag2);
     virtual ~Board();
 
     void reset();                                               //Reinitialises the object
