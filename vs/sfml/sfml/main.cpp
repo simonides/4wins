@@ -14,7 +14,7 @@
 #include "ThinkingAI.h"
 #include "SmartAI.h"
 
-#include "Menu.h"
+#include "Menu/Menu.h"
 
 const std::string GAME_TITLE = "4 Wins by ...";
 
@@ -44,15 +44,22 @@ void AI_testFunction(){
 }
 
 
+
+using namespace FourWins;
 int main(){
 	AI_testFunction();
 	
 	sf::RenderWindow* window = setupWindow();
-	Menu* menu = new Menu(window);
+	Menu::MainMenu* menu = new Menu::MainMenu(*window);
+	menu->init();
 	while (window->isOpen()){
 		
 		//GameSettings gamesettings = menu->loop();
 		//system("pause");
+		if (!window->isOpen())
+		{
+			break;
+		}
 		
 
 		I_Player* test =    new ThinkingAI(true, true);
