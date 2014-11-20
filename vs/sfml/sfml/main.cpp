@@ -54,17 +54,17 @@ int main(){
 		//system("pause");
 		
 
-		I_Player* test = new ThinkingAI(true, true);
-		I_Player* test2 =	new SmartAI(true, true);
+		I_Player* test =    new ThinkingAI(true, true);
+		I_Player* test2 =	new ThinkingAI(true, true);
 
-		ThreadController* tc = new ThreadController(*test);
+		ThreadController* tc3 = new ThreadController(*test);
 		ThreadController* tc2 = new ThreadController(*test2);
 		//I_Player* test2 =	new Player();
 
 		Player* p1 = new Player();
-		p1->type = Player::HUMAN;
-		//p1->controller = tc;
+		p1->type = Player::TC;
 		p1->player = nullptr;
+		p1->controller = tc3;
 
 		Player* p2 = new Player();
 		p2->type = Player::TC;
@@ -79,12 +79,17 @@ int main(){
         human2->type = Player::HUMAN;
         human2->player = nullptr;
 
-		Game* game = new Game(*window, *p1, *p2);
+		Game* game = new Game(*window, *p1, *human2);
 		game->runGame();
+
 
 		delete game;
 		delete p2;
 		delete p1;
+		delete test;
+		delete test2;
+		delete tc3;
+		delete tc2;
 		break; // or start new game .. 
 
 	}
