@@ -12,6 +12,7 @@ class MeepleBag;
 class I_Player;
 class RBoard;
 class Board;
+class RBag;
 
 struct Player{
 	enum{
@@ -24,9 +25,7 @@ struct Player{
 		ThreadController* controller;
 		I_Player* player;
 	};
-	std::vector<RMeeple*> usedRMeeples;
-	std::vector<RMeeple*> rMeeples;
-
+	RBag* rbag;
 	MeepleBag* logicalMeepleBag;
 };
 
@@ -48,7 +47,8 @@ private:
 	sf::Texture boardTexture;
 	sf::Texture fieldTexture;
 	sf::Texture fieldTextureOccupied;
-    
+	sf::Font font;
+
 	sf::Vector2f convertedMousePos;
 	sf::Vector2f lastValidPosition;
 	bool pressedLeftMouse;
@@ -71,8 +71,7 @@ private:
 	void switchPlayers();
 	void initMeeples();
 	void loadTextures();
-	sf::IntRect getTextRectForPos(const Meeple& meeple);
-	sf::IntRect getGlowTextRectForPos(const Meeple& meeple);
+
 	sf::Color rainbow(float progress) const ;
 
 	RMeeple* rMeepleToSet;
@@ -88,7 +87,5 @@ public:
     GameWinner::Enum runGame();                 //Runs the game, until it is over; returns the winner
   
 	void pollEvents();
-	void pollHumanWaiting();
-	void pollHumanSelectOpponentMeeple();
 };
 

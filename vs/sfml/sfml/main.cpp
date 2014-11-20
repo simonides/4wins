@@ -60,9 +60,9 @@ int main(){
 		//I_Player* test2 =	new Player();
 
 		Player* p1 = new Player();
-		p1->type = Player::TC;
-		p1->controller = tc;
-		//p1->player = nullptr;
+		p1->type = Player::HUMAN;
+		//p1->controller = tc;
+		p1->player = nullptr;
 
 		Player* p2 = new Player();
 		p2->type = Player::TC;
