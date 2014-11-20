@@ -31,9 +31,3 @@ extern const unsigned int WINDOW_WIDTH;
 
     #define PRINT_THINK_MAP 0               //prints the throughts of the AI's to the console
 #endif
-
-
-//Weitere improvements:
-//
-//  - gegnerische felder blockieren, wenn der Gegner mit dem nächsten zug gewinnen könnte!
-//

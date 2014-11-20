@@ -53,8 +53,10 @@ int main(){
 		//GameSettings gamesettings = menu->loop();
 		//system("pause");
 		
+
 		I_Player* test = new ThinkingAI(true, true);
 		I_Player* test2 =	new SmartAI(true, true);
+
 		ThreadController* tc = new ThreadController(*test);
 		ThreadController* tc2 = new ThreadController(*test2);
 		//I_Player* test2 =	new Player();
@@ -68,11 +70,14 @@ int main(){
 		p2->type = Player::TC;
 		p2->player = nullptr;
 		p2->controller = tc2;
-		//p1.player
+		
+        Player* human = new Player();
+        human->type = Player::HUMAN;
+        human->player = nullptr;
 
-		//ThreadController* test3 = new ThreadController(*test2);
-
-
+        Player* human2 = new Player();
+        human2->type = Player::HUMAN;
+        human2->player = nullptr;
 
 		Game* game = new Game(*window, *p1, *p2);
 		game->runGame();

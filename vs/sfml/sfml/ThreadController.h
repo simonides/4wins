@@ -21,9 +21,7 @@ struct ThreadCommand{                       //A command that is transmitted from
     const GameState* gameState;
     const Meeple* meepleToSet;          //Only needed for the type "SELECT_MEEPLE_POSITION"
 
-    std::string toString(){
-        return type == TERMINATE ? "terminate" : type == SELECT_OPPONENTS_MEEPLE ? "select opponent's meeple" : type == SELECT_MEEPLE_POSITION ? "select meeple position" : "reset player";
-    }
+    std::string toString();
 };
 
 

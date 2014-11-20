@@ -34,8 +34,8 @@ void GameSimulator::reset(){
     bag[0]->reset();
     bag[1]->reset();
     board->reset();
-    /*player1->reset();
-    player2->reset();*/
+    player1->reset();
+    player2->reset();
 }
 
 

@@ -10,7 +10,14 @@
 #include <iostream>
 
 
-using namespace std;
+
+
+
+std::string ThreadCommand::toString(){
+    return type == TERMINATE ? "terminate" : type == SELECT_OPPONENTS_MEEPLE ? "select opponent's meeple" : type == SELECT_MEEPLE_POSITION ? "select meeple position" : "reset player";
+}
+
+
 
 ThreadedGameSimulator::ThreadedGameSimulator(I_Player& player1, I_Player& player2) : GameSimulator(player1, player2),
                                                                                      controller1(player1), 
@@ -61,11 +68,11 @@ void ThreadedGameSimulator::runGameCycle(I_Player* player, I_Player* opponent, G
     
     //Debug:
     #if PRINT_BOARD_TO_CONSOLE
-        cout << "Player " << playerNr + 1 << " chose meeple \"" << toSet.toString() << '\"' << endl;
-        cout << "Player " << (playerNr + 1) % 2 + 1 << " sets meeple to " << pos.toString() << endl;
-        board->print(cout);
+        std::cout << "Player " << playerNr + 1 << " chose meeple \"" << toSet.toString() << '\"' << std::endl;
+        std::cout << "Player " << (playerNr + 1) % 2 + 1 << " sets meeple to " << pos.toString() << std::endl;
+        board->print(std::cout);
     #endif
     #if STEP_BY_STEP
-        cin.ignore();
+        std::cin.ignore();
     #endif
 }

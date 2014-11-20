@@ -8,9 +8,7 @@ class Meeple;
 struct BoardPos{
     uint8_t x;
     uint8_t y;
-    std::string toString(){
-		return std::string('(' + std::to_string(x+1) + '|' + std::to_string(y+1) + ')');
-    }
+    std::string toString();
 };
 
 struct WinCombination{      //Contains 4 meeples, that are either in a row, column, or diagonal. If these meeples are similar, a player won the game

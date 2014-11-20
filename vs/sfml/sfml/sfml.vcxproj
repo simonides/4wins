@@ -88,7 +88,7 @@
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="GameSimulator.cpp" />
-    <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="helper.cpp" />
     <ClCompile Include="RBag.cpp" />
     <ClCompile Include="RBoard.cpp" />
     <ClCompile Include="RField.cpp" />

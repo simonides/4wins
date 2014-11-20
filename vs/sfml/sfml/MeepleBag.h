@@ -30,7 +30,5 @@ public:
     
     bool isMeepleInBag(const Meeple& meeple) const;         //returns, if this meeple is in the bag
     int getMeepleIndex(const Meeple& meeple) const;         //returns the index of the meeple in the bag; returns -1, if the meeple is not in the bag
-
-
 };
 

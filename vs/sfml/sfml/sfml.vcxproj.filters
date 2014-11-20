@@ -96,9 +96,6 @@
     <ClCompile Include="ThreadController.cpp">
       <Filter>Source Files\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Helper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RMeeple.cpp">
       <Filter>Source Files\REntities</Filter>
     </ClCompile>
@@ -110,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="RBoard.cpp">
       <Filter>Source Files\REntities</Filter>
+    </ClCompile>
+    <ClCompile Include="helper.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
