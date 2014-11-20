@@ -3,6 +3,7 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <string>
+#include <assert.h>
 
 #include "Game.h"
 #include "GameSimulator.h"
@@ -79,7 +80,14 @@ int main(){
         human2->type = Player::HUMAN;
         human2->player = nullptr;
 
-		Game* game = new Game(*window, *p1, *human2);
+		assert(p1 != nullptr);
+		assert(p2 != nullptr);
+		assert(human != nullptr);
+		assert(human2 != nullptr);
+		assert(tc2 != nullptr);
+		assert(tc3 != nullptr);
+
+		Game* game = new Game(*window, *human, *human2);
 		game->runGame();
 
 

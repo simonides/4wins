@@ -35,9 +35,6 @@ struct Player{
 class Game
 {
 private:
-
-
-
 	sf::RenderWindow* window;
 
 	sf::Vector2f mousePosRelativeToMeepleBoundary;
@@ -63,7 +60,6 @@ private:
 	uint8_t activePlayerIndex;
 
 	sf::Clock meepleGlowAnimationClock;
-	sf::RectangleShape endscreenPanel;
 	RMeeple* winningCombiRMeeples[4];
 	bool drawEndScreen;
 	float color4MGlow[4];
@@ -71,11 +67,11 @@ private:
 	void switchPlayers();
 	void initMeeples();
 	void loadTextures();
-
+	void setString(std::string message);
 	sf::Color rainbow(float progress) const ;
 
 	RMeeple* rMeepleToSet;
-
+	sf::Text text;
 
 
 

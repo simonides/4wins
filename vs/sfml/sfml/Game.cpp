@@ -76,9 +76,6 @@ Game::Game(sf::RenderWindow& window,Player& player1,  Player& player2) : window(
 
 	initMeeples();
 
-	endscreenPanel.setFillColor(sf::Color(128,128,0,85));
-	endscreenPanel.setSize(sf::Vector2f(1500.f, 800.f));
-	endscreenPanel.setPosition(sf::Vector2f(0, 0));
 	color4MGlow[0] = 0.1f;
 	color4MGlow[1] = 0.25f;
 	color4MGlow[2] = 0.35f;
@@ -113,7 +110,7 @@ void Game::reset(){
 //Game Loop for one game, until there is a winner or the board is full
 GameWinner::Enum Game::runGame(){
 	sf::Clock clock;
-	sf::Text text;
+	
 
 	const Meeple* meepleToSet = nullptr;
 	RMeeple* glowMeepleTmp = nullptr;
@@ -133,7 +130,8 @@ GameWinner::Enum Game::runGame(){
 		text.setCharacterSize(50); // in pixels, not points!
 		text.setColor(sf::Color::Black);
 		//text.setStyle(sf::Text::Bold /*| sf::Text::Underlined*/);
-		text.setPosition(sf::Vector2f(430.f, 10.f));
+		
+
 
 		pollEvents();
 
@@ -157,7 +155,7 @@ GameWinner::Enum Game::runGame(){
 		case HUMAN_SELECT_MEEPLE:
 		{
 			assert(players[activePlayerIndex]->type == Player::HUMAN);
-			text.setString(std::string("Player " + std::to_string(activePlayerIndex + 1) + " choose Meeple"));
+			setString(std::string("Player " + std::to_string(activePlayerIndex + 1) + " choose Meeple"));
 
 			if (releasedLeftMouse){
 				rMeepleToSet = players[(activePlayerIndex + 1) % 2]->rbag->getRMeepleAtPosition(convertedMousePos);
@@ -167,7 +165,7 @@ GameWinner::Enum Game::runGame(){
 					meepleToSet = rMeepleToSet->getLogicalMeeple();
 
 					switchPlayers();
-
+					glowMeepleTmp = nullptr;
 					if (players[activePlayerIndex]->type == Player::TC){
 						loopState = TC_START_SELECT_MEEPLE_POSITION;
 					}
@@ -395,9 +393,6 @@ GameWinner::Enum Game::runGame(){
 		players[0]->rbag->draw(*window);
 		players[1]->rbag->draw(*window);
 
-		if (drawEndScreen){
-			window->draw(endscreenPanel);
-		}
 		window->draw(text);
 		window->display();
 	}
@@ -514,6 +509,35 @@ void Game::loadTextures(){
 		assert(false);
 	}
 }
+
+
+void Game::setString(std::string message)
+{
+
+	sf::FloatRect textRect = text.getLocalBounds();
+	text.setOrigin(textRect.left + textRect.width / 2.0f,
+		textRect.top + textRect.height / 2.0f);
+
+	text.setString(message);
+	//text.setOrigin(0, 0);
+
+
+	textRect = text.getLocalBounds();
+	text.setOrigin(textRect.left + textRect.width / 2.0f,
+		25.0f);
+	//window->mapCoordsToPixel( window->getSize())
+	//text.getLocalBounds().width
+	text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2.0f, 0.0f));
+
+	//float xPostext = (window->getSize().x / 2.f);
+	//std::cout << "windowsize /2: " << xPostext << std::endl;
+	//float test2 = (text.getGlobalBounds().width / 2);
+	//std::cout << "test2 /2: " << test2 << std::endl;
+	//text.setPosition(sf::Vector2f(xPostext + test2, 10.f));
+
+
+}
+
 
 void Game::pollEvents(){
 	pressedLeftMouse = false;
