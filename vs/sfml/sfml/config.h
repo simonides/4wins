@@ -9,7 +9,7 @@ extern const unsigned int WINDOW_WIDTH_TO_CALCULATE;
 extern const unsigned int WINDOW_HEIGHT; // standard display res setting
 extern const unsigned int WINDOW_WIDTH;
 
-#define PRINT_ALL
+//#define PRINT_ALL
 
        
 

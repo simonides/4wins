@@ -12,6 +12,7 @@ class MeepleBag;
 class I_Player;
 class RBoard;
 class Board;
+class RBag;
 
 struct Player{
 	enum{
@@ -24,9 +25,7 @@ struct Player{
 		ThreadController* controller;
 		I_Player* player;
 	};
-	std::vector<RMeeple*> usedRMeeples;
-	std::vector<RMeeple*> rMeeples;
-
+	RBag* rbag;
 	MeepleBag* logicalMeepleBag;
 };
 
@@ -36,9 +35,6 @@ struct Player{
 class Game
 {
 private:
-
-
-
 	sf::RenderWindow* window;
 
 	sf::Vector2f mousePosRelativeToMeepleBoundary;
@@ -48,7 +44,8 @@ private:
 	sf::Texture boardTexture;
 	sf::Texture fieldTexture;
 	sf::Texture fieldTextureOccupied;
-    
+	sf::Font font;
+
 	sf::Vector2f convertedMousePos;
 	sf::Vector2f lastValidPosition;
 	bool pressedLeftMouse;
@@ -58,12 +55,11 @@ private:
 	RBoard* board;
 
 	Player* players[2];
-    GameState gameStatePlayer[2];                //stores the gamestate for player 1 (buffered)
+    GameState* gameStates[2];                //stores the gamestate for player 1 (buffered)
 	
 	uint8_t activePlayerIndex;
 
 	sf::Clock meepleGlowAnimationClock;
-	sf::RectangleShape endscreenPanel;
 	RMeeple* winningCombiRMeeples[4];
 	bool drawEndScreen;
 	float color4MGlow[4];
@@ -71,15 +67,12 @@ private:
 	void switchPlayers();
 	void initMeeples();
 	void loadTextures();
-	sf::IntRect getTextRectForPos(const Meeple& meeple);
-	sf::IntRect getGlowTextRectForPos(const Meeple& meeple);
+	void setString(std::string message);
 	sf::Color rainbow(float progress) const ;
 
 	RMeeple* rMeepleToSet;
-
-
-
-
+	sf::Text text;
+    
 public:
     Game(sf::RenderWindow& window, Player& player1, Player& player2); //Initialises the game with 2 players
 	virtual ~Game();
@@ -88,7 +81,5 @@ public:
     GameWinner::Enum runGame();                 //Runs the game, until it is over; returns the winner
   
 	void pollEvents();
-	void pollHumanWaiting();
-	void pollHumanSelectOpponentMeeple();
 };
 

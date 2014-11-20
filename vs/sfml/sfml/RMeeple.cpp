@@ -1,15 +1,12 @@
 #include "RMeeple.h"
-
 #include "Meeple.h"
 
-//#include <iostream>
-//using namespace std;
 
-const float MEEPLE_HEIGHT = 170;
-const float MEEPLE_ANCHOR_TOP = 140;
+const float MEEPLE_HEIGHT = 200;
+const float MEEPLE_WIDTH = MEEPLE_HEIGHT * 0.49f;
 
-const float MEEPLE_WIDTH = 80;
 const float MEEPLE_ANCHOR_LEFT = 40;
+const float MEEPLE_ANCHOR_TOP = 10;
 
 //logicalMeeple has to be deleted by the bag
 RMeeple::RMeeple(const Meeple& logicalMeeple, sf::Texture& shapeTex, sf::Texture& glowShapeTex, sf::Vector2f& initPos)

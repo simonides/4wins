@@ -9,7 +9,7 @@ GameState::GameState(const MeepleBag* ownBag, const MeepleBag* opponentBag, cons
 }
 
 GameState::GameState(const GameState& base) :
-    ownBag(new MeepleBag(*ownBag)), opponentBag(new MeepleBag(*opponentBag)), board(new Board(*board, ownBag, opponentBag)), cloned(true){
+    ownBag(new MeepleBag(*base.ownBag)), opponentBag(new MeepleBag(*base.opponentBag)), board(new Board(*base.board, ownBag, opponentBag)), cloned(true){
 }
 
 GameState::~GameState(){

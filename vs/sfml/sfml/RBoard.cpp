@@ -4,19 +4,19 @@
 
 #include <iostream>
 #include <assert.h>
-//#include 
+#include "config.h"
 
-const unsigned int BOARD_X_OFFSET = 675;
-const unsigned int BOARD_Y_OFFSET = 150;
+const unsigned int BOARD_X_OFFSET = static_cast<int>( WINDOW_WIDTH_TO_CALCULATE / 2.f);
+const unsigned int BOARD_Y_OFFSET = 162;
 
-const unsigned int BOARD_X_SPACEING = 240;
-const unsigned int BOARD_Y_SPACEING = 75;
+const unsigned int BOARD_X_SPACEING = 269;
+const unsigned int BOARD_Y_SPACEING = 80;
 
-const float BOARD_HEIGHT = 620.f;
+const float BOARD_HEIGHT = 670.f;
 const float BOARD_WIDTH = BOARD_HEIGHT * 1.615f; // 1,615 = Ratio 16:9
 
-const float BOARD_X_POS = 180.f;
-const float BOARD_Y_POS = 70.f;
+const float BOARD_X_POS = WINDOW_WIDTH_TO_CALCULATE /2.f ;
+const float BOARD_Y_POS = WINDOW_HEIGHT_TO_CALCULATE / 2.f + 70.f;
 
 
 RBoard::RBoard(sf::Texture& boardTexture, sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied)
@@ -24,7 +24,9 @@ RBoard::RBoard(sf::Texture& boardTexture, sf::Texture& fieldTexture, sf::Texture
 {
 	boardShape.setTexture(&boardTexture);
 	boardShape.setSize(sf::Vector2f(BOARD_WIDTH, BOARD_HEIGHT));
-	//boardShape.setFillColor(sf::Color::White);
+	//boardShape.setFillColor(sf::Color::Red);
+	sf::FloatRect bounds =  boardShape.getGlobalBounds();
+	boardShape.setOrigin((bounds.left + bounds.width)/2.f, (bounds.top + bounds.height)/2.f);
 	boardShape.setPosition(sf::Vector2f(BOARD_X_POS, BOARD_Y_POS));	// todo calulate
 
 	initFields(fieldTexture,fieldTextureOccupied);

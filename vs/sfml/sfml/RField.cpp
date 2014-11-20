@@ -1,8 +1,8 @@
 #include "RField.h"
 
 
-const float HEIGHT = 80.f;
-const float WIDTH = 80.f;
+const float HEIGHT = 130.f;
+const float WIDTH = 130.f;
 
 RField::RField(const BoardPos& posOnBoard, sf::Vector2f& initPos, sf::Texture& fieldShapeTex, sf::Texture& occupiedShapeTex)
 	: posOnBoard(posOnBoard),shape(NOT_OCCUPIED)

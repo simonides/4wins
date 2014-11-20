@@ -3,6 +3,7 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <string>
+#include <assert.h>
 
 #include "Game.h"
 #include "GameSimulator.h"
@@ -54,17 +55,17 @@ int main(){
 		//system("pause");
 		
 
-		I_Player* test = new ThinkingAI(true, true);
-		I_Player* test2 =	new SmartAI(true, true);
+		I_Player* test =    new ThinkingAI(true, true);
+		I_Player* test2 =	new ThinkingAI(true, true);
 
-		ThreadController* tc = new ThreadController(*test);
+		ThreadController* tc3 = new ThreadController(*test);
 		ThreadController* tc2 = new ThreadController(*test2);
 		//I_Player* test2 =	new Player();
 
-        
-		Player* p1 = new Player();       
+		Player* p1 = new Player();
 		p1->type = Player::TC;
-		p1->controller = tc;
+		p1->player = nullptr;
+		p1->controller = tc3;
 
 		Player* p2 = new Player();
 		p2->type = Player::TC;
@@ -79,12 +80,25 @@ int main(){
         human2->type = Player::HUMAN;
         human2->player = nullptr;
 
+		assert(p1 != nullptr);
+		assert(p2 != nullptr);
+		assert(human != nullptr);
+		assert(human2 != nullptr);
+		assert(tc2 != nullptr);
+		assert(tc3 != nullptr);
+
+
 		Game* game = new Game(*window, *human, *human2);
 		game->runGame();
+
 
 		delete game;
 		delete p2;
 		delete p1;
+		delete test;
+		delete test2;
+		delete tc3;
+		delete tc2;
 		break; // or start new game .. 
 
 	}
