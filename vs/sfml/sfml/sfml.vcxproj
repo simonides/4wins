@@ -90,6 +90,7 @@
     <ClCompile Include="GameSimulator.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="helper.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="RBag.cpp" />
     <ClCompile Include="RBoard.cpp" />
     <ClCompile Include="RField.cpp" />
@@ -114,6 +115,7 @@
   <ItemGroup>
     <ClInclude Include="GameSimulator.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="RBag.h" />
     <ClInclude Include="RBoard.h" />
     <ClInclude Include="RField.h" />

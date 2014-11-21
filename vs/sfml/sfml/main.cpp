@@ -47,7 +47,7 @@ void AI_testFunction(){
 
 using namespace FourWins;
 int main(){
-	AI_testFunction();
+	//AI_testFunction();
 	
 	sf::RenderWindow* window = setupWindow();
 	Menu::MainMenu* menu = new Menu::MainMenu(*window);

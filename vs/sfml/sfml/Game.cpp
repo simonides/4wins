@@ -24,7 +24,7 @@
 #include <iostream>
 
 #include <math.h>
-
+#include "ParticleSystem.h"
 
 
 
@@ -112,8 +112,8 @@ void Game::reset(){
 //Game Loop for one game, until there is a winner or the board is full
 GameWinner::Enum Game::runGame(){
 	sf::Clock clock;
+    float elapsedTime = 0;
 	
-
 	const Meeple* meepleToSet = nullptr;
 	RMeeple* glowMeepleTmp = nullptr;
 	rMeepleToSet = nullptr;
@@ -122,9 +122,14 @@ GameWinner::Enum Game::runGame(){
 
 	LoopState loopState = INIT_STATE;
 
-	while (window->isOpen()){
 
-	    float fps = 1 / clock.getElapsedTime().asSeconds();
+
+    ParticleSystem* pr = new ParticleSystem();
+
+
+	while (window->isOpen()){
+        elapsedTime = clock.getElapsedTime().asSeconds();
+	    float fps = 1.f / elapsedTime;
 		clock.restart();
 
 		text.setFont(font);
@@ -137,251 +142,250 @@ GameWinner::Enum Game::runGame(){
 
 		pollEvents();
 
-		switch (loopState)
-		{
-		case INIT_STATE:
-		{
-			//todo das stimmt no ned ganz human iplayer und tc !!!!
-			loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
-			//goto ?
-			break;
-		}
-		case I_PLAYER_SELECT_MEEPLE:
-		{
-			assert(players[activePlayerIndex]->type == Player::I_PLAYER);
-			meepleToSet = &players[activePlayerIndex]->player->selectOpponentsMeeple(*gameStates[activePlayerIndex]);
-			loopState = HIGHLIGHT_SELECTED_MEEPLE;
-			//todo: goto??
-			break;
-		}
-		case HUMAN_SELECT_MEEPLE:
-		{
-			assert(players[activePlayerIndex]->type == Player::HUMAN);
-			setString(std::string("Player " + std::to_string(activePlayerIndex + 1) + " choose Meeple"));
+        switch (loopState)
+        {
+        case INIT_STATE:
+        {
+                           //todo das stimmt no ned ganz human iplayer und tc !!!!
+                           loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
+                           //goto ?
+                           break;
+        }
+        case I_PLAYER_SELECT_MEEPLE:
+        {
+                                       assert(players[activePlayerIndex]->type == Player::I_PLAYER);
+                                       meepleToSet = &players[activePlayerIndex]->player->selectOpponentsMeeple(*gameStates[activePlayerIndex]);
+                                       loopState = HIGHLIGHT_SELECTED_MEEPLE;
+                                       //todo: goto??
+                                       break;
+        }
+        case HUMAN_SELECT_MEEPLE:
+        {
+                                    assert(players[activePlayerIndex]->type == Player::HUMAN);
+                                    setString(std::string("Player " + std::to_string(activePlayerIndex + 1) + " choose Meeple"));
 
-			if (releasedLeftMouse){
-				rMeepleToSet = players[(activePlayerIndex + 1) % 2]->rbag->getRMeepleAtPosition(convertedMousePos);
-				if (rMeepleToSet != nullptr)
-				{
-					rMeepleToSet->setGlow(&SELECTED_GLOW);
-					meepleToSet = rMeepleToSet->getLogicalMeeple();
+                                    if (releasedLeftMouse){
+                                        rMeepleToSet = players[(activePlayerIndex + 1) % 2]->rbag->getRMeepleAtPosition(convertedMousePos);
+                                        if (rMeepleToSet != nullptr)
+                                        {
+                                            rMeepleToSet->setGlow(&SELECTED_GLOW);
+                                            meepleToSet = rMeepleToSet->getLogicalMeeple();
 
-					switchPlayers();
-					glowMeepleTmp = nullptr;
-					if (players[activePlayerIndex]->type == Player::TC){
-						loopState = TC_START_SELECT_MEEPLE_POSITION;
-					}
-					else if (players[activePlayerIndex]->type == Player::HUMAN) {
-						loopState = HUMAN_SELECT_MEEPLE_POSITION;
-					}
-					else{
-						loopState = I_PLAYER_SELECT_MEEPLE_POSITION;
-					}
-				}
-			}
-			if (glowMeepleTmp != nullptr)
-			{
-				glowMeepleTmp->setGlow(nullptr);
-			}
-			glowMeepleTmp = players[(activePlayerIndex + 1) % 2]->rbag->getRMeepleAtPosition(convertedMousePos);
-			if (glowMeepleTmp != nullptr)
-			{
-				glowMeepleTmp->setGlow(&STANDARD_GLOW);
-			}
-			break;
-		}
-		case TC_START_SELECT_MEEPLE:
-		{
-			assert(players[activePlayerIndex]->type == Player::TC);
-			players[activePlayerIndex]->controller->run_selectOpponentsMeeple(*gameStates[activePlayerIndex]);
-			loopState = TC_WAIT_FOR_SELECTED_MEEPLE;
-			break;
-		}
-		case TC_WAIT_FOR_SELECTED_MEEPLE:
-		{
-			assert(players[activePlayerIndex]->type == Player::TC);
-			if (!players[activePlayerIndex]->controller->isResultAvailable()){
-				break;
-			}
-			meepleToSet = &players[activePlayerIndex]->controller->getOpponentsMeeple();
+                                            switchPlayers();
+                                            glowMeepleTmp = nullptr;
+                                            if (players[activePlayerIndex]->type == Player::TC){
+                                                loopState = TC_START_SELECT_MEEPLE_POSITION;
+                                            }
+                                            else if (players[activePlayerIndex]->type == Player::HUMAN) {
+                                                loopState = HUMAN_SELECT_MEEPLE_POSITION;
+                                            }
+                                            else{
+                                                loopState = I_PLAYER_SELECT_MEEPLE_POSITION;
+                                            }
+                                        }
+                                    }
+                                    if (glowMeepleTmp != nullptr)
+                                    {
+                                        glowMeepleTmp->setGlow(nullptr);
+                                    }
+                                    glowMeepleTmp = players[(activePlayerIndex + 1) % 2]->rbag->getRMeepleAtPosition(convertedMousePos);
+                                    if (glowMeepleTmp != nullptr)
+                                    {
+                                        glowMeepleTmp->setGlow(&STANDARD_GLOW);
+                                    }
+                                    break;
+        }
+        case TC_START_SELECT_MEEPLE:
+        {
+                                       assert(players[activePlayerIndex]->type == Player::TC);
+                                       players[activePlayerIndex]->controller->run_selectOpponentsMeeple(*gameStates[activePlayerIndex]);
+                                       loopState = TC_WAIT_FOR_SELECTED_MEEPLE;
+                                       break;
+        }
+        case TC_WAIT_FOR_SELECTED_MEEPLE:
+        {
+                                            assert(players[activePlayerIndex]->type == Player::TC);
+                                            if (!players[activePlayerIndex]->controller->isResultAvailable()){
+                                                break;
+                                            }
+                                            meepleToSet = &players[activePlayerIndex]->controller->getOpponentsMeeple();
 
-			loopState = HIGHLIGHT_SELECTED_MEEPLE;
-			//intentional fall through
-		}
-		case HIGHLIGHT_SELECTED_MEEPLE:
-		{
-			assert(players[activePlayerIndex]->type == Player::TC);
+                                            loopState = HIGHLIGHT_SELECTED_MEEPLE;
+                                            //intentional fall through
+        }
+        case HIGHLIGHT_SELECTED_MEEPLE:
+        {
+                                          assert(players[activePlayerIndex]->type == Player::TC);
 
-			switchPlayers();
+                                          switchPlayers();
 
-			rMeepleToSet = players[activePlayerIndex]->rbag->isPassedMeepleInUnused(meepleToSet);
-			assert(rMeepleToSet != nullptr);
-			rMeepleToSet->setGlow(&SELECTED_GLOW);
-			//highlight meeple (with glow animation? light -> heavy glow)
-			//search meeple in meeplebag  -> glow
+                                          rMeepleToSet = players[activePlayerIndex]->rbag->isPassedMeepleInUnused(meepleToSet);
+                                          assert(rMeepleToSet != nullptr);
+                                          rMeepleToSet->setGlow(&SELECTED_GLOW);
+                                          //highlight meeple (with glow animation? light -> heavy glow)
+                                          //search meeple in meeplebag  -> glow
 
-			//===todo auf 
-			loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE_POSITION : TC_START_SELECT_MEEPLE_POSITION;
-			break;
-		}
-		case I_PLAYER_SELECT_MEEPLE_POSITION:
-		{
-			assert(players[activePlayerIndex]->type == Player::I_PLAYER);
-			posMeepleTo = players[activePlayerIndex]->player->selectMeeplePosition(*gameStates[activePlayerIndex], *meepleToSet);
-			loopState = MOVE_MEEPLE_TO_SELECTED_POSITION;
-			//todo: goto??
-			break;
-		}
-		case HUMAN_SELECT_MEEPLE_POSITION:
-		{
-			assert(players[activePlayerIndex]->type == Player::HUMAN);
-			assert(rMeepleToSet != nullptr);
-			//human code
-			//move my fucking meeple :)
-			if (pressedLeftMouse && rMeepleToSet->containsPosition(convertedMousePos)){
-				lastValidPosition = rMeepleToSet->getPosition();
-				mousePosRelativeToMeepleBoundary = rMeepleToSet->getMousePosRelativeToMeepleBoundary(convertedMousePos);
-				dragMeeple = true;
-			}
+                                          //===todo auf 
+                                          loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE_POSITION : TC_START_SELECT_MEEPLE_POSITION;
+                                          break;
+        }
+        case I_PLAYER_SELECT_MEEPLE_POSITION:
+        {
+                                                assert(players[activePlayerIndex]->type == Player::I_PLAYER);
+                                                posMeepleTo = players[activePlayerIndex]->player->selectMeeplePosition(*gameStates[activePlayerIndex], *meepleToSet);
+                                                loopState = MOVE_MEEPLE_TO_SELECTED_POSITION;
+                                                //todo: goto??
+                                                break;
+        }
+        case HUMAN_SELECT_MEEPLE_POSITION:
+        {
+                                             assert(players[activePlayerIndex]->type == Player::HUMAN);
+                                             assert(rMeepleToSet != nullptr);
+                                             //human code
+                                             //move my fucking meeple :)
+                                             if (pressedLeftMouse && rMeepleToSet->containsPosition(convertedMousePos)){
+                                                 lastValidPosition = rMeepleToSet->getPosition();
+                                                 mousePosRelativeToMeepleBoundary = rMeepleToSet->getMousePosRelativeToMeepleBoundary(convertedMousePos);
+                                                 dragMeeple = true;
+                                             }
 
-			if (dragMeeple){ // todo checken ob !releaseleftmous braucht
-				sf::Vector2f test(convertedMousePos.x - mousePosRelativeToMeepleBoundary.x, convertedMousePos.y - mousePosRelativeToMeepleBoundary.y);
-				rMeepleToSet->setPosition(test);
-				board->setHoveredField(board->getBoardPosForPosititon(convertedMousePos));
-			}
+                                             if (dragMeeple){ // todo checken ob !releaseleftmous braucht
+                                                 sf::Vector2f test(convertedMousePos.x - mousePosRelativeToMeepleBoundary.x, convertedMousePos.y - mousePosRelativeToMeepleBoundary.y);
+                                                 rMeepleToSet->setPosition(test);
+                                                 board->setHoveredField(board->getBoardPosForPosititon(convertedMousePos));
+                                             }
 
-			if (releasedLeftMouse && dragMeeple){
-				dragMeeple = false;
-				BoardPos pos;
-				pos = board->getBoardPosForPosititon(convertedMousePos);
-				if ((pos.x < 4 && pos.y < 4) && logicalBoard->isFieldEmpty(pos)){
+                                             if (releasedLeftMouse && dragMeeple){
+                                                 dragMeeple = false;
+                                                 BoardPos pos;
+                                                 pos = board->getBoardPosForPosititon(convertedMousePos);
+                                                 if ((pos.x < 4 && pos.y < 4) && logicalBoard->isFieldEmpty(pos)){
 
-					players[activePlayerIndex]->rbag->changeRMeepleToUsed(*rMeepleToSet);
+                                                     players[activePlayerIndex]->rbag->changeRMeepleToUsed(*rMeepleToSet);
 
-					Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*meepleToSet);
-					logicalBoard->setMeeple(pos, *placeMe);
-					rMeepleToSet->setGlow(nullptr);
-					//todo einrasten machen snap meeeple
-					loopState = CHECK_END_CONDITION;
-				}
-				else{
-					rMeepleToSet->setPosition(lastValidPosition);
-				}
-			}
-			break;
-		}
-		case TC_START_SELECT_MEEPLE_POSITION:
-		{
-			assert(players[activePlayerIndex]->type == Player::TC);
-			players[activePlayerIndex]->controller->run_selectMeeplePosition(*gameStates[activePlayerIndex], *meepleToSet);
-			loopState = TC_WAIT_FOR_SELECTED_MEEPLE_POSITION;
-			//fall through?
-			break;
-		}
-		case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:
-		{
-			assert(players[activePlayerIndex]->type == Player::TC);
-			if (!players[activePlayerIndex]->controller->isResultAvailable()){
-				break;
-			}
-			posMeepleTo = players[activePlayerIndex]->controller->getMeeplePosition();
+                                                     Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*meepleToSet);
+                                                     logicalBoard->setMeeple(pos, *placeMe);
+                                                     rMeepleToSet->setGlow(nullptr);
+                                                     //todo einrasten machen snap meeeple
+                                                     loopState = CHECK_END_CONDITION;
+                                                 }
+                                                 else{
+                                                     rMeepleToSet->setPosition(lastValidPosition);
+                                                 }
+                                             }
+                                             break;
+        }
+        case TC_START_SELECT_MEEPLE_POSITION:
+        {
+                                                assert(players[activePlayerIndex]->type == Player::TC);
+                                                players[activePlayerIndex]->controller->run_selectMeeplePosition(*gameStates[activePlayerIndex], *meepleToSet);
+                                                loopState = TC_WAIT_FOR_SELECTED_MEEPLE_POSITION;
+                                                //fall through?
+                                                break;
+        }
+        case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:
+        {
+                                                     assert(players[activePlayerIndex]->type == Player::TC);
+                                                     if (!players[activePlayerIndex]->controller->isResultAvailable()){
+                                                         break;
+                                                     }
+                                                     posMeepleTo = players[activePlayerIndex]->controller->getMeeplePosition();
 
-			loopState = MOVE_MEEPLE_TO_SELECTED_POSITION;
-			//intentional fall through
-		}
-		case MOVE_MEEPLE_TO_SELECTED_POSITION:
-		{
-			assert(players[activePlayerIndex]->type == Player::TC);
-			assert(rMeepleToSet != nullptr);
+                                                     loopState = MOVE_MEEPLE_TO_SELECTED_POSITION;
+                                                     //intentional fall through
+        }
+        case MOVE_MEEPLE_TO_SELECTED_POSITION:
+        {
+                                                 assert(players[activePlayerIndex]->type == Player::TC);
+                                                 assert(rMeepleToSet != nullptr);
 
-			sf::FloatRect fieldBounds = board->getFieldBounds(posMeepleTo);
-			sf::Vector2f newPosition(
-				fieldBounds.left,
-				fieldBounds.top - 95.f); //todo magic num meepleheight
+                                                 sf::FloatRect fieldBounds = board->getFieldBounds(posMeepleTo);
+                                                 sf::Vector2f newPosition(
+                                                     fieldBounds.left,
+                                                     fieldBounds.top - 95.f); //todo magic num meepleheight
 
-			rMeepleToSet->setPosition(newPosition);
-			rMeepleToSet->setGlow(nullptr);
+                                                 rMeepleToSet->setPosition(newPosition);
+                                                 rMeepleToSet->setGlow(nullptr);
 
-			Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*meepleToSet);
-			logicalBoard->setMeeple(posMeepleTo, *placeMe);
+                                                 Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*meepleToSet);
+                                                 logicalBoard->setMeeple(posMeepleTo, *placeMe);
 
-			players[activePlayerIndex]->rbag->changeRMeepleToUsed(*rMeepleToSet);
+                                                 players[activePlayerIndex]->rbag->changeRMeepleToUsed(*rMeepleToSet);
 
-			loopState = CHECK_END_CONDITION;
-			break;
-		}
+                                                 loopState = CHECK_END_CONDITION;
+                                                 break;
+        }
 
-		case CHECK_END_CONDITION:
-		{
-			#if PRINT_BOARD_TO_CONSOLE
-			std::cout << "Player " << activePlayerIndex + 1 << " chose meeple \"" << meepleToSet->toString() << '\"' << std::endl;
-			std::cout << "Player " << (activePlayerIndex + 1) % 2 + 1 << " sets meeple to " << meepleToSet->toString() << std::endl;
-				logicalBoard->print(std::cout);
-			#endif
-			meepleToSet = nullptr;
-			rMeepleToSet = nullptr;
+        case CHECK_END_CONDITION:
+        {
+#if PRINT_BOARD_TO_CONSOLE
+                                    std::cout << "Player " << activePlayerIndex + 1 << " chose meeple \"" << meepleToSet->toString() << '\"' << std::endl;
+                                    std::cout << "Player " << (activePlayerIndex + 1) % 2 + 1 << " sets meeple to " << meepleToSet->toString() << std::endl;
+                                    logicalBoard->print(std::cout);
+#endif
+                                    meepleToSet = nullptr;
+                                    rMeepleToSet = nullptr;
 
-			const WinCombination* combi = logicalBoard->checkWinSituation();
-			if (combi != nullptr){    //player2 won
-				#if PRINT_WINNER_PER_ROUND
-				std::cout << "Player " << activePlayerIndex + 1 << " wins!" << std::endl;
-				#endif
-				loopState = DISPLAY_END_SCREEN;
-				
-				for (uint8_t i = 0; i < 4; ++i){
-					RMeeple* temp = players[activePlayerIndex]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
-					if (temp == nullptr)
-					{
-						winningCombiRMeeples[i] = players[(activePlayerIndex + 1) % 2]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
-					} else
-					{
-						winningCombiRMeeples[i] = temp;
-					}
-					assert(winningCombiRMeeples[i] != nullptr);
-				}
-			}
-			else if (activePlayerIndex == 1 && logicalBoard->isFull()){
-				#if PRINT_WINNER_PER_ROUND
-					std::cout << "Tie! There is no winner." << std::endl;
-				#endif
-				loopState = DISPLAY_END_SCREEN;
-			}
-			else{
-				//switchPlayers();
-				loopState = INIT_STATE;
-				break;
-			}
-			//intentional fall through
-		}
-		case DISPLAY_END_SCREEN:
-			assert(winningCombiRMeeples[0] != nullptr && winningCombiRMeeples[1] != nullptr &&winningCombiRMeeples[2] != nullptr &&winningCombiRMeeples[3] != nullptr);
-			drawEndScreen = true;
-			
-			if (meepleGlowAnimationClock.getElapsedTime().asSeconds() > 0.03f){
+                                    const WinCombination* combi = logicalBoard->checkWinSituation();
+                                    if (combi != nullptr){    //player2 won
+#if PRINT_WINNER_PER_ROUND
+                                        std::cout << "Player " << activePlayerIndex + 1 << " wins!" << std::endl;
+#endif
+                                        loopState = DISPLAY_END_SCREEN;
 
-				//color4MGlow[] = 0.f;
-				for (uint8_t i = 0; i < 4; ++i){
-				sf::Color c= rainbow(color4MGlow[i]);
-					winningCombiRMeeples[i]->setGlow(&c);
+                                        for (uint8_t i = 0; i < 4; ++i){
+                                            RMeeple* temp = players[activePlayerIndex]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
+                                            if (temp == nullptr)
+                                            {
+                                                winningCombiRMeeples[i] = players[(activePlayerIndex + 1) % 2]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
+                                            }
+                                            else
+                                            {
+                                                winningCombiRMeeples[i] = temp;
+                                            }
+                                            assert(winningCombiRMeeples[i] != nullptr);
+                                        }
+                                    }
+                                    else if (activePlayerIndex == 1 && logicalBoard->isFull()){
+#if PRINT_WINNER_PER_ROUND
+                                        std::cout << "Tie! There is no winner." << std::endl;
+#endif
+                                        loopState = DISPLAY_END_SCREEN;
+                                    }
+                                    else{
+                                        //switchPlayers();
+                                        loopState = INIT_STATE;
+                                        break;
+                                    }
+                                    //intentional fall through
+        }
+        case DISPLAY_END_SCREEN:
+            assert(winningCombiRMeeples[0] != nullptr && winningCombiRMeeples[1] != nullptr &&winningCombiRMeeples[2] != nullptr &&winningCombiRMeeples[3] != nullptr);
+            drawEndScreen = true;
 
-					color4MGlow[i] += 0.01f;
-					if (color4MGlow[i] > 1){
-						color4MGlow[i] = 0;
-					}
-				}
-				meepleGlowAnimationClock.restart();
-			}
-			
-			// ein button für menü und ein button für wrestart
+            //color4MGlow[] = 0.f;
+            for (uint8_t i = 0; i < 4; ++i){
+                sf::Color c = rainbow(color4MGlow[i]);
+                winningCombiRMeeples[i]->setGlow(&c);
 
-			// glow winning combination in rainbowcolor -> nyan cat -> nyan song
+                color4MGlow[i] += (1.5f * elapsedTime);
+                if (color4MGlow[i] > 1){
+                    color4MGlow[i] = 0;
+                }
+            }
+            meepleGlowAnimationClock.restart();
 
 
+            // ein button für menü und ein button für wrestart
 
-			//TODO player .. state resettten jakob? 
-			break;
+            // glow winning combination in rainbowcolor -> nyan cat -> nyan song
 
-		}
+
+
+            //TODO player .. state resettten jakob? 
+            break;
+
+        }
 
 		std::string title("4Wins by Jakob M., Sebastian S. and Simon D.   @");
 		title.append(std::to_string(fps));
@@ -396,6 +400,10 @@ GameWinner::Enum Game::runGame(){
 		players[1]->rbag->draw(*window);
 
 		window->draw(text);
+
+        pr->update(elapsedTime);
+        pr->draw(*window);
+
 		window->display();
 	}
 

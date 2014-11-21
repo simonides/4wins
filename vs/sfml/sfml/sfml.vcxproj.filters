@@ -123,6 +123,9 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -195,6 +198,9 @@
       <Filter>Header Files\REntities</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
   </ItemGroup>
