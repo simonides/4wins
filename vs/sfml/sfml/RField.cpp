@@ -11,7 +11,10 @@ RField::RField(const BoardPos& posOnBoard, sf::Vector2f& initPos, sf::Texture& f
 	fieldShape.setSize(sf::Vector2f(WIDTH, HEIGHT));
 	fieldShape.setPosition(initPos);
 	fieldShape.setTexture(&fieldShapeTex);
-	fieldShape.setFillColor(sf::Color::Yellow);
+	//fieldShape.setFillColor(sf::Color::Yellow);
+	//fieldShape.setFillColor(sf::Color(235,126,49,255));
+	fieldShape.setFillColor(sf::Color(239, 229, 14, 255));
+
 
 	sf::IntRect textRec(0, 0, fieldShapeTex.getSize().x, fieldShapeTex.getSize().y);
 	fieldShape.setTextureRect(textRec);

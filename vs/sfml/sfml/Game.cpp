@@ -394,11 +394,6 @@ GameWinner::Enum Game::runGame(){
 
 		}
 
-		sf::RectangleShape test;
-		test.setSize(sf::Vector2f(250, 250));
-		test.setPosition(0, 0);
-		test.setFillColor(sf::Color(228,128,128,98));
-
 		background.setTexture(&backgroundTexture);
 		background.setSize(sf::Vector2f(static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE)));
 		background.setPosition(0, 0);
@@ -413,21 +408,15 @@ GameWinner::Enum Game::runGame(){
 		
 		board->draw(*window);
 
-		//players[0]->rbag->draw(*window);
-		//players[1]->rbag->draw(*window);
-
 		window->draw(text);
              
-
-		//window->draw(test);
-        
 		std::sort(meeplesToDrawAndSort.begin(), meeplesToDrawAndSort.end(), [](RMeeple* a, RMeeple* b){return a->getYPos() < b->getYPos(); });
 		for (std::vector<RMeeple*>::iterator it = meeplesToDrawAndSort.begin(); it != meeplesToDrawAndSort.end(); ++it){
 			(*it)->draw(*window);
 		}
 
-        particleSystem->update(elapsedTime);
-        particleSystem->draw(*window);
+ /*       particleSystem->update(elapsedTime);
+        particleSystem->draw(*window);*/
 
 		window->display();
 	}
@@ -481,8 +470,8 @@ void Game::initMeeples(){
 		}
 		const Meeple* meeple = players[bagInd]->logicalMeepleBag->getMeeple(meepleIndex);
 
-		float xCoord = 70.f;
-		float yCoord = 130.f;
+		float xCoord = 100.f;
+		float yCoord = 90.f;
 
 
 		if (meeple->getShape() == MeepleShape::ROUND && meeple->getDetail() == MeepleDetail::HOLE)
@@ -492,24 +481,24 @@ void Game::initMeeples(){
 		}
 		if (meeple->getShape() == MeepleShape::ROUND && meeple->getDetail() == MeepleDetail::NO_HOLE)
 		{
-			xCoord += 340.f;
-			yCoord += 110.f;
+			xCoord += 342.f;
+			yCoord += 112.f;
 		}
 		if (meeple->getShape() == MeepleShape::SQUARE && meeple->getDetail() == MeepleDetail::HOLE)
 		{
-			xCoord += 430.f;
-			yCoord += 170.f;
+			xCoord += 434.f;
+			yCoord += 177.f;
 		}
 		if (meeple->getShape() == MeepleShape::SQUARE && meeple->getDetail() == MeepleDetail::NO_HOLE)
 		{
-			xCoord += 520.f;
-			yCoord += 220.f;
+			xCoord += 527.f;
+			yCoord += 233.f;
 		}
 
 		if (meeple->getSize() == MeepleSize::SMALL)
 		{
-			xCoord += -20.f;
-			yCoord += 25.f;
+			xCoord += -65.f;
+			yCoord += 44.f;
 		}
 
 		if (meeple->getColor() == MeepleColor::WHITE)
