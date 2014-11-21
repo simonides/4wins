@@ -1,6 +1,6 @@
 #include "RMeeple.h"
 #include "Meeple.h"
-
+#include "config.h"
 
 const float MEEPLE_HEIGHT_LARGE = 200.f;
 const float MEEPLE_WIDTH = MEEPLE_HEIGHT_LARGE * 0.5f;
@@ -22,7 +22,7 @@ const float MEEPLE_ORIGIN_TOP_SMALL = MEEPLE_HEIGHT_SMALL *(1.f - 0.38f);
 
 
 //logicalMeeple has to be deleted by the bag
-RMeeple::RMeeple(const Meeple& logicalMeeple, sf::Texture& shapeTex, sf::Texture& glowShapeTex, sf::Vector2f& initPos)
+RMeeple::RMeeple(const Meeple& logicalMeeple, sf::Texture& shapeTex, sf::Texture& glowShapeTex)
 	: logicalMeeple(&logicalMeeple), glowColor(nullptr)
 {
 
@@ -50,7 +50,7 @@ RMeeple::RMeeple(const Meeple& logicalMeeple, sf::Texture& shapeTex, sf::Texture
 	glowShapeTex.setSmooth(true);
 	glowShape.setTexture(&glowShapeTex);
 	initTextRects(shapeTex, glowShapeTex);
-	setPosition(initPos);
+	setPosition(getInitPositionForMeeple(logicalMeeple));
 	
 
 }
@@ -173,4 +173,53 @@ void RMeeple::initTextRects(sf::Texture& , sf::Texture& ){
 	shape.setTextureRect(texRect);
 	glowShape.setTextureRect(glowRect);
 	
+}
+void RMeeple::reset()
+{
+	setPosition( getInitPositionForMeeple(*logicalMeeple));
+}
+
+
+sf::Vector2f RMeeple::getInitPositionForMeeple(const Meeple& meeple) const
+{
+	float xCoord = 100.f;
+	float yCoord = 90.f;
+
+
+	if (meeple.getShape() == MeepleShape::ROUND && meeple.getDetail() == MeepleDetail::HOLE)
+	{
+		xCoord += 250.f;
+		yCoord += 55.f;
+	}
+	if (meeple.getShape() == MeepleShape::ROUND && meeple.getDetail() == MeepleDetail::NO_HOLE)
+	{
+		xCoord += 342.f;
+		yCoord += 112.f;
+	}
+	if (meeple.getShape() == MeepleShape::SQUARE && meeple.getDetail() == MeepleDetail::HOLE)
+	{
+		xCoord += 434.f;
+		yCoord += 177.f;
+	}
+	if (meeple.getShape() == MeepleShape::SQUARE && meeple.getDetail() == MeepleDetail::NO_HOLE)
+	{
+		xCoord += 527.f;
+		yCoord += 233.f;
+	}
+
+	if (meeple.getSize() == MeepleSize::SMALL)
+	{
+		xCoord += -65.f;
+		yCoord += 44.f;
+	}
+
+	if (meeple.getColor() == MeepleColor::WHITE)
+	{
+		xCoord = WINDOW_WIDTH_TO_CALCULATE / 2.f - xCoord;
+	}
+	else
+	{
+		xCoord += WINDOW_WIDTH_TO_CALCULATE / 2.f;
+	}
+	return sf::Vector2f(xCoord, yCoord);
 }

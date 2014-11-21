@@ -28,8 +28,6 @@
 
 
 
-//using namespace std;
-
 
 const sf::Color STANDARD_GLOW = sf::Color::Yellow;
 const sf::Color SELECTED_GLOW = sf::Color::Red;
@@ -50,11 +48,11 @@ enum LoopState{
 };
 
 
-
-
-
-Game::Game(sf::RenderWindow& window,Player& player1,  Player& player2) : window(&window),drawEndScreen(false){
-    assert(&player1 != &player2);   //hehehe, that won't crash this game
+Game::Game(sf::RenderWindow& window, Player& player1, Player& player2)
+	: window(&window), drawEndScreen(false), buttonColor(sf::Color(119, 110, 0, 255))
+	, runGameSwitch(true), hoveredButtonPtr(nullptr){
+    
+	assert(&player1 != &player2);   //hehehe, that won't crash this game
 
 	players[0] = &player1;
 	players[0]->logicalMeepleBag = new MeepleBag(MeepleColor::WHITE);
@@ -80,6 +78,26 @@ Game::Game(sf::RenderWindow& window,Player& player1,  Player& player2) : window(
 	color4MGlow[1] = 0.25f;
 	color4MGlow[2] = 0.35f;
 	color4MGlow[3] = 0.45f;
+
+	sf::Vector2f buttonSize(150.f, 150.f);
+	sf::Vector2f buttonOrigin(75.f, 75.f);
+
+
+	restartButton.setTexture(&restartButtonTexture);
+	restartButton.setFillColor(buttonColor);
+	restartButton.setSize(buttonSize);
+	restartButton.setOrigin(buttonOrigin);
+	restartButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f -90.f , WINDOW_HEIGHT_TO_CALCULATE / 2.f);
+
+
+	exitButton.setTexture(&exitButtonTexture);
+	exitButton.setFillColor(buttonColor);
+	exitButton.setSize(buttonSize);
+	exitButton.setOrigin(buttonOrigin);
+	exitButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f +90.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f);
+	
+
+
 }
 
 
@@ -100,17 +118,14 @@ void Game::reset(){
 	players[1]->logicalMeepleBag->reset();
 
 	logicalBoard->reset();
-    
-	//players1->reset();
- //   player2->reset();
-	//TODO reset players.. inkl ifs.. 
-	//players[0].controller->run_resetPlayer()
+	players[0]->rbag->reset();
+	players[1]->rbag->reset();
 }
 
 
 
 //Game Loop for one game, until there is a winner or the board is full
-GameWinner::Enum Game::runGame(){
+void Game::runGame(){
 	sf::Clock clock;
     float elapsedTime = 0;
 	
@@ -127,7 +142,7 @@ GameWinner::Enum Game::runGame(){
     ParticleSystem* particleSystem = new ParticleSystem();
 
 
-	while (window->isOpen()){
+	while (runGameSwitch && window->isOpen()){
         elapsedTime = clock.getElapsedTime().asSeconds();
 	    float fps = 1.f / elapsedTime;
 		clock.restart();
@@ -388,8 +403,40 @@ GameWinner::Enum Game::runGame(){
 			// glow winning combination in rainbowcolor -> nyan cat -> nyan song
 
 
+			if (hoveredButtonPtr != nullptr)
+			{
+				hoveredButtonPtr->setFillColor(buttonColor);
+				hoveredButtonPtr = nullptr;
+			}
+			if (restartButton.getGlobalBounds().contains(convertedMousePos))
+			{
+				restartButton.setFillColor(sf::Color::Magenta);
+				hoveredButtonPtr = &restartButton;
+			} 
 
-			//TODO player .. state resettten jakob? 
+			if (exitButton.getGlobalBounds().contains(convertedMousePos))
+			{
+				exitButton.setFillColor(sf::Color::Magenta);
+				hoveredButtonPtr = &exitButton;
+			}
+
+			if (releasedLeftMouse && restartButton.getGlobalBounds().contains(convertedMousePos))
+			{
+
+				reset();
+				for (uint8_t i = 0; i < 4; ++i){
+					
+					winningCombiRMeeples[i]->setGlow(nullptr);
+					winningCombiRMeeples[i] = nullptr;
+				}
+				switchPlayers();
+				drawEndScreen = false;
+				loopState = INIT_STATE;
+			}
+			if (releasedLeftMouse && exitButton.getGlobalBounds().contains(convertedMousePos))
+			{
+				runGameSwitch = false;
+			}
 			break;
 
 		}
@@ -415,13 +462,17 @@ GameWinner::Enum Game::runGame(){
 			(*it)->draw(*window);
 		}
 
- /*       particleSystem->update(elapsedTime);
-        particleSystem->draw(*window);*/
+		if (drawEndScreen)
+		{
+			window->draw(exitButton);
+			window->draw(restartButton);
+		}
+
+        //particleSystem->update(elapsedTime);
+        //particleSystem->draw(*window);
 
 		window->display();
 	}
-
-	return GameWinner::PLAYER_1;
 }
 
 sf::Color Game::rainbow(float progress) const
@@ -454,7 +505,7 @@ sf::Color Game::rainbow(float progress) const
 	}
 }
 
-
+//return meeple pos and then set i
 void Game::initMeeples(){
 	//cout << "init meeples" << endl;
 	for (int i = 0; i < 16; ++i){
@@ -470,52 +521,14 @@ void Game::initMeeples(){
 		}
 		const Meeple* meeple = players[bagInd]->logicalMeepleBag->getMeeple(meepleIndex);
 
-		float xCoord = 100.f;
-		float yCoord = 90.f;
-
-
-		if (meeple->getShape() == MeepleShape::ROUND && meeple->getDetail() == MeepleDetail::HOLE)
-		{
-			xCoord += 250.f;
-			yCoord += 55.f;
-		}
-		if (meeple->getShape() == MeepleShape::ROUND && meeple->getDetail() == MeepleDetail::NO_HOLE)
-		{
-			xCoord += 342.f;
-			yCoord += 112.f;
-		}
-		if (meeple->getShape() == MeepleShape::SQUARE && meeple->getDetail() == MeepleDetail::HOLE)
-		{
-			xCoord += 434.f;
-			yCoord += 177.f;
-		}
-		if (meeple->getShape() == MeepleShape::SQUARE && meeple->getDetail() == MeepleDetail::NO_HOLE)
-		{
-			xCoord += 527.f;
-			yCoord += 233.f;
-		}
-
-		if (meeple->getSize() == MeepleSize::SMALL)
-		{
-			xCoord += -65.f;
-			yCoord += 44.f;
-		}
-
-		if (meeple->getColor() == MeepleColor::WHITE)
-		{
-			xCoord = WINDOW_WIDTH_TO_CALCULATE / 2.f - xCoord;
-		} else
-		{
-			xCoord += WINDOW_WIDTH_TO_CALCULATE / 2.f;
-		}
-		sf::Vector2f initPos(xCoord, yCoord);
-
-		RMeeple* rmeeple = new RMeeple(*meeple, meepleSprite, glowSprite, initPos);
+		RMeeple* rmeeple = new RMeeple(*meeple, meepleSprite, glowSprite);
 
 		meeplesToDrawAndSort.push_back(rmeeple);
 		players[bagInd]->rbag->addRMeeple(rmeeple);
 	}
 }
+
+
 
 
 void Game::loadTextures(){
@@ -527,24 +540,42 @@ void Game::loadTextures(){
 		std::cerr << "couldn't load the texture: glow" << std::endl;
 		assert(false);
 	}
+	glowSprite.setSmooth(true);
 	if (!boardTexture.loadFromFile("Resources\\board.png")){ 
 		std::cerr << "couldn't load the texture: board" << std::endl;
 		assert(false);
 	}
+	boardTexture.setSmooth(true);
+
 	if (!fieldTexture.loadFromFile("Resources\\field.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
+	fieldTexture.setSmooth(true);
+
 	if (!fieldTextureOccupied.loadFromFile("Resources\\field.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
+	fieldTextureOccupied.setSmooth(true);
 
 	if (!backgroundTexture.loadFromFile("Resources\\background.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
 	backgroundTexture.setSmooth(true);
+
+	if (!exitButtonTexture.loadFromFile("Resources\\ExitButton.png")){
+		std::cerr << "couldn't load the texture: field" << std::endl;
+		assert(false);
+	}
+	exitButtonTexture.setSmooth(true);
+
+	if (!restartButtonTexture.loadFromFile("Resources\\reloadButton.png")){
+		std::cerr << "couldn't load the texture: field" << std::endl;
+		assert(false);
+	}
+	restartButtonTexture.setSmooth(true);
 
 	if (!font.loadFromFile("Resources\\Fonts\\roboto\\roboto-black.ttf"))
 	{
@@ -562,8 +593,6 @@ void Game::setString(std::string message)
 	text.setOrigin(textRect.left + textRect.width / 2.0f,
 		25.0f);
 	text.setPosition(sf::Vector2f(WINDOW_WIDTH_TO_CALCULATE / 2.0f, 35.0f));
-
-
 }
 
 
@@ -609,10 +638,7 @@ void Game::pollEvents(){
 			default:
 				break;
 		}
-
 	}
-
-	
 }
 
 

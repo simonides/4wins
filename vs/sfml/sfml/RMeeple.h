@@ -18,7 +18,7 @@ private:
 	void initTextRects(sf::Texture& meepleSprites, sf::Texture& meepleGlowSprites);
 
 public:
-	RMeeple(const Meeple& logicalMeeple, sf::Texture& shapeTex, sf::Texture& glowTexShape, sf::Vector2f& initPos);
+	RMeeple(const Meeple& logicalMeeple, sf::Texture& shapeTex, sf::Texture& glowTexShape);
 	~RMeeple();
 	
 	void draw(sf::RenderWindow& window) const;
@@ -40,4 +40,8 @@ public:
 	float RMeeple::getYPos() const;
 		
 	sf::Vector2f RMeeple::getGlobalOrigin() const;
+
+	void reset();
+
+	sf::Vector2f getInitPositionForMeeple(const Meeple& meeple) const;
 };

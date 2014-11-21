@@ -84,5 +84,8 @@
 		rMeeples.insert(rMeeples.end(), usedRMeeples.begin(), usedRMeeples.end());
 		usedRMeeples.clear();
 		assert(rMeeples.size() == 8 && usedRMeeples.size() == 0);
+		for (std::vector<RMeeple*>::iterator it = rMeeples.begin(); it != rMeeples.end(); ++it){
+			(*it)->reset();
+		}
 	}
 
