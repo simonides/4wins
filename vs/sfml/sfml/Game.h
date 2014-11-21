@@ -4,8 +4,6 @@
 #include "RMeeple.h"
 #include "GameState.h"
 
-#include "Menu/Button.h"
-
 #include <cstdint>
 #include <vector>
 
@@ -49,12 +47,14 @@ private:
 	sf::Texture backgroundTexture;
 	sf::Texture exitButtonTexture;
 	sf::Texture restartButtonTexture;
+	sf::Texture particleSprites;
 
 	sf::RectangleShape exitButton;
 	sf::RectangleShape restartButton;
 	sf::Color buttonColor;
 
 	sf::RectangleShape* hoveredButtonPtr;
+
 
 	sf::RectangleShape background;
 	std::vector<RMeeple*> meeplesToDrawAndSort;

@@ -4,52 +4,40 @@
 #include <vector>
 #include <stdint.h>
 
+#include "ParticleBuilder.h"
+
+
+
+
+
 namespace sf{
     class RenderWindow;
 }
 
 
-struct Particle{
-    sf::RectangleShape shape;   
-    sf::Vector2f direction;
-
-    uint8_t nextColor;
-    float colorProgress;   //0..255
-    float colorSpeed;
-
-    float alpha;
-    float fadeoutSpeed;
-
-    float rotationSpeed;
-};
 
 
 
-
-class ParticleSystem
-{
+class ParticleSystem{
 private:
-    sf::Vector2u gravity;
-
-    sf::Texture particleSprites;
+    sf::Texture& particleSprites;
     sf::Vector2u spriteCount;   //Number of sprites in the texture
     sf::IntRect textureCoords;  //coords of the sprite at 0|0
+    
+    /*std::vector<Particle*> particles;
+    std::vector<Particle*> particlePool;*/
 
+    Particle* particles;  
+    unsigned int particleCount;
 
-    std::vector<Particle*> particles;
-
-
-    void createNewParticle();
-    sf::Color getColor(uint8_t idx);
-    sf::Color getInterpolatedColor(uint8_t nextColor, float progress, sf::Uint8 alpha = 255);
-
-    float randomise(float min, float max);
+    ParticleSystem& operator = (const ParticleSystem&);
 public:
-    ParticleSystem();
+    ParticleSystem(sf::Texture& particleSprites, sf::Vector2u spriteCount);
+
+    void newParticleCloud(unsigned int particleCount, ParticleBuilder& builder);    //Tells the particleSystem to generate new particles accoring to the building plan
 
     void update(float elapsedTime);
     void draw(sf::RenderWindow& window) const;
-
 
     ~ParticleSystem();
 };

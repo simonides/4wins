@@ -139,8 +139,28 @@ void Game::runGame(){
 
 
 
-    ParticleSystem* particleSystem = new ParticleSystem();
+    ParticleSystem* particleSystem = new ParticleSystem(particleSprites, sf::Vector2u(2, 2));
 
+
+    ////FOR DUST-CLOUDS:
+    //ParticleBuilder* builder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 50, 150 }, { 290, 320 }, { 500, 2000 }, { 300, 500 });
+    //builder->setRotation();
+    //builder->setGravity(120, 90);
+    //particleSystem->newParticleCloud(20, *builder);
+    
+    ////FOR MOUSE-CLICKS:
+    //ParticleBuilder* mbBuilder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 50, 150 });
+    //mbBuilder->setRotation({ 0.1, 3.5 });
+    //mbBuilder->setGravity(120, 90);
+        
+
+
+    ParticleBuilder* endScreenParticleBuilder = new ParticleBuilder({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 });
+    endScreenParticleBuilder->setPath({ 10, 200 }, { 275, 350 })
+                            ->setGravity(30)
+                            ->setRotation({ 100, 600 }, { -1, 3 })
+                            ->setFadeoutSpeed({ 60, 80 });      
+        
 
 	while (runGameSwitch && window->isOpen()){
         elapsedTime = clock.getElapsedTime().asSeconds();
@@ -153,6 +173,12 @@ void Game::runGame(){
 		text.setColor(sf::Color::Black);
 		//text.setStyle(sf::Text::Bold /*| sf::Text::Underlined*/);
 		
+       /* mbBuilder->setPosition(convertedMousePos);
+        if (pressedLeftMouse){
+            particleSystem->newParticleCloud(5, *mbBuilder);
+        }*/
+        
+        
 
 
 		pollEvents();
@@ -348,41 +374,58 @@ void Game::runGame(){
 			rMeepleToSet = nullptr;
 
 			const WinCombination* combi = logicalBoard->checkWinSituation();
-			if (combi != nullptr){    //player2 won
-				#if PRINT_WINNER_PER_ROUND
-				std::cout << "Player " << activePlayerIndex + 1 << " wins!" << std::endl;
-				#endif
-				loopState = DISPLAY_END_SCREEN;
-				
-				for (uint8_t i = 0; i < 4; ++i){
-					RMeeple* temp = players[activePlayerIndex]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
-					if (temp == nullptr)
-					{
-						winningCombiRMeeples[i] = players[(activePlayerIndex + 1) % 2]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
-					} else
-					{
-						winningCombiRMeeples[i] = temp;
-					}
-					assert(winningCombiRMeeples[i] != nullptr);
-				}
-			}
-			else if (activePlayerIndex == 1 && logicalBoard->isFull()){
-				#if PRINT_WINNER_PER_ROUND
-					std::cout << "Tie! There is no winner." << std::endl;
-				#endif
-				loopState = DISPLAY_END_SCREEN;
-			}
-			else{
-				//switchPlayers();
-				loopState = INIT_STATE;
-				break;
-			}
-			//intentional fall through
-		}
-		case DISPLAY_END_SCREEN:
-			assert(winningCombiRMeeples[0] != nullptr && winningCombiRMeeples[1] != nullptr &&winningCombiRMeeples[2] != nullptr &&winningCombiRMeeples[3] != nullptr);
-			drawEndScreen = true;
-			
+            if (combi != nullptr){    //player2 won
+#if PRINT_WINNER_PER_ROUND
+                std::cout << "Player " << activePlayerIndex + 1 << " wins!" << std::endl;
+#endif
+                loopState = DISPLAY_END_SCREEN;
+
+                for (uint8_t i = 0; i < 4; ++i){
+                    RMeeple* temp = players[activePlayerIndex]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
+                    if (temp == nullptr)
+                    {
+                        winningCombiRMeeples[i] = players[(activePlayerIndex + 1) % 2]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
+                    }
+                    else
+                    {
+                        winningCombiRMeeples[i] = temp;
+                    }
+                    assert(winningCombiRMeeples[i] != nullptr);
+                }
+            }
+            else if (activePlayerIndex == 1 && logicalBoard->isFull()){
+#if PRINT_WINNER_PER_ROUND
+                std::cout << "Tie! There is no winner." << std::endl;
+#endif
+                loopState = DISPLAY_END_SCREEN;
+            }
+            else{
+                //switchPlayers();
+                loopState = INIT_STATE;
+                break;
+            }
+            //intentional fall through
+        }
+        case DISPLAY_END_SCREEN:
+            assert(winningCombiRMeeples[0] != nullptr && winningCombiRMeeples[1] != nullptr &&winningCombiRMeeples[2] != nullptr &&winningCombiRMeeples[3] != nullptr);
+            
+            if (drawEndScreen != true || rand()%100 < 3){
+                int particle_count = 50;
+                endScreenParticleBuilder->setPosition({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 })
+                                        ->setPath({ 10, 200 }, { 275, 350 });
+                particleSystem->newParticleCloud(particle_count, *endScreenParticleBuilder);
+                endScreenParticleBuilder->setPosition({ static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) })
+                                        ->setPath({ 10, 200 }, { 190, 265 });
+                particleSystem->newParticleCloud(particle_count, *endScreenParticleBuilder);
+                endScreenParticleBuilder->setPosition({ 0, 0 })
+                                        ->setPath({ 10, 200 }, { -15, 89 });                                        
+                particleSystem->newParticleCloud(particle_count, *endScreenParticleBuilder);
+                endScreenParticleBuilder->setPosition({ static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), 0 })
+                                        ->setPath({ 10, 200 }, { 89, 195 });
+                particleSystem->newParticleCloud(particle_count, *endScreenParticleBuilder);
+            }
+            drawEndScreen = true;
+
 			if (meepleGlowAnimationClock.getElapsedTime().asSeconds() > 0.03f){
 
 				//color4MGlow[] = 0.f;
@@ -422,7 +465,6 @@ void Game::runGame(){
 
 			if (releasedLeftMouse && restartButton.getGlobalBounds().contains(convertedMousePos))
 			{
-
 				reset();
 				for (uint8_t i = 0; i < 4; ++i){
 					
@@ -462,17 +504,22 @@ void Game::runGame(){
 			(*it)->draw(*window);
 		}
 
+		particleSystem->update(elapsedTime);
+		particleSystem->draw(*window);
+
 		if (drawEndScreen)
 		{
 			window->draw(exitButton);
 			window->draw(restartButton);
 		}
 
-        //particleSystem->update(elapsedTime);
-        //particleSystem->draw(*window);
+
 
 		window->display();
 	}
+
+    delete endScreenParticleBuilder;
+
 }
 
 sf::Color Game::rainbow(float progress) const
@@ -532,56 +579,69 @@ void Game::initMeeples(){
 
 
 void Game::loadTextures(){
-	if (!meepleSprite.loadFromFile("Resources\\pencilStyle.png")){
+    if (!meepleSprite.loadFromFile(WORKING_DIR + "pencilStyle.png")){
 		std::cerr << "couldn't load the texture: meepleSprites" << std::endl;
 		assert(false);
 	}
-	if (!glowSprite.loadFromFile("Resources\\glow.png")){
+	meepleSprite.setSmooth(true);
+
+    if (!glowSprite.loadFromFile(WORKING_DIR + "glow.png")){
 		std::cerr << "couldn't load the texture: glow" << std::endl;
 		assert(false);
 	}
 	glowSprite.setSmooth(true);
-	if (!boardTexture.loadFromFile("Resources\\board.png")){ 
+
+
+	if (!boardTexture.loadFromFile(WORKING_DIR + "board.png")){
 		std::cerr << "couldn't load the texture: board" << std::endl;
 		assert(false);
 	}
 	boardTexture.setSmooth(true);
 
-	if (!fieldTexture.loadFromFile("Resources\\field.png")){
+
+    if (!fieldTexture.loadFromFile(WORKING_DIR + "field.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
 	fieldTexture.setSmooth(true);
 
-	if (!fieldTextureOccupied.loadFromFile("Resources\\field.png")){
+
+    if (!fieldTextureOccupied.loadFromFile(WORKING_DIR + "field.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
 	fieldTextureOccupied.setSmooth(true);
 
-	if (!backgroundTexture.loadFromFile("Resources\\background.png")){
+    if (!backgroundTexture.loadFromFile(WORKING_DIR + "background.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
 	backgroundTexture.setSmooth(true);
 
-	if (!exitButtonTexture.loadFromFile("Resources\\ExitButton.png")){
+	if (!exitButtonTexture.loadFromFile(WORKING_DIR + "ExitButton.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
 	exitButtonTexture.setSmooth(true);
 
-	if (!restartButtonTexture.loadFromFile("Resources\\reloadButton.png")){
+	if (!restartButtonTexture.loadFromFile(WORKING_DIR + "reloadButton.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
 	restartButtonTexture.setSmooth(true);
 
-	if (!font.loadFromFile("Resources\\Fonts\\roboto\\roboto-black.ttf"))
-	{
+	if (!particleSprites.loadFromFile(WORKING_DIR + "stars.png")){
+		std::cerr << "couldn't load the texture: meepleSprites" << std::endl;
+		assert(false);
+	}
+	//particleSprites.setSmooth(true); //check performance first
+
+    if (!font.loadFromFile(WORKING_DIR + "Fonts\\roboto\\roboto-black.ttf")){
 		std::cerr << "Couldn't load the Font: roboto-black.ttf" << std::endl;
 		assert(false);
 	}
+
+
 }
 
 
