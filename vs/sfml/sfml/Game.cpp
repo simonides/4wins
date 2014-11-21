@@ -124,8 +124,7 @@ GameWinner::Enum Game::runGame(){
 
 
 
-    ParticleSystem* particleSystem = new ParticleSystem();
-
+    ParticleSystem* particleSystem = new ParticleSystem(particleSprites, sf::Vector2u(2, 2));
 
 
     ////FOR DUST-CLOUDS:
@@ -141,8 +140,8 @@ GameWinner::Enum Game::runGame(){
         
 
 
-    ParticleBuilder* endScreepParticleBuilder = new ParticleBuilder({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 });
-    endScreepParticleBuilder->setPath({ 10, 200 }, { 275, 350 })
+    ParticleBuilder* endScreenParticleBuilder = new ParticleBuilder({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 });
+    endScreenParticleBuilder->setPath({ 10, 200 }, { 275, 350 })
                             ->setGravity(30)
                             ->setRotation({ 100, 600 }, { -1, 3 })
                             ->setFadeoutSpeed({ 60, 80 });      
@@ -397,18 +396,18 @@ GameWinner::Enum Game::runGame(){
             
             if (drawEndScreen != true || rand()%100 < 3){
                 int particle_count = 50;
-                endScreepParticleBuilder->setPosition({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 })
+                endScreenParticleBuilder->setPosition({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 })
                                         ->setPath({ 10, 200 }, { 275, 350 });
-                particleSystem->newParticleCloud(particle_count, *endScreepParticleBuilder);
-                endScreepParticleBuilder->setPosition({ static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) })
+                particleSystem->newParticleCloud(particle_count, *endScreenParticleBuilder);
+                endScreenParticleBuilder->setPosition({ static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) })
                                         ->setPath({ 10, 200 }, { 190, 265 });
-                particleSystem->newParticleCloud(particle_count, *endScreepParticleBuilder);
-                endScreepParticleBuilder->setPosition({ 0, 0 })
+                particleSystem->newParticleCloud(particle_count, *endScreenParticleBuilder);
+                endScreenParticleBuilder->setPosition({ 0, 0 })
                                         ->setPath({ 10, 200 }, { -15, 89 });                                        
-                particleSystem->newParticleCloud(particle_count, *endScreepParticleBuilder);
-                endScreepParticleBuilder->setPosition({ static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), 0 })
+                particleSystem->newParticleCloud(particle_count, *endScreenParticleBuilder);
+                endScreenParticleBuilder->setPosition({ static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), 0 })
                                         ->setPath({ 10, 200 }, { 89, 195 });
-                particleSystem->newParticleCloud(particle_count, *endScreepParticleBuilder);
+                particleSystem->newParticleCloud(particle_count, *endScreenParticleBuilder);
             }
             drawEndScreen = true;
 
@@ -475,6 +474,8 @@ GameWinner::Enum Game::runGame(){
 
 		window->display();
 	}
+
+    delete endScreenParticleBuilder;
 
 	return GameWinner::PLAYER_1;
 }
@@ -574,38 +575,42 @@ void Game::initMeeples(){
 
 
 void Game::loadTextures(){
-	if (!meepleSprite.loadFromFile("Resources\\pencilStyle.png")){
+    if (!meepleSprite.loadFromFile(WORKING_DIR + "pencilStyle.png")){
 		std::cerr << "couldn't load the texture: meepleSprites" << std::endl;
 		assert(false);
 	}
-	if (!glowSprite.loadFromFile("Resources\\glow.png")){
+    if (!glowSprite.loadFromFile(WORKING_DIR + "glow.png")){
 		std::cerr << "couldn't load the texture: glow" << std::endl;
 		assert(false);
 	}
-	if (!boardTexture.loadFromFile("Resources\\board.png")){ 
+    if (!boardTexture.loadFromFile(WORKING_DIR + "board.png")){
 		std::cerr << "couldn't load the texture: board" << std::endl;
 		assert(false);
 	}
-	if (!fieldTexture.loadFromFile("Resources\\field.png")){
+    if (!fieldTexture.loadFromFile(WORKING_DIR + "field.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
-	if (!fieldTextureOccupied.loadFromFile("Resources\\field.png")){
+    if (!fieldTextureOccupied.loadFromFile(WORKING_DIR + "field.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
 
-	if (!backgroundTexture.loadFromFile("Resources\\background.png")){
+    if (!backgroundTexture.loadFromFile(WORKING_DIR + "background.png")){
 		std::cerr << "couldn't load the texture: field" << std::endl;
 		assert(false);
 	}
 	backgroundTexture.setSmooth(true);
 
-	if (!font.loadFromFile("Resources\\Fonts\\roboto\\roboto-black.ttf"))
-	{
+    if (!font.loadFromFile(WORKING_DIR + "Fonts\\roboto\\roboto-black.ttf")){
 		std::cerr << "Couldn't load the Font: roboto-black.ttf" << std::endl;
 		assert(false);
 	}
+
+    if (!particleSprites.loadFromFile(WORKING_DIR + "stars.png")){
+        std::cerr << "couldn't load the texture: meepleSprites" << std::endl;
+        assert(false);
+    }
 }
 
 

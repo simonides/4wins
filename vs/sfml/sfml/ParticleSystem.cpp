@@ -13,14 +13,7 @@
 #define PARTICLE_DELETE_HORIZON 50          //If a particle is outside of the window with a distance of PARTICLE_DELETE_HORIZON units, it will be deleted
 
 
-ParticleSystem::ParticleSystem(){
-    //TODO: don't load texture here
-    if (!particleSprites.loadFromFile(WORKING_DIR + "stars.png")){
-        std::cerr << "couldn't load the texture: meepleSprites" << std::endl;
-        assert(false);
-    }
-    spriteCount = sf::Vector2u(2, 2);
-
+ParticleSystem::ParticleSystem(sf::Texture& particleSprites, sf::Vector2u spriteCount) : particleSprites(particleSprites), spriteCount(spriteCount){
     textureCoords.width = particleSprites.getSize().x / spriteCount.x;				
     textureCoords.height = particleSprites.getSize().y / spriteCount.y;
     textureCoords.left = 0;
@@ -31,7 +24,7 @@ ParticleSystem::ParticleSystem(){
 }
 
 ParticleSystem::~ParticleSystem(){
-    delete particles;
+    delete[] particles;
 }
 
 

@@ -43,8 +43,9 @@ private:
 	sf::Texture glowSprite;
 	sf::Texture boardTexture;
 	sf::Texture fieldTexture;
-	sf::Texture fieldTextureOccupied;
-	sf::Texture backgroundTexture;
+    sf::Texture fieldTextureOccupied;
+    sf::Texture backgroundTexture;
+    sf::Texture particleSprites;
 
 	sf::RectangleShape background;
 	std::vector<RMeeple*> meeplesToDrawAndSort;
