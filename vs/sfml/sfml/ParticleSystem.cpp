@@ -102,7 +102,7 @@ sf::Color ParticleSystem::getInterpolatedColor(uint8_t nextColor, float progress
 }
 
 float ParticleSystem::randomise(float min, float max){
-    assert(max > min);
+    assert(max >= min);
     float random = ((float)rand()) / (float)RAND_MAX;
     return  min + random * (max - min);
 }

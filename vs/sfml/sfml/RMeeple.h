@@ -14,7 +14,7 @@ private:
 	sf::RectangleShape glowShape;
 	
 	sf::Color* glowColor;
-
+	
 	void initTextRects(sf::Texture& meepleSprites, sf::Texture& meepleGlowSprites);
 
 public:
@@ -37,7 +37,7 @@ public:
 
 	const Meeple* getLogicalMeeple() const;
 
-	sf::Vector2f RMeeple::getAnchorPoint() const;
-	
+	float RMeeple::getYPos() const;
+		
+	sf::Vector2f RMeeple::getGlobalOrigin() const;
 };
-

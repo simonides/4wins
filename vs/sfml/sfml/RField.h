@@ -35,7 +35,7 @@ public:
 
 	void setShape(Shape shape);
 
-	const sf::FloatRect getGlobalBounds() const;
+	sf::FloatRect getGlobalBounds() const;
 
 	BoardPos getBoardPos() const;
 
