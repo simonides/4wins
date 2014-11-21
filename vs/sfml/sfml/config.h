@@ -11,7 +11,7 @@ extern const unsigned int WINDOW_WIDTH;
 
 //#define PRINT_ALL
 
-       
+extern const unsigned int MAX_PARTICLE_COUNT;   //Max. number of particles per particleSystem
 
 
 #define THREAD_DEBUGGING 0                  //prints messages regarding multithreading within the main thread

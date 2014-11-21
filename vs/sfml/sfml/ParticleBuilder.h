@@ -25,7 +25,7 @@ struct Particle{
 struct Interval{
     float min;
     float max;
-    float get();
+    float get() const;
 };
 
 
@@ -49,12 +49,21 @@ private:
     Interval colorSpeed;
     //Alpha:
     Interval fadeoutSpeed;
-public:
-    ParticleBuilder(sf::Vector2f position, Interval diameter, Interval speed = { 40, 400 }, Interval angle = { 0, 360 }, Interval colorSpeed = { 500, 2000 }, Interval fadeoutSpeed = { 50, 100 });
-    void setPosition(sf::Vector2f position);
-    void setPositionOffset(Interval positionOffset);
-    void setGravity(float gravitySpeed = 300, float gravity = 270);
-    void setRotation(Interval rotationOffset = { 0.5, 1.5 }, Interval rotationSpeed = {0, 600});
 
-    Particle* createParticle(sf::Texture& particleSprites, sf::Vector2u spriteCount, sf::IntRect textureCoords);     //Creates a new particle. Needs to be deleted()
+public:
+    ParticleBuilder(sf::Vector2f position, Interval diameter);
+    //ParticleBuilder(sf::Vector2f position, Interval diameter, Interval speed = { 40, 400 }, Interval angle = { 0, 360 }, Interval colorSpeed = { 500, 2000 }, Interval fadeoutSpeed = { 50, 100 });
+    ParticleBuilder* setPosition(sf::Vector2f position, Interval positionOffset={0,0});
+    ParticleBuilder* setDiameter(Interval diameter);
+
+    ParticleBuilder* setPath(Interval speed = { 40, 400 }, Interval angle = { 0, 360 });
+    ParticleBuilder* setGravity(float gravitySpeed = 300, float gravity = 90);
+
+    ParticleBuilder* setRotation(Interval rotationSpeed = { 0, 600 }, Interval rotationOffset = { 0.5, 1.5 });
+
+    ParticleBuilder* setColorSpeed(Interval colorSpeed = { 500, 2000 });
+    ParticleBuilder* setFadeoutSpeed(Interval fadeoutSpeed = { 50, 100 });
+    
+    Particle* createParticle(sf::Texture& particleSprites, sf::Vector2u spriteCount, sf::IntRect textureCoords) const;     //Creates a new particle. Needs to be deleted()
+    void initialiseParticle(Particle* memory, sf::Texture& particleSprites, sf::Vector2u spriteCount, sf::IntRect textureCoords) const;     
 };

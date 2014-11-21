@@ -97,7 +97,7 @@ int main(){
 		assert(tc1 != nullptr);
 
 
-		Game* game = new Game(*window, *human, *p1);
+		Game* game = new Game(*window, *p2, *p1);
 		game->runGame();
 
 

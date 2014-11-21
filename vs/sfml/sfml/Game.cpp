@@ -125,16 +125,27 @@ GameWinner::Enum Game::runGame(){
 
 
     ParticleSystem* particleSystem = new ParticleSystem();
-    ParticleBuilder* builder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 50, 150 }, { 290, 320 }, { 500, 2000 }, { 300, 500 });
-    builder->setRotation();
-    builder->setGravity(120, 90);
-    particleSystem->newParticleCloud(20, *builder);
-    
 
-    //ParticleBuilder* mbBuilder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 20, 200 });
-    ParticleBuilder* mbBuilder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 50, 150 });
-    mbBuilder->setRotation({ 0.1, 3.5 });
-    mbBuilder->setGravity(120, 90);
+
+
+    ////FOR DUST-CLOUDS:
+    //ParticleBuilder* builder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 50, 150 }, { 290, 320 }, { 500, 2000 }, { 300, 500 });
+    //builder->setRotation();
+    //builder->setGravity(120, 90);
+    //particleSystem->newParticleCloud(20, *builder);
+    
+    ////FOR MOUSE-CLICKS:
+    //ParticleBuilder* mbBuilder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 50, 150 });
+    //mbBuilder->setRotation({ 0.1, 3.5 });
+    //mbBuilder->setGravity(120, 90);
+        
+
+
+    ParticleBuilder* endScreepParticleBuilder = new ParticleBuilder({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 });
+    endScreepParticleBuilder->setPath({ 10, 200 }, { 275, 350 })
+                            ->setGravity(30)
+                            ->setRotation({ 100, 600 }, { -1, 3 })
+                            ->setFadeoutSpeed({ 60, 80 });      
         
 
 	while (window->isOpen()){
@@ -148,11 +159,13 @@ GameWinner::Enum Game::runGame(){
 		text.setColor(sf::Color::Black);
 		//text.setStyle(sf::Text::Bold /*| sf::Text::Underlined*/);
 		
-        mbBuilder->setPosition(convertedMousePos);
+       /* mbBuilder->setPosition(convertedMousePos);
         if (pressedLeftMouse){
             particleSystem->newParticleCloud(5, *mbBuilder);
-        }
+        }*/
         
+        
+
 
 		pollEvents();
 
@@ -347,41 +360,58 @@ GameWinner::Enum Game::runGame(){
 			rMeepleToSet = nullptr;
 
 			const WinCombination* combi = logicalBoard->checkWinSituation();
-			if (combi != nullptr){    //player2 won
-				#if PRINT_WINNER_PER_ROUND
-				std::cout << "Player " << activePlayerIndex + 1 << " wins!" << std::endl;
-				#endif
-				loopState = DISPLAY_END_SCREEN;
-				
-				for (uint8_t i = 0; i < 4; ++i){
-					RMeeple* temp = players[activePlayerIndex]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
-					if (temp == nullptr)
-					{
-						winningCombiRMeeples[i] = players[(activePlayerIndex + 1) % 2]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
-					} else
-					{
-						winningCombiRMeeples[i] = temp;
-					}
-					assert(winningCombiRMeeples[i] != nullptr);
-				}
-			}
-			else if (activePlayerIndex == 1 && logicalBoard->isFull()){
-				#if PRINT_WINNER_PER_ROUND
-					std::cout << "Tie! There is no winner." << std::endl;
-				#endif
-				loopState = DISPLAY_END_SCREEN;
-			}
-			else{
-				//switchPlayers();
-				loopState = INIT_STATE;
-				break;
-			}
-			//intentional fall through
-		}
-		case DISPLAY_END_SCREEN:
-			assert(winningCombiRMeeples[0] != nullptr && winningCombiRMeeples[1] != nullptr &&winningCombiRMeeples[2] != nullptr &&winningCombiRMeeples[3] != nullptr);
-			drawEndScreen = true;
-			
+            if (combi != nullptr){    //player2 won
+#if PRINT_WINNER_PER_ROUND
+                std::cout << "Player " << activePlayerIndex + 1 << " wins!" << std::endl;
+#endif
+                loopState = DISPLAY_END_SCREEN;
+
+                for (uint8_t i = 0; i < 4; ++i){
+                    RMeeple* temp = players[activePlayerIndex]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
+                    if (temp == nullptr)
+                    {
+                        winningCombiRMeeples[i] = players[(activePlayerIndex + 1) % 2]->rbag->isPassedMeepleInUsed(combi->meeples[i]);
+                    }
+                    else
+                    {
+                        winningCombiRMeeples[i] = temp;
+                    }
+                    assert(winningCombiRMeeples[i] != nullptr);
+                }
+            }
+            else if (activePlayerIndex == 1 && logicalBoard->isFull()){
+#if PRINT_WINNER_PER_ROUND
+                std::cout << "Tie! There is no winner." << std::endl;
+#endif
+                loopState = DISPLAY_END_SCREEN;
+            }
+            else{
+                //switchPlayers();
+                loopState = INIT_STATE;
+                break;
+            }
+            //intentional fall through
+        }
+        case DISPLAY_END_SCREEN:
+            assert(winningCombiRMeeples[0] != nullptr && winningCombiRMeeples[1] != nullptr &&winningCombiRMeeples[2] != nullptr &&winningCombiRMeeples[3] != nullptr);
+            
+            if (drawEndScreen != true || rand()%100 < 3){
+                int particle_count = 50;
+                endScreepParticleBuilder->setPosition({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 })
+                                        ->setPath({ 10, 200 }, { 275, 350 });
+                particleSystem->newParticleCloud(particle_count, *endScreepParticleBuilder);
+                endScreepParticleBuilder->setPosition({ static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) })
+                                        ->setPath({ 10, 200 }, { 190, 265 });
+                particleSystem->newParticleCloud(particle_count, *endScreepParticleBuilder);
+                endScreepParticleBuilder->setPosition({ 0, 0 })
+                                        ->setPath({ 10, 200 }, { -15, 89 });                                        
+                particleSystem->newParticleCloud(particle_count, *endScreepParticleBuilder);
+                endScreepParticleBuilder->setPosition({ static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), 0 })
+                                        ->setPath({ 10, 200 }, { 89, 195 });
+                particleSystem->newParticleCloud(particle_count, *endScreepParticleBuilder);
+            }
+            drawEndScreen = true;
+
 			if (meepleGlowAnimationClock.getElapsedTime().asSeconds() > 0.03f){
 
 				//color4MGlow[] = 0.f;

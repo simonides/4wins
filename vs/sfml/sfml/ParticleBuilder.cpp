@@ -9,7 +9,7 @@
 
 
 
-float Interval::get(){
+float Interval::get() const{
     assert(max >= min);
     float random = ((float)rand()) / (float)RAND_MAX;
     return  min + random * (max - min);
@@ -18,7 +18,7 @@ float Interval::get(){
 
 
 
-ParticleBuilder::ParticleBuilder(sf::Vector2f position, Interval diameter, Interval speed, Interval angle, Interval colorSpeed, Interval fadeoutSpeed) :
+/*ParticleBuilder::ParticleBuilder(sf::Vector2f position, Interval diameter, Interval speed, Interval angle, Interval colorSpeed, Interval fadeoutSpeed) :
         position(position),
         positionOffset({ 0, 0 }),
         diameter(diameter),
@@ -30,80 +30,114 @@ ParticleBuilder::ParticleBuilder(sf::Vector2f position, Interval diameter, Inter
         rotationSpeed({ 0, 0 }),
         colorSpeed(colorSpeed),
         fadeoutSpeed(fadeoutSpeed){
+}*/
+
+
+ParticleBuilder::ParticleBuilder(sf::Vector2f position, Interval diameter){ 
+    setPosition(position);
+    setDiameter(diameter);
+    setPath();
+    setGravity();
+    setRotation();
+    setColorSpeed();
+    setFadeoutSpeed();
 }
 
-void ParticleBuilder::setPosition(sf::Vector2f position){
+ParticleBuilder* ParticleBuilder::setDiameter(Interval diameter){
+    this->diameter = diameter;
+    return this;
+}
+
+ParticleBuilder*  ParticleBuilder::setPosition(sf::Vector2f position, Interval positionOffset){
     this->position = position;
-}
-
-void ParticleBuilder::setPositionOffset(Interval positionOffset){
     this->positionOffset = positionOffset;
+    return this;
 }
 
-void ParticleBuilder::setGravity(float gravitySpeed, float gravity){
+
+ParticleBuilder* ParticleBuilder::setPath(Interval speed, Interval angle){
+    this->speed = speed;
+    this->angle = angle;
+    return this;
+}
+
+ParticleBuilder* ParticleBuilder::setGravity(float gravitySpeed, float gravity){
     this->gravitySpeed = gravitySpeed;
     this->gravity = gravity;
+    return this;
 }
 
-void ParticleBuilder::setRotation(Interval rotationOffset, Interval rotationSpeed){
-    assert(rotationSpeed.min >= 0);
-    this->rotationOffset = rotationOffset;
+ParticleBuilder* ParticleBuilder::setRotation(Interval rotationSpeed, Interval rotationOffset){
     this->rotationSpeed = rotationSpeed;
+    this->rotationOffset = rotationOffset;
+    return this;
+}
+
+ParticleBuilder* ParticleBuilder::setColorSpeed(Interval colorSpeed){
+    this->colorSpeed = colorSpeed;
+    return this;
+}
+
+ParticleBuilder* ParticleBuilder::setFadeoutSpeed(Interval fadeoutSpeed){
+    this->fadeoutSpeed = fadeoutSpeed;
+    return this;
 }
 
 
-Particle* ParticleBuilder::createParticle(sf::Texture& particleSprites, sf::Vector2u spriteCount, sf::IntRect textureCoords){
-    Particle* particle = new Particle();
+void ParticleBuilder::initialiseParticle(Particle* memory, sf::Texture& particleSprites, sf::Vector2u spriteCount, sf::IntRect textureCoords) const{
     //Basics: 
-        particle->shape.setTexture(&particleSprites);
+        memory->shape.setTexture(&particleSprites);
         sf::IntRect coords = textureCoords;
         coords.left = coords.width * (rand() % spriteCount.x);
         coords.top = coords.height * (rand() % spriteCount.y);
-        particle->shape.setTextureRect(coords);
+        memory->shape.setTextureRect(coords);
     //Path:
         float _speed = speed.get();
         float _angle = angle.get()*M_PI / 180.f;
-        particle->direction.x = cos(_angle) * _speed;
-        particle->direction.y = sin(_angle) * _speed;
+        memory->direction.x = cos(_angle) * _speed;
+        memory->direction.y = sin(_angle) * _speed;
     //Gravity:
         float angle_rad = gravity*M_PI / 180.f;
-        particle->gravity.x = cos(angle_rad) * gravitySpeed;
-        particle->gravity.y = sin(angle_rad) * gravitySpeed;
+        memory->gravity.x = cos(angle_rad) * gravitySpeed;
+        memory->gravity.y = sin(angle_rad) * gravitySpeed;
     //Size:
         float _diameter = diameter.get();
-        particle->shape.setSize(sf::Vector2f(_diameter, _diameter));
+        memory->shape.setSize(sf::Vector2f(_diameter, _diameter));
     //Rotation:
         float _rotationOffset = rotationOffset.get();
-        particle->shape.setOrigin(_diameter / 2.f * _rotationOffset, _diameter / 2.f * _rotationOffset);    //origin = nearly center   
-                
+        memory->shape.setOrigin(_diameter / 2.f * _rotationOffset, _diameter / 2.f * _rotationOffset);    //origin = nearly center   
+
         float diff = rotationSpeed.max - rotationSpeed.min;
         Interval _rotationSpeed = { -(diff / 2.f), diff / 2.f };
-        Interval rotationPreference = { diff * 0.1, diff * 0.3 };
+        Interval rotationPreference = { diff * 0.1f, diff * 0.3f };
         float _rotationPreference = rotationPreference.get();
-        if (particle->direction.x < 0){
+        if (memory->direction.x < 0){
             _rotationPreference *= -1;
         }
         _rotationSpeed.min += _rotationPreference;
         _rotationSpeed.max += _rotationPreference;
-        
-        particle->rotationSpeed = _rotationSpeed.get();
+
+        memory->rotationSpeed = _rotationSpeed.get();
     //Color:
-        particle->nextColor = rand() % 6;
+        memory->nextColor = rand() % 6;
         Interval colorProgress = { 0, 255 };
-        particle->colorProgress = colorProgress.get();
+        memory->colorProgress = colorProgress.get();
 
-
-        particle->shape.setFillColor(ColorAnimator::getInterpolatedColor(particle->nextColor, particle->colorProgress));
-        particle->colorSpeed = colorSpeed.get();
+        memory->shape.setFillColor(ColorAnimator::getInterpolatedColor(memory->nextColor, memory->colorProgress));
+        memory->colorSpeed = colorSpeed.get();
     //Transparency:
-        particle->alpha = 255.f;
-        particle->fadeoutSpeed = fadeoutSpeed.get();
-
+        memory->alpha = 255.f;
+        memory->fadeoutSpeed = fadeoutSpeed.get();
+    //Position:
         sf::Vector2f _position = position;
         _position.x += positionOffset.get();
         _position.y += positionOffset.get();
-        
-        particle->shape.setPosition(_position);
-    
-        return particle;
+
+        memory->shape.setPosition(_position);
+}
+
+Particle* ParticleBuilder::createParticle(sf::Texture& particleSprites, sf::Vector2u spriteCount, sf::IntRect textureCoords) const{
+    Particle* particle = new Particle();
+    initialiseParticle(particle, particleSprites, spriteCount, textureCoords);
+    return particle;
 }

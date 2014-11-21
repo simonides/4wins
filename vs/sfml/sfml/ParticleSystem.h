@@ -9,6 +9,7 @@
 
 
 
+
 namespace sf{
     class RenderWindow;
 }
@@ -24,8 +25,11 @@ private:
     sf::Vector2u spriteCount;   //Number of sprites in the texture
     sf::IntRect textureCoords;  //coords of the sprite at 0|0
     
-    std::vector<Particle*> particles;
+    /*std::vector<Particle*> particles;
+    std::vector<Particle*> particlePool;*/
 
+    Particle* particles;  
+    unsigned int particleCount;
 public:
     ParticleSystem();
 

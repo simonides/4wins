@@ -14,6 +14,7 @@
 
 
 ParticleSystem::ParticleSystem(){
+    //TODO: don't load texture here
     if (!particleSprites.loadFromFile(WORKING_DIR + "stars.png")){
         std::cerr << "couldn't load the texture: meepleSprites" << std::endl;
         assert(false);
@@ -25,56 +26,64 @@ ParticleSystem::ParticleSystem(){
     textureCoords.left = 0;
     textureCoords.top = 0;
 
+    particles = new Particle[MAX_PARTICLE_COUNT];       //Allocate everything - we don't wanna have any new's during the game
+    particleCount = 0;
 }
 
 ParticleSystem::~ParticleSystem(){
-    for (std::vector<Particle*>::const_iterator it = particles.begin(); it != particles.end();){
-        delete *it;
-    }
+    delete particles;
 }
 
 
-void ParticleSystem::newParticleCloud(unsigned int particleCount, ParticleBuilder& builder){
-    for (unsigned int i = 0; i < particleCount; i++){
-        particles.push_back(builder.createParticle(particleSprites, spriteCount, textureCoords));
+void ParticleSystem::newParticleCloud(unsigned int newParticleCount, ParticleBuilder& builder){
+    for (unsigned int i = particleCount; i < particleCount + newParticleCount; ++i){
+        if (i >= MAX_PARTICLE_COUNT){
+            #ifndef NDEBUG
+                std::cerr << "Particle Limit reached";
+            #endif
+                particleCount = MAX_PARTICLE_COUNT;
+                return;
+        }
+        builder.initialiseParticle(particles+i, particleSprites, spriteCount, textureCoords);
     }
+    particleCount += newParticleCount;
 }
 
 
 void ParticleSystem::update(float elapsedTime){
     assert(elapsedTime > 0);
-    for (std::vector<Particle*>::const_iterator it = particles.begin(); it != particles.end();){
+    for (unsigned int i = 0; i < particleCount; ++i){
         //Path:
-            (*it)->shape.move((*it)->direction.x * elapsedTime, (*it)->direction.y * elapsedTime);            
-            (*it)->shape.move((*it)->gravity.x * elapsedTime, (*it)->gravity.y * elapsedTime);
+             particles[i].shape.move( particles[i].direction.x * elapsedTime,  particles[i].direction.y * elapsedTime);            
+             particles[i].shape.move( particles[i].gravity.x * elapsedTime,  particles[i].gravity.y * elapsedTime);
         //Rotation:
-            (*it)->shape.rotate((*it)->rotationSpeed * elapsedTime);
+             particles[i].shape.rotate( particles[i].rotationSpeed * elapsedTime);
         //Color:
-            (*it)->colorProgress += (*it)->colorSpeed *elapsedTime;
-            while ((*it)->colorProgress > 255){
-                (*it)->colorProgress -= 255;
-                (*it)->nextColor = ((*it)->nextColor+1)%6;                
+             particles[i].colorProgress +=  particles[i].colorSpeed *elapsedTime;
+            while ( particles[i].colorProgress > 255){
+                 particles[i].colorProgress -= 255;
+                 particles[i].nextColor = ( particles[i].nextColor+1)%6;                
             }
         //Transparency:
-            (*it)->alpha -= (*it)->fadeoutSpeed *elapsedTime;
-            if ((*it)->alpha < 0){ (*it)->alpha = 0; }
-            (*it)->shape.setFillColor(ColorAnimator::getInterpolatedColor((*it)->nextColor, (*it)->colorProgress, static_cast<sf::Uint8>((*it)->alpha)));
+             particles[i].alpha -=  particles[i].fadeoutSpeed *elapsedTime;
+             if ( particles[i].alpha < 0){  particles[i].alpha = 0; }
+             particles[i].shape.setFillColor(ColorAnimator::getInterpolatedColor( particles[i].nextColor,  particles[i].colorProgress, static_cast<sf::Uint8>( particles[i].alpha)));
         //Delete if invisible:
-            sf::Vector2f pos = (*it)->shape.getPosition();
-            //TODO: simon fragen, wass ich hier für werte brauche
-            if( (*it)->alpha <= 0 || 
+            sf::Vector2f pos =  particles[i].shape.getPosition();
+            if( particles[i].alpha <= 0 || 
                 pos.x < -PARTICLE_DELETE_HORIZON || pos.x > WINDOW_WIDTH_TO_CALCULATE  + PARTICLE_DELETE_HORIZON ||
                 pos.y < -PARTICLE_DELETE_HORIZON || pos.y > WINDOW_HEIGHT_TO_CALCULATE + PARTICLE_DELETE_HORIZON ){
-                delete *it;
-                it = particles.erase(it);
-            }else{
-                ++it;
+
+                --particleCount;
+                if (i != particleCount){
+                    particles[i] = particles[particleCount];
+                }
             }
     }
 }
 
 void ParticleSystem::draw(sf::RenderWindow& window) const{
-    for (std::vector<Particle*>::const_iterator it = particles.begin(); it != particles.end(); ++it){
-        window.draw((*it)->shape);
+    for (unsigned int i = 0; i < particleCount; ++i){
+        window.draw(particles[i].shape);
     }
 }
