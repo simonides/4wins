@@ -125,7 +125,17 @@ GameWinner::Enum Game::runGame(){
 
 
     ParticleSystem* particleSystem = new ParticleSystem();
+    ParticleBuilder* builder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 50, 150 }, { 290, 320 }, { 500, 2000 }, { 300, 500 });
+    builder->setRotation();
+    builder->setGravity(120, 90);
+    particleSystem->newParticleCloud(20, *builder);
+    
 
+    //ParticleBuilder* mbBuilder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 20, 200 });
+    ParticleBuilder* mbBuilder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 50, 150 });
+    mbBuilder->setRotation({ 0.1, 3.5 });
+    mbBuilder->setGravity(120, 90);
+        
 
 	while (window->isOpen()){
         elapsedTime = clock.getElapsedTime().asSeconds();
@@ -138,7 +148,11 @@ GameWinner::Enum Game::runGame(){
 		text.setColor(sf::Color::Black);
 		//text.setStyle(sf::Text::Bold /*| sf::Text::Underlined*/);
 		
-
+        mbBuilder->setPosition(convertedMousePos);
+        if (pressedLeftMouse){
+            particleSystem->newParticleCloud(5, *mbBuilder);
+        }
+        
 
 		pollEvents();
 

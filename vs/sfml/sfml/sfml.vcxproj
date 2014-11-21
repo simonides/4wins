@@ -86,10 +86,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ColorAnimator.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="GameSimulator.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="helper.cpp" />
+    <ClCompile Include="ParticleBuilder.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="RBag.cpp" />
     <ClCompile Include="RBoard.cpp" />
@@ -113,8 +115,10 @@
     <ClCompile Include="ThreadedGameSimulator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ColorAnimator.h" />
     <ClInclude Include="GameSimulator.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="ParticleBuilder.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="RBag.h" />
     <ClInclude Include="RBoard.h" />
