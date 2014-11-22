@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <vector>
 #include "Board.h"
-
+#include "ColorAnimation.h"
 
 class ParticleBuilder;
 class ParticleSystem;
@@ -19,9 +19,11 @@ class Board;
 class RBag;
 class ResourceLoader;
 
-enum GameReturn
-{
-	GAME, MENU, EXIT
+enum GameReturn{
+	REPLAY, 
+    BACK_TO_MENU, 
+    EXIT_GAME,
+    KEEP_PLAYING         //Game-internal, until the game ended and the player pressed a button
 };
 
 struct Player{
@@ -40,8 +42,7 @@ struct Player{
 };
 
 
-//Contains all information about a game, and handles the game loop
-//A Game-object is usable for exacly one round
+
 class Game
 {
 private:
@@ -64,9 +65,10 @@ private:
 		CHECK_END_CONDITION, DISPLAY_END_SCREEN
 	};
 
-	GameReturn runGameSwitch;
+	//GameReturn runGameSwitch;
 	bool pressedLeftMouse;
 	bool releasedLeftMouse;
+    bool rightMouseButtonPressed;
 
 	sf::Vector2f mousePosRelativeToMeepleBoundary;
 	sf::Vector2f convertedMousePos;
@@ -76,7 +78,7 @@ private:
 	std::vector<RMeeple*> meeplesToDrawAndSort;
 
 	uint8_t activePlayerIndex;
-	Board* logicalBoard; // needed????
+	Board* logicalBoard; //todo needed????
 	RBoard* board;
 	Player* players[2];
 	GameState* gameStates[2];                //stores the gamestate for player 1 (buffered)
@@ -86,7 +88,9 @@ private:
 	RMeeple* glowMeepleTmp;
 	BoardPos posMeepleTo;
 	bool dragMeeple;
-	ParticleSystem* particleSystem;
+    ParticleSystem* particleSystem;
+    ParticleBuilder* dustBuilder;
+    ParticleBuilder* mouseCursorParticleBuilder;
 	ParticleBuilder* endScreenParticleBuilder;
 	sf::Color STANDARD_GLOW;
 	sf::Color SELECTED_GLOW;
@@ -98,9 +102,9 @@ private:
 	sf::RectangleShape restartButton;
 	sf::RectangleShape menuButton;
 	sf::Color buttonColor;
-	float color4MGlow[4];
-	RMeeple* winningCombiRMeeples[4];
-	sf::Clock meepleGlowAnimationClock;
+	//float color4MGlow[4];
+	
+	//sf::Clock meepleGlowAnimationClock;
 	
 	
 
@@ -119,15 +123,21 @@ private:
 	LoopState MoveMeepleToSelectedPosition();
 	
 	LoopState checkEndCondition();
-	LoopState displayEndscreen();
+    GameReturn displayEndscreen(float elapsedTime);
+
+    //End-Screen: rainbow-animation  for winCombination
+        RMeeple* winningCombiRMeeples[4];
+        ColorAnimation colorAnimations[4];     //Animations for all meeples in the winCombination
+
 
 	// other functions
 	void switchPlayers();
 	void initMeeples();
 	sf::Color rainbow(float progress) const; // TODO gehört raus :D
+    void createMeepleDust(sf::FloatRect fieldBounds);
 
 public:
-    Game(sf::RenderWindow& window, Player& player1, Player& player2,ResourceLoader& resourceLoader); //Initialises the game with 2 players
+    Game(sf::RenderWindow& window, Player* players[2], ResourceLoader& resourceLoader); //Initialises the game with 2 players
 	virtual ~Game();
 	void reset();                               //Reinitialises the object
     GameReturn runGame();                 //Runs the game, until it is over; returns the winner

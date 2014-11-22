@@ -56,83 +56,61 @@ int main(){
 
 
 
+    //bool exitGame = false;
+
+	I_Player* player1 = new StupidAI();
+    I_Player* player2 = new SmartAI(true, true);
+    ThreadController* tc1 = new ThreadController(*player1);
+    ThreadController* tc2 = new ThreadController(*player2);
+    
+    Player* players[2];
+    players[0] = new Player();
+    players[0]->type = Player::TC;
+    players[0]->player = nullptr;
+    players[0]->controller = tc1;
+
+    players[1] = new Player();
+    players[1]->type = Player::TC;
+    players[1]->player = nullptr;
+    players[1]->controller = tc2;
 
 
-	I_Player* test = new StupidAI();
-	I_Player* test2 = new SmartAI(true, true);
+	//Player* human = new Player();
+	//human->type = Player::HUMAN;
+	//human->player = nullptr;
 
-	ThreadController* tc1 = new ThreadController(*test2);
-	ThreadController* tc2 = new ThreadController(*test2);
-	//I_Player* test2 =	new Player();
+	//Player* human2 = new Player();
+	//human2->type = Player::HUMAN;
+	//human2->player = nullptr;
 
-	Player* p1 = new Player();
-	p1->type = Player::TC;
-	p1->player = nullptr;
-	p1->controller = tc1;
 
-	Player* p2 = new Player();
-	p2->type = Player::TC;
-	p2->player = nullptr;
-	p2->controller = tc2;
+    Game* game = new Game(*window, players, resourceLoader);
 
-	Player* human = new Player();
-	human->type = Player::HUMAN;
-	human->player = nullptr;
+    GameReturn returnValue = REPLAY;
 
-	Player* human2 = new Player();
-	human2->type = Player::HUMAN;
-	human2->player = nullptr;
-
-	assert(p1 != nullptr);
-	assert(p2 != nullptr);
-	assert(human != nullptr);
-	assert(human2 != nullptr);
-	assert(tc2 != nullptr);
-	assert(tc1 != nullptr);
-
-	while (window->isOpen()){
-
-		menu->loop();
-
-		Game* game = new Game(*window, *p2, *p1, resourceLoader);
-		GameReturn returnValue = game->runGame();
-		if (returnValue == EXIT)
-		{
-			delete game;
-			delete p2;
-			delete p1;
-			delete test;
-			delete test2;
-			delete tc1;
-			delete tc2;
-			break;
+    while (window->isOpen() /*&& !exitGame*/){
+        if (returnValue == BACK_TO_MENU){
+            //menu->loop();
+        }
+        		
+		returnValue = game->runGame();
+		if (returnValue == EXIT_GAME){
+            /*exitGame = true;*/
+            break;
 		}
-		else
-		{
-			delete game;
-			continue;
-		}
-
-
-
-
+        game->reset();
 	}
-
-	//delete menu;
+    delete game;
+    delete players[0];
+    delete players[1];
+    delete tc2;
+    delete tc1;
+    delete player2;
+    delete player1;
+	delete menu;
 	delete window;
+
+
 
 	return 0;
 }
-
-/*
-sf::Music music;
-if (!music.openFromFile(WORKING_DIR + "test.ogg"))
-return -1; // error
-music.play();
-music.setLoop(true);
-
-cin.ignore();   //wait for keypress
-
-music.stop();
-return 0;
-*/

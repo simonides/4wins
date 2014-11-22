@@ -32,8 +32,12 @@ RBoard::RBoard(  sf::Texture& boardTexture,sf::Texture& fieldTexture,   sf::Text
 }
 
 
-RBoard::~RBoard()
-{
+RBoard::~RBoard(){
+    for (uint8_t x = 0; x < 4; ++x){
+        for (uint8_t y = 0; y < 4; ++y){
+            delete fields[x][y];
+        }
+    }    
 }
 
 void RBoard::draw(sf::RenderWindow& window) const{
