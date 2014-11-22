@@ -26,6 +26,12 @@ void ResourceLoader::loadResourcesFromFileSys(bool setSmooth)
 	}
 	meepleSprite.setSmooth(setSmooth);
 
+	if (!avatarSprite.loadFromFile(WORKING_DIR + "players.png")){
+		std::cerr << "Couldn't load the texture: avatarSprite" << std::endl;
+		assert(false);
+	}
+	avatarSprite.setSmooth(setSmooth);
+
 	if (!glowSprite.loadFromFile(WORKING_DIR + "glow.png")){
 		std::cerr << "Couldn't load the texture: glow" << std::endl;
 		assert(false);
@@ -47,11 +53,11 @@ void ResourceLoader::loadResourcesFromFileSys(bool setSmooth)
 	fieldTexture.setSmooth(setSmooth);
 
 
-	if (!backgroundTexture.loadFromFile(WORKING_DIR + "background.png")){
+	if (!backgroundSprite.loadFromFile(WORKING_DIR + "background.png")){
 		std::cerr << "Couldn't load the texture: background" << std::endl;
 		assert(false);
 	}
-	backgroundTexture.setSmooth(setSmooth);
+	backgroundSprite.setSmooth(setSmooth);
 
 	if (!exitButtonTexture.loadFromFile(WORKING_DIR + "quit.png")){
 		std::cerr << "Couldn't load the texture: quit" << std::endl;
@@ -85,25 +91,42 @@ sf::Texture* ResourceLoader::getTexture(ResourceTexture textureType)
 {
 	switch (textureType)
 	{
-	case MEEPLE_SPRITE: return &meepleSprite;
-	case MEEPLE_GLOW_SPRITE: return &glowSprite;
-	case BOARD_TEX: return &boardTexture;
-	case FIELD_TEX: return &fieldTexture;
-	case BACKGROUND_TEX: return &backgroundTexture;
-	case EXIT_BTN_TEX: return &exitButtonTexture;
-	case RELOAD_BTN_TEX: return &reloadButtonTexture;
-	case MENU_BTN_TEX: return &menuButtonTexture;
-	case PARTICLE_SPRITE: return &particleSprite;
-	default: return &exitButtonTexture;
+	case MEEPLE_SPRITE:			return &meepleSprite;
+	case MEEPLE_GLOW_SPRITE:	return &glowSprite;
+	case BOARD_TEX:				return &boardTexture;
+	case FIELD_TEX:				return &fieldTexture;
+	case BACKGROUND_TEX:		return &backgroundSprite;
+	case EXIT_BTN_TEX:			return &exitButtonTexture;
+	case RELOAD_BTN_TEX:		return &reloadButtonTexture;
+	case MENU_BTN_TEX:			return &menuButtonTexture;
+	case PARTICLE_SPRITE:		return &particleSprite;
+	case AVATAR_SPRITE:			return &avatarSprite;
+	default:					return &exitButtonTexture;
+	
+
 		//assert(false);
+	}
+}
+
+sf::IntRect ResourceLoader::getTextureRect(ResourceRect rectType) const
+{
+	switch (rectType)
+	{
+	case UNCLE_BENS:		return sf::IntRect(0,   0, 128, 194);
+	case MR_PROPER:			return sf::IntRect(128, 0, 128, 194);
+	case RONALD:			return sf::IntRect(256, 0, 128, 194);
+	case SMILEY:			return sf::IntRect(384, 0, 128, 194);
+	case BACKGROUND:		return sf::IntRect(0, 0, 135, 68);
+	case BACKGROUND_WINDOW: return sf::IntRect(4, 70, 31, 49);
+	default:				return sf::IntRect(0, 0, 16, 16);//default something
 	}
 }
 sf::Font* ResourceLoader::getFont(ResourceFont fontType)
 {
 	switch (fontType)
 	{
-	case ROBOTO: return &roboto;
-	default: return &roboto;
+	case ROBOTO:			return &roboto;
+	default:				return &roboto;
 		//assert(false);
 	}
 }

@@ -135,6 +135,9 @@
     <ClCompile Include="ResourceLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RBackground.cpp">
+      <Filter>Source Files\REntities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="ResourceLoader.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RBackground.h">
+      <Filter>Header Files\REntities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

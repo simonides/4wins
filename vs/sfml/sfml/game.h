@@ -3,12 +3,15 @@
 
 #include "RMeeple.h"
 #include "GameState.h"
+#include "ResourceLoader.h"
+#include "RBackground.h"
 
 #include <cstdint>
 #include <vector>
 #include "Board.h"
 
 
+class RBackground;
 class ParticleBuilder;
 class ParticleSystem;
 class ThreadController;
@@ -17,7 +20,7 @@ class I_Player;
 class RBoard;
 class Board;
 class RBag;
-class ResourceLoader;
+//class ResourceLoader;
 
 enum GameReturn
 {
@@ -31,6 +34,8 @@ struct Player{
 		TC
 	} type;
 	
+	ResourceLoader::ResourceRect playerAvatar;
+
 	union{
 		ThreadController* controller;
 		I_Player* player;
@@ -45,9 +50,10 @@ struct Player{
 class Game
 {
 private:
+
 	sf::RenderWindow* window;
 	ResourceLoader* resourceLoader;
-	sf::RectangleShape background;
+	RBackground* background;
 
 	//gameloop
 	enum LoopState{
@@ -76,10 +82,12 @@ private:
 	std::vector<RMeeple*> meeplesToDrawAndSort;
 
 	uint8_t activePlayerIndex;
-	Board* logicalBoard; // needed????
+	Board* logicalBoard;					// needed????
 	RBoard* board;
 	Player* players[2];
 	GameState* gameStates[2];                //stores the gamestate for player 1 (buffered)
+
+
 
 	//loopvars
 	const Meeple* meepleToSet;

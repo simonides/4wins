@@ -95,6 +95,7 @@
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="ParticleBuilder.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="RBackground.cpp" />
     <ClCompile Include="RBag.cpp" />
     <ClCompile Include="RBoard.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="ParticleBuilder.h" />
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="RBackground.h" />
     <ClInclude Include="RBag.h" />
     <ClInclude Include="RBoard.h" />
     <ClInclude Include="ResourceLoader.h" />

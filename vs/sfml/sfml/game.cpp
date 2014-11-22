@@ -25,6 +25,10 @@
 
 #include "ParticleSystem.h"
 #include "ResourceLoader.h"
+
+#include "RBackground.h"
+
+
 //
 //const sf::Color STANDARD_GLOW = sf::Color::Yellow;
 //const sf::Color SELECTED_GLOW = sf::Color::Red;
@@ -68,6 +72,7 @@ Game::Game(sf::RenderWindow& window, Player& player1, Player& player2, ResourceL
 	sf::Vector2f buttonSize(150.f, 150.f);
 	sf::Vector2f buttonOrigin(75.f, 75.f);
 
+	background = new RBackground(resourceLoader,player1,player2);
 
 	restartButton.setTexture(resourceLoader.getTexture(ResourceLoader::RELOAD_BTN_TEX));
 	restartButton.setFillColor(buttonColor);
@@ -119,9 +124,7 @@ void Game::reset(){
 //Game Loop for one game, until there is a winner or the board is full
 GameReturn Game::runGame(){
 	runGameSwitch = GAME;
-	background.setTexture(resourceLoader->getTexture(ResourceLoader::BACKGROUND_TEX));
-	background.setSize(sf::Vector2f(static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE)));
-	background.setPosition(0, 0);
+
 
 	sf::Clock clock;
     float elapsedTime = 0;
@@ -242,8 +245,10 @@ GameReturn Game::runGame(){
 		window->setTitle(title);
 
 		window->clear(sf::Color::White);
-		window->draw(background);
-		
+
+		background->update(elapsedTime);
+		background->draw(*window);
+
 		board->draw(*window);
 
 		//window->draw(text);
@@ -262,7 +267,7 @@ GameReturn Game::runGame(){
 			window->draw(menuButton);
 			window->draw(restartButton);
 		}
-
+	
 		window->display();
 	}
 
@@ -343,6 +348,8 @@ void Game::pollEvents(){
 			case sf::Event::MouseButtonPressed:
 				if (event.mouseButton.button == sf::Mouse::Left){
 					pressedLeftMouse = true;
+					background->setLeftWindow(true);
+					background->setRightWindow(true);
 				}
 				break;
 
@@ -350,6 +357,8 @@ void Game::pollEvents(){
 				switch (event.mouseButton.button){
 				case sf::Mouse::Left:
 					releasedLeftMouse = true;
+					background->setLeftWindow(false);
+					background->setRightWindow(false);
 					break;
 
 				default:
@@ -633,7 +642,7 @@ Game::LoopState Game::displayEndscreen(){
 	if (menuButton.getGlobalBounds().contains(convertedMousePos))
 	{
 		menuButton.setFillColor(sf::Color::Magenta);
-		hoveredButtonPtr = &exitButton;
+		hoveredButtonPtr = &menuButton;
 	}
 
 	if (releasedLeftMouse && restartButton.getGlobalBounds().contains(convertedMousePos))

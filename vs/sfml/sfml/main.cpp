@@ -69,19 +69,23 @@ int main(){
 	p1->type = Player::TC;
 	p1->player = nullptr;
 	p1->controller = tc1;
+	p1->playerAvatar = ResourceLoader::UNCLE_BENS;
 
 	Player* p2 = new Player();
 	p2->type = Player::TC;
 	p2->player = nullptr;
 	p2->controller = tc2;
+	p2->playerAvatar = ResourceLoader::MR_PROPER;
 
 	Player* human = new Player();
 	human->type = Player::HUMAN;
 	human->player = nullptr;
+	human->playerAvatar = ResourceLoader::SMILEY;
 
 	Player* human2 = new Player();
 	human2->type = Player::HUMAN;
 	human2->player = nullptr;
+	human2->playerAvatar = ResourceLoader::RONALD;
 
 	assert(p1 != nullptr);
 	assert(p2 != nullptr);
@@ -92,7 +96,7 @@ int main(){
 
 	while (window->isOpen()){
 
-		menu->loop();
+		//menu->loop();
 
 		Game* game = new Game(*window, *p2, *p1, resourceLoader);
 		GameReturn returnValue = game->runGame();
@@ -112,10 +116,6 @@ int main(){
 			delete game;
 			continue;
 		}
-
-
-
-
 	}
 
 	//delete menu;
