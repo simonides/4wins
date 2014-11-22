@@ -32,7 +32,7 @@
 
 Game::Game(sf::RenderWindow& window, Player& player1, Player& player2, ResourceLoader& resourceLoader)
 	: window(&window), resourceLoader(&resourceLoader)
-	, runGameSwitch(true), pressedLeftMouse(false)
+	, runGameSwitch(GAME), pressedLeftMouse(false)
 	, releasedLeftMouse(false), rMeepleToSet(nullptr)
 	, activePlayerIndex(0), STANDARD_GLOW(sf::Color::Yellow)
 	, SELECTED_GLOW(sf::Color::Red), drawEndScreen(false)
@@ -73,15 +73,21 @@ Game::Game(sf::RenderWindow& window, Player& player1, Player& player2, ResourceL
 	restartButton.setFillColor(buttonColor);
 	restartButton.setSize(buttonSize);
 	restartButton.setOrigin(buttonOrigin);
-	restartButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f -90.f , WINDOW_HEIGHT_TO_CALCULATE / 2.f);
+	restartButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f -150.f , WINDOW_HEIGHT_TO_CALCULATE / 2.f);
 
 
 	exitButton.setTexture(resourceLoader.getTexture(ResourceLoader::EXIT_BTN_TEX));
 	exitButton.setFillColor(buttonColor);
 	exitButton.setSize(buttonSize);
 	exitButton.setOrigin(buttonOrigin);
-	exitButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f +90.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f);
+	exitButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f +150.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f);
 	
+	menuButton.setTexture(resourceLoader.getTexture(ResourceLoader::MENU_BTN_TEX));
+	menuButton.setFillColor(buttonColor);
+	menuButton.setSize(buttonSize);
+	menuButton.setOrigin(buttonOrigin);
+	menuButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f);
+
 
 
 }
@@ -111,7 +117,8 @@ void Game::reset(){
 
 
 //Game Loop for one game, until there is a winner or the board is full
-void Game::runGame(){
+GameReturn Game::runGame(){
+	runGameSwitch = GAME;
 	background.setTexture(resourceLoader->getTexture(ResourceLoader::BACKGROUND_TEX));
 	background.setSize(sf::Vector2f(static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE)));
 	background.setPosition(0, 0);
@@ -129,7 +136,7 @@ void Game::runGame(){
 
 
 
-	particleSystem = new ParticleSystem(*resourceLoader->getTexture(ResourceLoader::STAR_SPRITE_TEX), sf::Vector2u(2, 2));
+	particleSystem = new ParticleSystem(*resourceLoader->getTexture(ResourceLoader::PARTICLE_SPRITE), sf::Vector2u(2, 2));
 
 
     ////FOR DUST-CLOUDS:
@@ -150,7 +157,7 @@ void Game::runGame(){
                             ->setFadeoutSpeed({ 35, 65 });      
         
 
-	while (runGameSwitch && window->isOpen()){
+	while (runGameSwitch == GAME && window->isOpen()){
         elapsedTime = clock.getElapsedTime().asSeconds();
 	    float fps = 1.f / elapsedTime;
 		clock.restart();
@@ -252,6 +259,7 @@ void Game::runGame(){
 		if (drawEndScreen)
 		{
 			window->draw(exitButton);
+			window->draw(menuButton);
 			window->draw(restartButton);
 		}
 
@@ -259,7 +267,7 @@ void Game::runGame(){
 	}
 
     delete endScreenParticleBuilder;
-
+	return runGameSwitch;
 }
 
 sf::Color Game::rainbow(float progress) const
@@ -622,6 +630,11 @@ Game::LoopState Game::displayEndscreen(){
 		exitButton.setFillColor(sf::Color::Magenta);
 		hoveredButtonPtr = &exitButton;
 	}
+	if (menuButton.getGlobalBounds().contains(convertedMousePos))
+	{
+		menuButton.setFillColor(sf::Color::Magenta);
+		hoveredButtonPtr = &exitButton;
+	}
 
 	if (releasedLeftMouse && restartButton.getGlobalBounds().contains(convertedMousePos))
 	{
@@ -637,7 +650,11 @@ Game::LoopState Game::displayEndscreen(){
 	}
 	if (releasedLeftMouse && exitButton.getGlobalBounds().contains(convertedMousePos))
 	{
-		runGameSwitch = false;
+		runGameSwitch = EXIT;
+	}
+	if (releasedLeftMouse && menuButton.getGlobalBounds().contains(convertedMousePos))
+	{
+		runGameSwitch = MENU;
 	}
 	return DISPLAY_END_SCREEN;
 }

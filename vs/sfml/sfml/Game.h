@@ -19,6 +19,11 @@ class Board;
 class RBag;
 class ResourceLoader;
 
+enum GameReturn
+{
+	GAME, MENU, EXIT
+};
+
 struct Player{
 	enum{
 		HUMAN,
@@ -59,7 +64,7 @@ private:
 		CHECK_END_CONDITION, DISPLAY_END_SCREEN
 	};
 
-	bool runGameSwitch;
+	GameReturn runGameSwitch;
 	bool pressedLeftMouse;
 	bool releasedLeftMouse;
 
@@ -125,7 +130,7 @@ public:
     Game(sf::RenderWindow& window, Player& player1, Player& player2,ResourceLoader& resourceLoader); //Initialises the game with 2 players
 	virtual ~Game();
 	void reset();                               //Reinitialises the object
-    void runGame();                 //Runs the game, until it is over; returns the winner
+    GameReturn runGame();                 //Runs the game, until it is over; returns the winner
 	void pollEvents();
 };
 

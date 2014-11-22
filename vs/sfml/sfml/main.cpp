@@ -48,66 +48,73 @@ using namespace FourWins;
 
 int main(){
 	//AI_testFunction();
-	ResourceLoader* resourceLoader = new ResourceLoader();
+	ResourceLoader resourceLoader;
 	sf::RenderWindow* window = setupWindow();
 
 	Menu::MainMenu* menu = new Menu::MainMenu(*window);
 	menu->init();
 
+
+
+
+
+	I_Player* test = new StupidAI();
+	I_Player* test2 = new SmartAI(true, true);
+
+	ThreadController* tc1 = new ThreadController(*test2);
+	ThreadController* tc2 = new ThreadController(*test2);
+	//I_Player* test2 =	new Player();
+
+	Player* p1 = new Player();
+	p1->type = Player::TC;
+	p1->player = nullptr;
+	p1->controller = tc1;
+
+	Player* p2 = new Player();
+	p2->type = Player::TC;
+	p2->player = nullptr;
+	p2->controller = tc2;
+
+	Player* human = new Player();
+	human->type = Player::HUMAN;
+	human->player = nullptr;
+
+	Player* human2 = new Player();
+	human2->type = Player::HUMAN;
+	human2->player = nullptr;
+
+	assert(p1 != nullptr);
+	assert(p2 != nullptr);
+	assert(human != nullptr);
+	assert(human2 != nullptr);
+	assert(tc2 != nullptr);
+	assert(tc1 != nullptr);
+
 	while (window->isOpen()){
-		
-		GameSettings gamesettings = menu->loop();
-		//system("pause");
-		if (!window->isOpen())
+
+		menu->loop();
+
+		Game* game = new Game(*window, *p2, *p1, resourceLoader);
+		GameReturn returnValue = game->runGame();
+		if (returnValue == EXIT)
 		{
+			delete game;
+			delete p2;
+			delete p1;
+			delete test;
+			delete test2;
+			delete tc1;
+			delete tc2;
 			break;
 		}
-		
-
-		I_Player* test =    new StupidAI( );
-		I_Player* test2 =	new SmartAI(true, true);
-
-		ThreadController* tc1 = new ThreadController(*test2);
-		ThreadController* tc2 = new ThreadController(*test2);
-		//I_Player* test2 =	new Player();
-
-		Player* p1 = new Player();
-		p1->type = Player::TC;
-		p1->player = nullptr;
-		p1->controller = tc1;
-
-		Player* p2 = new Player();
-		p2->type = Player::TC;
-		p2->player = nullptr;
-		p2->controller = tc2;
-		
-        Player* human = new Player();
-        human->type = Player::HUMAN;
-        human->player = nullptr;
-
-        Player* human2 = new Player();
-        human2->type = Player::HUMAN;
-        human2->player = nullptr;
-
-		assert(p1 != nullptr);
-		assert(p2 != nullptr);
-		assert(human != nullptr);
-		assert(human2 != nullptr);
-		assert(tc2 != nullptr);
-		assert(tc1 != nullptr);
+		else
+		{
+			delete game;
+			continue;
+		}
 
 
-		Game* game = new Game(*window, *p2, *p1, *resourceLoader);
-		game->runGame();
 
-
-		delete game;
-		delete p2;
-		delete p1;
-		delete test;
-		delete test2;
-		delete tc1;
-		delete tc2;
 
 	}
 
