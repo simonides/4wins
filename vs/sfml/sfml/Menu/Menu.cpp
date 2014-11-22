@@ -3,6 +3,7 @@
 #include "../ThinkingAI.h"
 #include "Listbox.h"
 #include "Button.h"
+#include "../helper.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -111,9 +112,15 @@ void FourWins::Menu::MainMenu::pollEvents()
 		this->lbPlayer2->update(event, converted);
 		this->btnStart->update(event, converted);
 
-		if (event.type == sf::Event::Closed)
+		switch (event.type)
 		{
+		case sf::Event::Resized:
+			handleResizeWindowEvent(window);
+			break;
+
+		case sf::Event::Closed:
 			this->window->close();
+			break;
 		}
 	}
 }

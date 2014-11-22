@@ -43,18 +43,17 @@ void AI_testFunction(){
     exit(0);
 }
 
-
-
 using namespace FourWins;
+
 int main(){
-	AI_testFunction();
+	//AI_testFunction();
 	
 	sf::RenderWindow* window = setupWindow();
 	Menu::MainMenu* menu = new Menu::MainMenu(*window);
 	menu->init();
 	while (window->isOpen()){
 		
-		//GameSettings gamesettings = menu->loop();
+		GameSettings gamesettings = menu->loop();
 		//system("pause");
 		if (!window->isOpen())
 		{
