@@ -34,22 +34,26 @@
 //const sf::Color SELECTED_GLOW = sf::Color::Red;
 
 
-Game::Game(sf::RenderWindow& window, Player& player1, Player& player2, ResourceLoader& resourceLoader)
+#define DUST_X_OFFSET -10     //X-Offset for producing dust when placing a meeple
+
+Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceLoader& resourceLoader)
 	: window(&window), resourceLoader(&resourceLoader)
-	, runGameSwitch(GAME), pressedLeftMouse(false)
+	, pressedLeftMouse(false)
 	, releasedLeftMouse(false), rMeepleToSet(nullptr)
 	, activePlayerIndex(0), STANDARD_GLOW(sf::Color::Yellow)
 	, SELECTED_GLOW(sf::Color::Red), drawEndScreen(false)
 	, hoveredButtonPtr(nullptr), buttonColor(sf::Color(119, 110, 0, 255))
+    , dustBuilder(nullptr), endScreenParticleBuilder(nullptr)
+    , rightMouseButtonPressed(false)
 	{
     
-	assert(&player1 != &player2);   //hehehe, that won't crash this game
+    assert(_players[0] != _players[1]);   //hehehe, that won't crash this game
 
-	players[0] = &player1;
+    players[0] = _players[0];
 	players[0]->logicalMeepleBag = new MeepleBag(MeepleColor::WHITE);
 	players[0]->rbag = new RBag();
 
-	players[1] = &player2;
+    players[1] = _players[1];
 	players[1]->logicalMeepleBag = new MeepleBag(MeepleColor::BLACK);
 	players[1]->rbag = new RBag();
 
@@ -64,15 +68,12 @@ Game::Game(sf::RenderWindow& window, Player& player1, Player& player2, ResourceL
     
 	initMeeples();
 
-	color4MGlow[0] = 0.1f;
-	color4MGlow[1] = 0.25f;
-	color4MGlow[2] = 0.35f;
-	color4MGlow[3] = 0.45f;
+	    
 
 	sf::Vector2f buttonSize(150.f, 150.f);
 	sf::Vector2f buttonOrigin(75.f, 75.f);
 
-	background = new RBackground(resourceLoader,player1,player2);
+	background = new RBackground(resourceLoader,*_players[0],*_players[1]);
 
 	restartButton.setTexture(resourceLoader.getTexture(ResourceLoader::RELOAD_BTN_TEX));
 	restartButton.setFillColor(buttonColor);
@@ -93,12 +94,40 @@ Game::Game(sf::RenderWindow& window, Player& player1, Player& player2, ResourceL
 	menuButton.setOrigin(buttonOrigin);
 	menuButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f);
 
+    particleSystem = new ParticleSystem(*resourceLoader.getTexture(ResourceLoader::PARTICLE_SPRITE), sf::Vector2u(4, 2));
 
+    //FOR DUST-CLOUDS:
+    dustBuilder = new ParticleBuilder({ 300, 300 }, { 5, 30 });
+    dustBuilder->setSprites({ 2, 3 }, { 0, 1 })
+        ->setPath({ 50, 150 }, { 290, 320 })
+        ->setGravity(100, 90)
+        ->setRotation()
+        ->setFadeoutSpeed({ 300, 500 });
+       
+    //FOR MOUSE-CLICKS:
+    mouseCursorParticleBuilder = new ParticleBuilder({ 300, 300 }, { 5, 30 });
+    mouseCursorParticleBuilder->setSprites({ 0, 3 }, { 0, 1 })
+        ->setPath({ 5, 150 })
+        ->setGravity(120, 90)
+        ->setRotation({ 0, 600 }, { 0.1, 3.5 });
 
+    
+    //End-Screen Animation:
+    endScreenParticleBuilder = new ParticleBuilder({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 });
+    endScreenParticleBuilder->setSprites({ 0, 1 }, { 0, 1 })
+        ->setDynamicColor()
+        ->setPath({ 10, 200 }, { 275, 350 })
+        ->setGravity(30)
+        ->setRotation({ 100, 600 }, { -1, 3 })
+        ->setFadeoutSpeed({ 35, 65 });
 }
 
 
 Game::~Game(){
+    delete endScreenParticleBuilder;
+    delete mouseCursorParticleBuilder;
+    delete dustBuilder;
+    delete particleSystem;
     delete gameStates[1];
     delete gameStates[0];
 	delete players[1]->logicalMeepleBag;
@@ -117,14 +146,18 @@ void Game::reset(){
 	logicalBoard->reset();
 	players[0]->rbag->reset();
 	players[1]->rbag->reset();
+
+    for (uint8_t i = 0; i < 4; ++i){
+        winningCombiRMeeples[i]->setGlow(nullptr);
+        winningCombiRMeeples[i] = nullptr;
+    }
+    switchPlayers(); // TODO check this.. 
 }
 
 
 
 //Game Loop for one game, until there is a winner or the board is full
 GameReturn Game::runGame(){
-	runGameSwitch = GAME;
-
 
 	sf::Clock clock;
     float elapsedTime = 0;
@@ -134,33 +167,12 @@ GameReturn Game::runGame(){
 	rMeepleToSet = nullptr;
 	posMeepleTo = { 42, 42 };
 	dragMeeple = false;
+    drawEndScreen = false;
 
 	LoopState loopState = INIT_STATE;
+    GameReturn gameReturn = KEEP_PLAYING;
 
-
-
-	particleSystem = new ParticleSystem(*resourceLoader->getTexture(ResourceLoader::PARTICLE_SPRITE), sf::Vector2u(2, 2));
-
-
-    ////FOR DUST-CLOUDS:
-    //ParticleBuilder* builder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 50, 150 }, { 290, 320 }, { 500, 2000 }, { 300, 500 });
-    //builder->setRotation();
-    //builder->setGravity(120, 90);
-    //particleSystem->newParticleCloud(20, *builder);
-    
-    ////FOR MOUSE-CLICKS:
-    //ParticleBuilder* mbBuilder = new ParticleBuilder({ 300, 300 }, { 5, 30 }, { 50, 150 });
-    //mbBuilder->setRotation({ 0.1, 3.5 });
-    //mbBuilder->setGravity(120, 90);
-
-    endScreenParticleBuilder = new ParticleBuilder({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 });
-    endScreenParticleBuilder->setPath({ 10, 200 }, { 275, 350 })
-                            ->setGravity(30)
-                            ->setRotation({ 100, 600 }, { -1, 3 })
-                            ->setFadeoutSpeed({ 35, 65 });      
-        
-
-	while (runGameSwitch == GAME && window->isOpen()){
+    while (window->isOpen() && gameReturn == KEEP_PLAYING){
         elapsedTime = clock.getElapsedTime().asSeconds();
 	    float fps = 1.f / elapsedTime;
 		clock.restart();
@@ -171,10 +183,11 @@ GameReturn Game::runGame(){
 		//text.setColor(sf::Color::Black);
 		//text.setStyle(sf::Text::Bold /*| sf::Text::Underlined*/);
 		
-       /* mbBuilder->setPosition(convertedMousePos);
-        if (pressedLeftMouse){
-            particleSystem->newParticleCloud(5, *mbBuilder);
-        }*/
+        
+        if (rightMouseButtonPressed && rand()%5 == 0){
+            mouseCursorParticleBuilder->setPosition(convertedMousePos);
+            particleSystem->newParticleCloud(1, *mouseCursorParticleBuilder);
+        }
         
 		pollEvents();
 
@@ -195,7 +208,7 @@ GameReturn Game::runGame(){
 			loopState =  humanSelectMeeple();
 			break;
 
-		case TC_START_SELECT_MEEPLE:
+        case TC_START_SELECT_MEEPLE:
 			loopState = tcStartSelectMeeple();
 			break;
 
@@ -235,7 +248,7 @@ GameReturn Game::runGame(){
 			break;
 
 		case DISPLAY_END_SCREEN:
-			loopState = displayEndscreen();
+            gameReturn = displayEndscreen(elapsedTime);
 			break;
 		}
 
@@ -270,39 +283,17 @@ GameReturn Game::runGame(){
 	
 		window->display();
 	}
-
-    delete endScreenParticleBuilder;
-	return runGameSwitch;
+    return gameReturn;
 }
 
-sf::Color Game::rainbow(float progress) const
-{
-	/*convert to rainbow RGB*/
-	float a = (1.f - progress) / 0.2f;
-	uint8_t X = static_cast<uint8_t>(floor(a));
-	float Y = floor(255 * (a - X));
-	switch (X)
-	{
-	case 0:
-		return sf::Color(255, static_cast<uint8_t>( Y), 0, 255);
-
-	case 1:
-		return sf::Color(static_cast<uint8_t>(255 - Y) , 255, 0, 255);
-
-	case 2:
-		return sf::Color(0, 255, static_cast<uint8_t>(Y), 255);
-
-	case 3:
-		return	sf::Color(0, static_cast<uint8_t>(255 - Y), 255, 255);
-
-	case 4:
-		return sf::Color(static_cast<uint8_t>(Y), 0, 255, 255);
-
-	case 5:
-		return sf::Color(255, 0, 255, 255);
-	default:
-		return sf::Color::Blue;
-	}
+void Game::createMeepleDust(sf::FloatRect fieldBounds){
+    dustBuilder->setPosition({ fieldBounds.left - DUST_X_OFFSET, fieldBounds.top + fieldBounds.height / 2 })
+               ->setPath({ 50, 150 }, { 220, 250 });  //left dust
+    particleSystem->newParticleCloud(20, *dustBuilder);    
+    dustBuilder->setPosition({ fieldBounds.left + fieldBounds.width + DUST_X_OFFSET, fieldBounds.top + fieldBounds.height / 2 })
+               ->setPath({ 50, 150 }, { 290, 320 }); //right dust
+    particleSystem->newParticleCloud(20, *dustBuilder);
+    //particleSystem->newParticleCloud(20, *dustBuilder);
 }
 
 //return meeple pos and then set i
@@ -346,24 +337,29 @@ void Game::pollEvents(){
 		switch (event.type){
 
 			case sf::Event::MouseButtonPressed:
-				if (event.mouseButton.button == sf::Mouse::Left){
-					pressedLeftMouse = true;
-					background->setLeftWindow(true);
-					background->setRightWindow(true);
-				}
-				break;
+                switch (event.mouseButton.button){
+                    case sf::Mouse::Left:
+                        pressedLeftMouse = true;
+                        break;
+                    case sf::Mouse::Right:
+                        rightMouseButtonPressed = true;
+						background->setLeftWindow(true);
+						background->setRightWindow(true);
+                        break;
+                    }
+                break;
 
 			case sf::Event::MouseButtonReleased:
 				switch (event.mouseButton.button){
-				case sf::Mouse::Left:
-					releasedLeftMouse = true;
-					background->setLeftWindow(false);
-					background->setRightWindow(false);
-					break;
-
-				default:
-					break;
-				}
+				    case sf::Mouse::Left:
+					    releasedLeftMouse = true;
+					    break;
+                    case sf::Mouse::Right:
+                        rightMouseButtonPressed = false;
+						background->setLeftWindow(false);
+						background->setRightWindow(false);
+                        break;
+				    }
 				break;
 
 			case sf::Event::MouseMoved:
@@ -494,8 +490,7 @@ Game::LoopState Game::humanSelectMeeplePosition(){
 			sf::FloatRect fieldBounds = board->getFieldGlobalBounds(pos);
 			sf::Vector2f newPosition(fieldBounds.left + fieldBounds.width / 2.f, fieldBounds.top + fieldBounds.height / 2.f);
 			rMeepleToSet->setPosition(newPosition);
-
-
+                       
 			players[activePlayerIndex]->rbag->changeRMeepleToUsed(*rMeepleToSet);
 
 			Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*meepleToSet);
@@ -503,6 +498,9 @@ Game::LoopState Game::humanSelectMeeplePosition(){
 			rMeepleToSet->setGlow(nullptr);
 			rMeepleToSet = nullptr;
 			board->setHoveredField({ 42, 42 });
+
+            createMeepleDust(fieldBounds);
+
 			return CHECK_END_CONDITION;
 		}
 		else{
@@ -542,6 +540,8 @@ Game::LoopState Game::MoveMeepleToSelectedPosition(){
 	logicalBoard->setMeeple(posMeepleTo, *placeMe);
 
 	players[activePlayerIndex]->rbag->changeRMeepleToUsed(*rMeepleToSet);
+
+    createMeepleDust(fieldBounds);
 
 	return CHECK_END_CONDITION;
 
@@ -586,7 +586,9 @@ Game::LoopState Game::checkEndCondition(){
 		return INIT_STATE;
 	}
 }
-Game::LoopState Game::displayEndscreen(){
+
+
+GameReturn Game::displayEndscreen(float elapsedTime){
 	assert(winningCombiRMeeples[0] != nullptr && winningCombiRMeeples[1] != nullptr &&winningCombiRMeeples[2] != nullptr &&winningCombiRMeeples[3] != nullptr);
 
 	if (drawEndScreen != true || rand() % 100 < 50){
@@ -604,23 +606,19 @@ Game::LoopState Game::displayEndscreen(){
 			->setPath({ 10, 200 }, { 89, 195 });
 		particleSystem->newParticleCloud(particle_count, *endScreenParticleBuilder);
 	}
+    if (drawEndScreen != true){
+        for (uint8_t i = 0; i < 4; i++){
+            colorAnimations[i].init(4, i*25);
+        }        
+    }
 	drawEndScreen = true;
-
-	if (meepleGlowAnimationClock.getElapsedTime().asSeconds() > 0.03f){
-
+    //Animate rainbow-colors on the meeples, which were responsible for the winning-combination:  
+        sf::Color color;
 		for (uint8_t i = 0; i < 4; ++i){
-			sf::Color c = rainbow(color4MGlow[i]);
-			winningCombiRMeeples[i]->setGlow(&c);
-
-			color4MGlow[i] += 0.01f;
-			if (color4MGlow[i] > 1){
-				color4MGlow[i] = 0;
-			}
+            colorAnimations[i].animate(elapsedTime);
+            color = colorAnimations[i].getColor();
+            winningCombiRMeeples[i]->setGlow(&color);
 		}
-		meepleGlowAnimationClock.restart();
-	}
-
-	// glow winning combination in rainbowcolor -> nyan cat -> nyan song
 
 
 	if (hoveredButtonPtr != nullptr)
@@ -645,27 +643,16 @@ Game::LoopState Game::displayEndscreen(){
 		hoveredButtonPtr = &menuButton;
 	}
 
-	if (releasedLeftMouse && restartButton.getGlobalBounds().contains(convertedMousePos))
-	{
-		reset();
-		for (uint8_t i = 0; i < 4; ++i){
-
-			winningCombiRMeeples[i]->setGlow(nullptr);
-			winningCombiRMeeples[i] = nullptr;
-		}
-		switchPlayers(); // TODO check this.. 
-		drawEndScreen = false;
-		return INIT_STATE;
+	if (releasedLeftMouse && restartButton.getGlobalBounds().contains(convertedMousePos)){
+		return REPLAY;
 	}
-	if (releasedLeftMouse && exitButton.getGlobalBounds().contains(convertedMousePos))
-	{
-		runGameSwitch = EXIT;
+	if (releasedLeftMouse && exitButton.getGlobalBounds().contains(convertedMousePos)){
+		return EXIT_GAME;
 	}
-	if (releasedLeftMouse && menuButton.getGlobalBounds().contains(convertedMousePos))
-	{
-		runGameSwitch = MENU;
+	if (releasedLeftMouse && menuButton.getGlobalBounds().contains(convertedMousePos)){
+		return BACK_TO_MENU;
 	}
-	return DISPLAY_END_SCREEN;
+	return KEEP_PLAYING;
 }
 
 //void Game::setString(std::string message)

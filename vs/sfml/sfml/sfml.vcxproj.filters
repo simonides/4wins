@@ -129,10 +129,10 @@
     <ClCompile Include="ParticleBuilder.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="ColorAnimator.cpp">
+    <ClCompile Include="ResourceLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceLoader.cpp">
+    <ClCompile Include="ColorAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RBackground.cpp">
@@ -218,10 +218,10 @@
     <ClInclude Include="ParticleBuilder.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="ColorAnimator.h">
+    <ClInclude Include="ResourceLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceLoader.h">
+    <ClInclude Include="ColorAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RBackground.h">

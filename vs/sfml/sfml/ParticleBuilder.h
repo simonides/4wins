@@ -3,6 +3,8 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <stdint.h>
 
+#include "ColorAnimation.h"
+
 
 struct Particle{
     //Position:
@@ -11,9 +13,8 @@ struct Particle{
         sf::Vector2f direction;
         sf::Vector2f gravity;              
     //Color:
-        uint8_t nextColor;
-        float colorProgress;   //0..255
-        float colorSpeed;
+        bool staticColor;       //If true, the other color-fields are ignored, and the color will never be changed
+        ColorAnimation colorAnimation;
     //Alpha:
         float alpha;
         float fadeoutSpeed;
@@ -33,23 +34,27 @@ struct Interval{
 class ParticleBuilder{
 private:
     //Position:
-    sf::Vector2f position;         //Target position of the particle
-    Interval positionOffset;       //Positionoffset   
+        sf::Vector2f position;         //Target position of the particle
+        Interval positionOffset;       //Positionoffset   
     //Size:
-    Interval diameter;             //Particle size
+        Interval diameter;             //Particle size
     //Path:
-    Interval speed;                //Initial particle speed
-    Interval angle;                //Initial particle direction (0°..360°)
-    float gravitySpeed;            //gravity speed
-    float gravity;                 //Gravity direction (0°..360°)
+        Interval speed;                //Initial particle speed
+        Interval angle;                //Initial particle direction (0°..360°)
+        float gravitySpeed;            //gravity speed
+        float gravity;                 //Gravity direction (0°..360°)
     //Rotation:
-    Interval rotationOffset;       //Offset of the rotation-origin to the particle center (1 = diameter)
-    Interval rotationSpeed;        //Rotationspeed (only positive)
+        Interval rotationOffset;       //Offset of the rotation-origin to the particle center (1 = diameter)
+        Interval rotationSpeed;        //Rotationspeed (only positive)
     //Color:
-    Interval colorSpeed;
+        bool staticColor;               //true: only uses the "color"-member; false: iterpolates the color in all rainbow-colors by using the field "colorSpeed"
+        sf::Color color;            
+        Interval colorSpeed;
     //Alpha:
-    Interval fadeoutSpeed;
-
+        Interval fadeoutSpeed;
+    //Sprites:
+        sf::Vector2u spritesX;               //the sprites of the texture, that can be used (0...number of sprites in the texture)
+        sf::Vector2u spritesY;
 public:
     ParticleBuilder(sf::Vector2f position, Interval diameter);
     //ParticleBuilder(sf::Vector2f position, Interval diameter, Interval speed = { 40, 400 }, Interval angle = { 0, 360 }, Interval colorSpeed = { 500, 2000 }, Interval fadeoutSpeed = { 50, 100 });
@@ -61,9 +66,11 @@ public:
 
     ParticleBuilder* setRotation(Interval rotationSpeed = { 0, 600 }, Interval rotationOffset = { 0.5, 1.5 });
 
-    ParticleBuilder* setColorSpeed(Interval colorSpeed = { 500, 2000 });
+    ParticleBuilder* setStaticColor(sf::Color color = sf::Color::White);
+    ParticleBuilder* setDynamicColor(Interval colorSpeed = { 2, 8 });
     ParticleBuilder* setFadeoutSpeed(Interval fadeoutSpeed = { 50, 100 });
-    
+    ParticleBuilder* setSprites(sf::Vector2u spritesX = { 0, 0 }, sf::Vector2u spritesY = { 0, 0 });
+
     Particle* createParticle(sf::Texture& particleSprites, sf::Vector2u spriteCount, sf::IntRect textureCoords) const;     //Creates a new particle. Needs to be deleted()
     void initialiseParticle(Particle* memory, sf::Texture& particleSprites, sf::Vector2u spriteCount, sf::IntRect textureCoords) const;     
 };
