@@ -10,7 +10,7 @@
 #include "config.h"
 #include "ColorAnimator.h"
 
-#define PARTICLE_DELETE_HORIZON 50          //If a particle is outside of the window with a distance of PARTICLE_DELETE_HORIZON units, it will be deleted
+#define PARTICLE_DELETE_HORIZON 30          //If a particle is outside of the window with a distance of PARTICLE_DELETE_HORIZON units, it will be deleted
 
 
 ParticleSystem::ParticleSystem(sf::Texture& particleSprites, sf::Vector2u spriteCount) : particleSprites(particleSprites), spriteCount(spriteCount){
@@ -63,7 +63,7 @@ void ParticleSystem::update(float elapsedTime){
              particles[i].shape.setFillColor(ColorAnimator::getInterpolatedColor( particles[i].nextColor,  particles[i].colorProgress, static_cast<sf::Uint8>( particles[i].alpha)));
         //Delete if invisible:
             sf::Vector2f pos =  particles[i].shape.getPosition();
-            if( particles[i].alpha <= 0 || 
+            if( particles[i].alpha <= 0.1 || 
                 pos.x < -PARTICLE_DELETE_HORIZON || pos.x > WINDOW_WIDTH_TO_CALCULATE  + PARTICLE_DELETE_HORIZON ||
                 pos.y < -PARTICLE_DELETE_HORIZON || pos.y > WINDOW_HEIGHT_TO_CALCULATE + PARTICLE_DELETE_HORIZON ){
 

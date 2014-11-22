@@ -13,6 +13,7 @@
 #include "StupidAI.h"
 #include "ThinkingAI.h"
 #include "SmartAI.h"
+#include "ResourceLoader.h"
 
 #include "Menu/Menu.h"
 
@@ -21,7 +22,7 @@ const std::string GAME_TITLE = "4 Wins by ...";
 sf::RenderWindow* setupWindow(){
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE), GAME_TITLE);
 	window->setPosition(sf::Vector2i(0, 0));
-	window->setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
+	//window->setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
 	//window->setFramerateLimit(2);
 	window->setSize(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));// 16:9
 	return window;
@@ -48,7 +49,7 @@ void AI_testFunction(){
 using namespace FourWins;
 int main(){
 	//AI_testFunction();
-	
+	ResourceLoader* resourceLoader = new ResourceLoader();
 	sf::RenderWindow* window = setupWindow();
 
 	Menu::MainMenu* menu = new Menu::MainMenu(*window);
@@ -97,7 +98,7 @@ int main(){
 		assert(tc1 != nullptr);
 
 
-		Game* game = new Game(*window, *p2, *p1);
+		Game* game = new Game(*window, *p2, *p1, *resourceLoader);
 		game->runGame();
 
 

@@ -19,16 +19,14 @@ const float BOARD_X_POS = WINDOW_WIDTH_TO_CALCULATE /2.f ;
 const float BOARD_Y_POS = WINDOW_HEIGHT_TO_CALCULATE / 2.f + 77.f;
 
 
-RBoard::RBoard(sf::Texture& boardTexture, sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied)
+RBoard::RBoard(  sf::Texture& boardTexture,sf::Texture& fieldTexture,   sf::Texture& fieldTextureOccupied)
 	: hoveredField({42,42})
 {
-	boardTexture.setSmooth(true);
 	boardShape.setTexture(&boardTexture);
 	boardShape.setSize(sf::Vector2f(BOARD_WIDTH, BOARD_HEIGHT));
-	//boardShape.setFillColor(sf::Color::Red);
 	sf::FloatRect bounds =  boardShape.getGlobalBounds();
 	boardShape.setOrigin((bounds.left + bounds.width)/2.f, (bounds.top + bounds.height)/2.f);
-	boardShape.setPosition(sf::Vector2f(BOARD_X_POS, BOARD_Y_POS));	// todo calulate
+	boardShape.setPosition(sf::Vector2f(BOARD_X_POS, BOARD_Y_POS));
 
 	initFields(fieldTexture,fieldTextureOccupied);
 }
@@ -75,10 +73,6 @@ sf::FloatRect RBoard::getFieldGlobalBounds(const BoardPos boardPos) const{
 
 
 void RBoard::initFields(sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied){
-	
-	fieldTexture.setSmooth(true);
-	fieldTextureOccupied.setSmooth(true);
-
 	uint8_t counter = 0;
 
 	for (uint8_t y = 0; y < 7; ++y){

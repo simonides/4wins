@@ -13,7 +13,7 @@ private:
 	void RBoard::initFields(sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied);
 	BoardPos RBoard::getBoardPosforCounter(uint8_t counter);
 public:
-	RBoard(sf::Texture& boardTexture, sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied);
+	RBoard(sf::Texture& boardTexture,  sf::Texture& fieldTexture,  sf::Texture& fieldTextureOccupied);
 	~RBoard();
 	
 	void draw(sf::RenderWindow& window) const; 

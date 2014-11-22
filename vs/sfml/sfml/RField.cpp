@@ -27,8 +27,6 @@ RField::RField(const BoardPos& posOnBoard, sf::Vector2f& initPos, sf::Texture& f
 	occupiedShape.setFillColor(sf::Color::Magenta);
 
 	shapePtr = &fieldShape;
-
-
 }
 
 
