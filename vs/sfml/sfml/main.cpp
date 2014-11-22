@@ -108,7 +108,6 @@ int main(){
 		delete test2;
 		delete tc1;
 		delete tc2;
-		break; // or start new game .. 
 
 	}
 

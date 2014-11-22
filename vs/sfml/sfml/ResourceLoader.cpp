@@ -65,11 +65,18 @@ void ResourceLoader::loadResourcesFromFileSys(bool setSmooth)
 	}
 	reloadButtonTexture.setSmooth(setSmooth);
 
-	if (!starSprite.loadFromFile(WORKING_DIR + "stars.png")){
-		std::cerr << "Couldn't load the texture: stars" << std::endl;
+	if (!particleSprite.loadFromFile(WORKING_DIR + "particles.png")){
+		std::cerr << "Couldn't load the texture: particles" << std::endl;
 		assert(false);
 	}
-	//starSprite.setSmooth(true); //check performance first
+	//particleSprite.setSmooth(true); //check performance first
+
+	if (!menuButtonTexture.loadFromFile(WORKING_DIR + "menue.png")){
+		std::cerr << "Couldn't load the texture: menue" << std::endl;
+		assert(false);
+	}
+	menuButtonTexture.setSmooth(setSmooth);
+	
 }
 
 
@@ -86,7 +93,7 @@ sf::Texture* ResourceLoader::getTexture(ResourceTexture textureType)
 	case EXIT_BTN_TEX: return &exitButtonTexture;
 	case RELOAD_BTN_TEX: return &reloadButtonTexture;
 	case MENU_BTN_TEX: return &menuButtonTexture;
-	case STAR_SPRITE_TEX: return &starSprite;
+	case PARTICLE_SPRITE: return &particleSprite;
 	default: return &exitButtonTexture;
 		//assert(false);
 	}

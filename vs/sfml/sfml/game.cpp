@@ -255,8 +255,6 @@ void Game::runGame(){
 			window->draw(restartButton);
 		}
 
-
-
 		window->display();
 	}
 

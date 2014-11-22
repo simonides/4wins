@@ -17,7 +17,7 @@ private:
 	sf::Texture reloadButtonTexture;
 	sf::Texture menuButtonTexture;
 
-	sf::Texture starSprite;
+	sf::Texture particleSprite;
 
 	void loadResourcesFromFileSys(bool setSmooth); // invoked by the constructor
 
@@ -33,7 +33,7 @@ public:
 		FIELD_TEX,
 		BACKGROUND_TEX,
 		EXIT_BTN_TEX, RELOAD_BTN_TEX, MENU_BTN_TEX,
-		STAR_SPRITE_TEX
+		PARTICLE_SPRITE
 	};
 	ResourceLoader();
 	~ResourceLoader();
