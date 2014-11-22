@@ -44,9 +44,8 @@ void AI_testFunction(){
     exit(0);
 }
 
-
-
 using namespace FourWins;
+
 int main(){
 	//AI_testFunction();
 	ResourceLoader* resourceLoader = new ResourceLoader();
@@ -57,7 +56,7 @@ int main(){
 
 	while (window->isOpen()){
 		
-		//GameSettings gamesettings = menu->loop();
+		GameSettings gamesettings = menu->loop();
 		//system("pause");
 		if (!window->isOpen())
 		{
