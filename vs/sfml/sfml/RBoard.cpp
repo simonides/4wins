@@ -7,7 +7,7 @@
 #include "config.h"
 
 const unsigned int BOARD_X_OFFSET = static_cast<int>( WINDOW_WIDTH_TO_CALCULATE / 2.f);
-const unsigned int BOARD_Y_OFFSET = 162;
+const unsigned int BOARD_Y_OFFSET = 152;
 
 const unsigned int BOARD_X_SPACEING = 269;
 const unsigned int BOARD_Y_SPACEING = 80;
@@ -16,12 +16,13 @@ const float BOARD_HEIGHT = 670.f;
 const float BOARD_WIDTH = BOARD_HEIGHT * 1.615f; // 1,615 = Ratio 16:9
 
 const float BOARD_X_POS = WINDOW_WIDTH_TO_CALCULATE /2.f ;
-const float BOARD_Y_POS = WINDOW_HEIGHT_TO_CALCULATE / 2.f + 70.f;
+const float BOARD_Y_POS = WINDOW_HEIGHT_TO_CALCULATE / 2.f + 77.f;
 
 
 RBoard::RBoard(sf::Texture& boardTexture, sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied)
 	: hoveredField({42,42})
 {
+	boardTexture.setSmooth(true);
 	boardShape.setTexture(&boardTexture);
 	boardShape.setSize(sf::Vector2f(BOARD_WIDTH, BOARD_HEIGHT));
 	//boardShape.setFillColor(sf::Color::Red);
@@ -59,21 +60,24 @@ BoardPos RBoard::getBoardPosForPosititon(sf::Vector2f& position) const{
 
 void RBoard::setHoveredField(const BoardPos boardPos){
 	if (hoveredField.x < 4 && hoveredField.y < 4){
-		fields[hoveredField.x][hoveredField.y]->setShape(Shape::NOT_OCCUPIED);
+		fields[hoveredField.x][hoveredField.y]->setShape(NOT_OCCUPIED);
 	}
 	hoveredField = boardPos;
 	if (boardPos.x < 4 && boardPos.y < 4){
-		fields[boardPos.x][boardPos.y]->setShape(Shape::OCCUPIED);
+		fields[boardPos.x][boardPos.y]->setShape(OCCUPIED);
 	}
 }
 
-const sf::FloatRect RBoard::getFieldBounds(const BoardPos boardPos) const{
+sf::FloatRect RBoard::getFieldGlobalBounds(const BoardPos boardPos) const{
 	return fields[boardPos.x][boardPos.y]->getGlobalBounds();
 }
 
 
 
 void RBoard::initFields(sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied){
+	
+	fieldTexture.setSmooth(true);
+	fieldTextureOccupied.setSmooth(true);
 
 	uint8_t counter = 0;
 

@@ -24,7 +24,7 @@ public:
 	//if x or y in board pos are higher than 3 no field is hovered
 	void setHoveredField(const BoardPos boardPos);
 
-	const sf::FloatRect getFieldBounds(const BoardPos boardPos) const;
+	sf::FloatRect getFieldGlobalBounds(const BoardPos boardPos) const;
 
 };
 

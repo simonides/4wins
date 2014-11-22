@@ -63,14 +63,6 @@
 
 	void RBag::changeRMeepleToUsed(const RMeeple& rMeeple)
 	{
-		//Todo unbedingt y sortieren!!!!!!!!!!!!!!!!!!!!!!
-
-		//mylist.insert()
-		//if (someIterator != someList.end()) {
-		//someIterator++;
-		//}
-		//someList.insert(someIterator, someValue);
-
 		for (std::vector<RMeeple*>::iterator it = rMeeples.begin(); it != rMeeples.end(); ++it){
 			if (&rMeeple == *it){
 				RMeeple* m = *it;
@@ -84,6 +76,7 @@
 	void RBag::addRMeeple(RMeeple* r_meeple)
 	{
 		rMeeples.push_back(r_meeple);
+		std::sort(rMeeples.begin(), rMeeples.end(), [](RMeeple* a, RMeeple* b){return a->getYPos() > b->getYPos(); });
 	}
 
 	void RBag::reset()
@@ -91,5 +84,8 @@
 		rMeeples.insert(rMeeples.end(), usedRMeeples.begin(), usedRMeeples.end());
 		usedRMeeples.clear();
 		assert(rMeeples.size() == 8 && usedRMeeples.size() == 0);
+		for (std::vector<RMeeple*>::iterator it = rMeeples.begin(); it != rMeeples.end(); ++it){
+			(*it)->reset();
+		}
 	}
 

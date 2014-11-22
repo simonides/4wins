@@ -44,6 +44,21 @@ private:
 	sf::Texture boardTexture;
 	sf::Texture fieldTexture;
 	sf::Texture fieldTextureOccupied;
+	sf::Texture backgroundTexture;
+	sf::Texture exitButtonTexture;
+	sf::Texture restartButtonTexture;
+	sf::Texture particleSprites;
+
+	sf::RectangleShape exitButton;
+	sf::RectangleShape restartButton;
+	sf::Color buttonColor;
+
+	sf::RectangleShape* hoveredButtonPtr;
+
+
+	sf::RectangleShape background;
+	std::vector<RMeeple*> meeplesToDrawAndSort;
+
 	sf::Font font;
 
 	sf::Vector2f convertedMousePos;
@@ -62,6 +77,7 @@ private:
 	sf::Clock meepleGlowAnimationClock;
 	RMeeple* winningCombiRMeeples[4];
 	bool drawEndScreen;
+	bool runGameSwitch;
 	float color4MGlow[4];
 
 	void switchPlayers();
@@ -78,7 +94,7 @@ public:
 	virtual ~Game();
 	void reset();                               //Reinitialises the object
 
-    GameWinner::Enum runGame();                 //Runs the game, until it is over; returns the winner
+    void runGame();                 //Runs the game, until it is over; returns the winner
   
 	void pollEvents();
 };
