@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Game.h"
 
-class ResourceLoader;
+class ResourceManager;
 struct Player;
 
 class RBackground
@@ -19,7 +19,7 @@ private:
 	bool closeRightWindow;
 
 public:
-	RBackground(ResourceLoader& resourceLoader,Player& p1, Player& p2);
+	RBackground(ResourceManager& resourceLoader,Player& p1, Player& p2);
 	~RBackground();
 	
 	void draw(sf::RenderWindow& window) const;

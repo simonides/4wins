@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-class ResourceLoader
+
+class ResourceManager
 {
 private:
 	sf::Font roboto;
@@ -43,13 +44,10 @@ public:
 		BACKGROUND, BACKGROUND_WINDOW, 
 		MR_PROPER, UNCLE_BENS, RONALD, SMILEY, ELLE
 	};
-	ResourceLoader();
-	~ResourceLoader();
+	ResourceManager();
 
 	sf::Texture* getTexture(ResourceTexture textureType);
-	sf::IntRect ResourceLoader::getTextureRect(ResourceRect rectType) const;
+	sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const;
 	sf::Font* getFont(ResourceFont fontType);
-	
-
 };
 

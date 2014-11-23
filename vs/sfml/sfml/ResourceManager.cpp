@@ -1,19 +1,14 @@
-#include "ResourceLoader.h"
+#include "ResourceManager.h"
 #include "config.h"
 #include <assert.h>
 #include <iostream>
 
-ResourceLoader::ResourceLoader()
-{
+ResourceManager::ResourceManager(){
 	loadResourcesFromFileSys(true);
 }
 
 
-ResourceLoader::~ResourceLoader()
-{
-}
-
-void ResourceLoader::loadResourcesFromFileSys(bool setSmooth)
+void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 {
 	if (!roboto.loadFromFile(WORKING_DIR + "Fonts\\roboto\\roboto-black.ttf")){
 		std::cerr << "Couldn't load the Font: roboto-black.ttf" << std::endl;
@@ -82,12 +77,11 @@ void ResourceLoader::loadResourcesFromFileSys(bool setSmooth)
 		assert(false);
 	}
 	menuButtonTexture.setSmooth(setSmooth);
-	
 }
 
 
 
-sf::Texture* ResourceLoader::getTexture(ResourceTexture textureType)
+sf::Texture* ResourceManager::getTexture(ResourceTexture textureType)
 {
 	switch (textureType)
 	{
@@ -108,7 +102,7 @@ sf::Texture* ResourceLoader::getTexture(ResourceTexture textureType)
 	}
 }
 
-sf::IntRect ResourceLoader::getTextureRect(ResourceRect rectType) const
+sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 {
 	switch (rectType)
 	{
@@ -122,7 +116,7 @@ sf::IntRect ResourceLoader::getTextureRect(ResourceRect rectType) const
 	default:				return sf::IntRect(0, 0, 16, 16);//default something
 	}
 }
-sf::Font* ResourceLoader::getFont(ResourceFont fontType)
+sf::Font* ResourceManager::getFont(ResourceFont fontType)
 {
 	switch (fontType)
 	{

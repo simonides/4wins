@@ -5,7 +5,7 @@
 
 #include "RMeeple.h"
 #include "GameState.h"
-#include "ResourceLoader.h"
+#include "ResourceManager.h"
 #include "RBackground.h"
 #include "Board.h"
 #include "ColorAnimation.h"
@@ -38,7 +38,7 @@ struct Player{
 		TC
 	} type;
 	
-	ResourceLoader::ResourceRect playerAvatar;  
+	ResourceManager::ResourceRect playerAvatar;  
 
 	union{
 		ThreadController* controller;
@@ -57,7 +57,7 @@ class Game
 {
 private:
 	sf::RenderWindow* window;
-	ResourceLoader* resourceLoader;
+	ResourceManager* resourceLoader;
 	RBackground* background;
 
 	//gameloop
@@ -175,7 +175,7 @@ private:
 
     Game& operator = (const Game&);
 public:
-    Game(sf::RenderWindow& window, Player* players[2], ResourceLoader& resourceLoader); //Initialises the game with 2 players
+    Game(sf::RenderWindow& window, Player* players[2], ResourceManager& resourceLoader); //Initialises the game with 2 players
 	virtual ~Game();
 	void reset();                               //Reinitialises the object for another round
     GameMenuDecision::Enum runGame();           //Runs the game, until it is over; returns the winner

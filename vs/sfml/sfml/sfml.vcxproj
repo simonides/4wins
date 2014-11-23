@@ -98,7 +98,7 @@
     <ClCompile Include="RBackground.cpp" />
     <ClCompile Include="RBag.cpp" />
     <ClCompile Include="RBoard.cpp" />
-    <ClCompile Include="ResourceLoader.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RField.cpp" />
     <ClCompile Include="RMeeple.cpp" />
     <ClCompile Include="SmartAI.cpp" />
@@ -113,7 +113,7 @@
     <ClCompile Include="Menu\Menu.cpp" />
     <ClCompile Include="Menu\MenuConstants.cpp" />
     <ClCompile Include="RandomAI.cpp" />
-    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StupidAI.cpp" />
     <ClCompile Include="ThinkingAI.cpp" />
     <ClCompile Include="ThreadController.cpp" />
@@ -128,7 +128,7 @@
     <ClInclude Include="RBackground.h" />
     <ClInclude Include="RBag.h" />
     <ClInclude Include="RBoard.h" />
-    <ClInclude Include="ResourceLoader.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RField.h" />
     <ClInclude Include="SmartAI.h" />
     <ClInclude Include="I_AI.h" />
@@ -144,7 +144,7 @@
     <ClInclude Include="RandomAI.h" />
     <ClInclude Include="Menu\Listbox.h" />
     <ClInclude Include="RMeeple.h" />
-    <ClInclude Include="Sound.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StupidAI.h" />
     <ClInclude Include="ThinkingAI.h" />
     <ClInclude Include="ThreadController.h" />

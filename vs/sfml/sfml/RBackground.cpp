@@ -14,34 +14,34 @@ const float WINDOW_POSITION_FROM_TOP = 13.f;
 const float LEFT_WINDOW_POSITION_FROM_LEFT = 35.f;
 const float RIGHT_WINDOW_POSITION_FROM_LEFT = 986.f;
 
-RBackground::RBackground(ResourceLoader& resourceLoader, Player& p1, Player& p2)
+RBackground::RBackground(ResourceManager& resourceLoader, Player& p1, Player& p2)
 	: closeLeftWindow(true), closeRightWindow(true)
 {
 	background.setSize(sf::Vector2f(static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE)));
-	background.setTexture(resourceLoader.getTexture(ResourceLoader::BACKGROUND_TEX));
-	background.setTextureRect(resourceLoader.getTextureRect(ResourceLoader::BACKGROUND));
+	background.setTexture(resourceLoader.getTexture(ResourceManager::BACKGROUND_TEX));
+	background.setTextureRect(resourceLoader.getTextureRect(ResourceManager::BACKGROUND));
 	background.setPosition(0.f, 0.f);
 
 
 	leftWindow.setSize(sf::Vector2f(BACKGRND_WINDOW_WIDTH, BACKGRND_WINDOW_HEIGHT));
-	leftWindow.setTexture(resourceLoader.getTexture(ResourceLoader::BACKGROUND_TEX));
-	leftWindow.setTextureRect(resourceLoader.getTextureRect(ResourceLoader::BACKGROUND_WINDOW));
+	leftWindow.setTexture(resourceLoader.getTexture(ResourceManager::BACKGROUND_TEX));
+	leftWindow.setTextureRect(resourceLoader.getTextureRect(ResourceManager::BACKGROUND_WINDOW));
 	//leftWindow.setFillColor(sf::Color(255, 0, 0, 80));
 	leftWindow.setPosition(LEFT_WINDOW_POSITION_FROM_LEFT, WINDOW_POSITION_FROM_TOP);
 
 	rightWindow.setSize(sf::Vector2f(BACKGRND_WINDOW_WIDTH, BACKGRND_WINDOW_HEIGHT));
-	rightWindow.setTexture(resourceLoader.getTexture(ResourceLoader::BACKGROUND_TEX));
-	rightWindow.setTextureRect(resourceLoader.getTextureRect(ResourceLoader::BACKGROUND_WINDOW));
+	rightWindow.setTexture(resourceLoader.getTexture(ResourceManager::BACKGROUND_TEX));
+	rightWindow.setTextureRect(resourceLoader.getTextureRect(ResourceManager::BACKGROUND_WINDOW));
 	//rightWindow.setFillColor(sf::Color(255,0,0,80));
 	rightWindow.setPosition(RIGHT_WINDOW_POSITION_FROM_LEFT, WINDOW_POSITION_FROM_TOP);
 
 	avatarPlayer1.setSize(sf::Vector2f(AVATAR_WIDTH, AVATAR_HEIGHT));
-	avatarPlayer1.setTexture(resourceLoader.getTexture(ResourceLoader::AVATAR_SPRITE));
+	avatarPlayer1.setTexture(resourceLoader.getTexture(ResourceManager::AVATAR_SPRITE));
 	avatarPlayer1.setTextureRect(resourceLoader.getTextureRect(p1.playerAvatar));
 	avatarPlayer1.setPosition(LEFT_WINDOW_POSITION_FROM_LEFT, WINDOW_POSITION_FROM_TOP);
 
 	avatarPlayer2.setSize(sf::Vector2f(AVATAR_WIDTH, AVATAR_HEIGHT));
-	avatarPlayer2.setTexture(resourceLoader.getTexture(ResourceLoader::AVATAR_SPRITE));
+	avatarPlayer2.setTexture(resourceLoader.getTexture(ResourceManager::AVATAR_SPRITE));
 	avatarPlayer2.setTextureRect(resourceLoader.getTextureRect(p2.playerAvatar));
 	avatarPlayer2.setPosition(RIGHT_WINDOW_POSITION_FROM_LEFT, WINDOW_POSITION_FROM_TOP);
 	

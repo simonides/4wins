@@ -13,10 +13,10 @@
 #include "StupidAI.h"
 #include "ThinkingAI.h"
 #include "SmartAI.h"
-#include "ResourceLoader.h"
+#include "ResourceManager.h"
 
 #include "Menu/Menu.h"
-#include "Sound.h"
+#include "SoundManager.h"
 
 const std::string GAME_TITLE = "4 Wins by ...";
 
@@ -49,8 +49,8 @@ using namespace FourWins;
 
 int main(){
 	//AI_testFunction();
-	ResourceLoader resourceLoader;
-	Sound soundManager;
+	ResourceManager resourceLoader;
+    SoundManager soundManager;
 	sf::RenderWindow* window = setupWindow();
 
 	Menu::MainMenu* menu = new Menu::MainMenu(*window);
@@ -68,7 +68,7 @@ int main(){
     players[0]->type = Player::HUMAN;
     players[0]->player = nullptr;
     players[0]->controller = tc1;
-	players[0]->playerAvatar = ResourceLoader::ELLE;
+	players[0]->playerAvatar = ResourceManager::ELLE;
     players[0]->meeplePositionThinkTime = { 0, 1 };
     players[0]->meepleChoosingThinkTime = { 0, 1 };
 
@@ -76,7 +76,7 @@ int main(){
     players[1]->type = Player::TC;
     players[1]->player = nullptr;
     players[1]->controller = tc2;
-    players[1]->playerAvatar = ResourceLoader::RONALD;
+    players[1]->playerAvatar = ResourceManager::RONALD;
     players[1]->meeplePositionThinkTime = { 2, 5 };
     players[1]->meepleChoosingThinkTime = { 1, 2 };
 
@@ -84,7 +84,7 @@ int main(){
 
     GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::REPLAY;
 
-	soundManager.getMusic(BACKGROUND1)->play();
+	soundManager.getMusic(SoundManager::BACKGROUND1)->play();
     while (window->isOpen() /*&& !exitGame*/){
         if (gameMenuDecision == GameMenuDecision::BACK_TO_MENU){
             //menu->loop();

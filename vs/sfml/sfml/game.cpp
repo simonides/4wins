@@ -24,7 +24,7 @@
 #include "helper.h"
 
 #include "ParticleSystem.h"
-#include "ResourceLoader.h"
+#include "ResourceManager.h"
 
 #include "RBackground.h"
 
@@ -37,7 +37,7 @@
 
 #define DUST_X_OFFSET -10     //X-Offset for producing dust when placing a meeple
 
-Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceLoader& resourceLoader)
+Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resourceLoader)
 	: window(&window), resourceLoader(&resourceLoader)
 	, pressedLeftMouse(false)
 	, releasedLeftMouse(false), rMeepleToSet(nullptr)
@@ -64,9 +64,9 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceLoader& resour
 
 	logicalBoard = new Board();	
 
-	board = new RBoard(*resourceLoader.getTexture(ResourceLoader::BOARD_TEX)
-		, *resourceLoader.getTexture(ResourceLoader::FIELD_TEX)
-		, *resourceLoader.getTexture(ResourceLoader::FIELD_TEX));
+	board = new RBoard(*resourceLoader.getTexture(ResourceManager::BOARD_TEX)
+		, *resourceLoader.getTexture(ResourceManager::FIELD_TEX)
+		, *resourceLoader.getTexture(ResourceManager::FIELD_TEX));
 
     gameStates[0] = new GameState(players[0]->logicalMeepleBag, players[1]->logicalMeepleBag, logicalBoard);
     gameStates[1] = new GameState(players[1]->logicalMeepleBag, players[0]->logicalMeepleBag, logicalBoard);
@@ -79,25 +79,25 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceLoader& resour
 
     //Game Menu Buttons:
         sf::Vector2f buttonOrigin(GAME_MENU_BUTTON_SIZE.x / 2.f, GAME_MENU_BUTTON_SIZE.y / 2.f);
-	    restartButton.setTexture(resourceLoader.getTexture(ResourceLoader::RELOAD_BTN_TEX));
+	    restartButton.setTexture(resourceLoader.getTexture(ResourceManager::RELOAD_BTN_TEX));
         restartButton.setFillColor(GAME_MENU_BUTTON_COLOR);
         restartButton.setSize(GAME_MENU_BUTTON_SIZE);
 	    restartButton.setOrigin(buttonOrigin);
 	    restartButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f -150.f , WINDOW_HEIGHT_TO_CALCULATE / 2.f);
 
-	    exitButton.setTexture(resourceLoader.getTexture(ResourceLoader::EXIT_BTN_TEX));
+	    exitButton.setTexture(resourceLoader.getTexture(ResourceManager::EXIT_BTN_TEX));
         exitButton.setFillColor(GAME_MENU_BUTTON_COLOR);
         exitButton.setSize(GAME_MENU_BUTTON_SIZE);
 	    exitButton.setOrigin(buttonOrigin);
 	    exitButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f +150.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f);
 	
-	    menuButton.setTexture(resourceLoader.getTexture(ResourceLoader::MENU_BTN_TEX));
+	    menuButton.setTexture(resourceLoader.getTexture(ResourceManager::MENU_BTN_TEX));
         menuButton.setFillColor(GAME_MENU_BUTTON_COLOR);
         menuButton.setSize(GAME_MENU_BUTTON_SIZE);
 	    menuButton.setOrigin(buttonOrigin);
 	    menuButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f);
     //Init Particle systems:
-        particleSystem = new ParticleSystem(*resourceLoader.getTexture(ResourceLoader::PARTICLE_SPRITE), sf::Vector2u(4, 2));
+        particleSystem = new ParticleSystem(*resourceLoader.getTexture(ResourceManager::PARTICLE_SPRITE), sf::Vector2u(4, 2));
     //FOR DUST-CLOUDS:
         dustBuilder = new ParticleBuilder({ 300, 300 }, { 5, 30 });
         dustBuilder->setSprites({ 2, 3 }, { 0, 1 })
@@ -276,8 +276,8 @@ void Game::initMeeples(){
 		const Meeple* meeple = players[bagInd]->logicalMeepleBag->getMeeple(meepleIndex);
 
 		RMeeple* rmeeple = new RMeeple(*meeple,
-			*resourceLoader->getTexture(ResourceLoader::MEEPLE_SPRITE),
-			*resourceLoader->getTexture(ResourceLoader::MEEPLE_GLOW_SPRITE));
+			*resourceLoader->getTexture(ResourceManager::MEEPLE_SPRITE),
+			*resourceLoader->getTexture(ResourceManager::MEEPLE_GLOW_SPRITE));
 
 		meeplesToDrawAndSort.push_back(rmeeple);
 		players[bagInd]->rbag->addRMeeple(rmeeple);
