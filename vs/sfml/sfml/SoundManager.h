@@ -1,5 +1,4 @@
 #pragma once
-#include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/Music.hpp>
 
 
@@ -12,11 +11,12 @@ private:
     sf::Music select;
     sf::Music ohYeah[5];
 
-	sf::Music backgroundMusic;
+    sf::Music backgroundMusic;
+    sf::Music winMusic;
 
 public:	
     enum Music{
-        BACKGROUND,// BACKGROUND2, BACKGROUND3,
+        BACKGROUND, WIN_MUSIC,
         SHEEP, MEEPLE_DROP, MEEPLE_WIN_DROP, GAME_START, SELECT, OH_YEAH
     };
 

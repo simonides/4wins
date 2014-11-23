@@ -41,6 +41,7 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resou
             resourceManager(&resourceManager),
             soundManager(&soundManager),
             background(new RBackground(resourceManager, *_players[0], *_players[1])),
+            backgroundMusic(nullptr),
 
             activePlayerIndex(1),
             logicalBoard(new Board()),
@@ -197,12 +198,19 @@ GameMenuDecision::Enum Game::runGame(){
     float elapsedTime;
 	
     reset();
-    soundManager->getMusic(SoundManager::GAME_START)->play();
 
     LoopState lastLoopState = DISPLAY_END_SCREEN;   
 	LoopState loopState = INIT_STATE;
     GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::KEEP_PLAYING;
     InputEvents inputEvents;
+
+    soundManager->getMusic(SoundManager::GAME_START)->play();
+
+    if (backgroundMusic != nullptr){
+        backgroundMusic->stop();
+    }
+    backgroundMusic = soundManager->getMusic(SoundManager::BACKGROUND);
+    backgroundMusic->play();
 
     while (window->isOpen() && gameMenuDecision == GameMenuDecision::KEEP_PLAYING){
         elapsedTime = clock.getElapsedTime().asSeconds();
@@ -211,30 +219,32 @@ GameMenuDecision::Enum Game::runGame(){
         inputEvents = pollEvents();
 
         //Snow-Animation
-            if (inputEvents.rightMouseButtonPressed && rand() % 5 == 0){
+            if (inputEvents.rightMouseButtonPressed){            //It's ok that the number of particles might decrease at lower frame rates
                 mouseCursorParticleBuilder->setPosition(inputEvents.mousePosition);
                 particleSystem->newParticleCloud(1, *mouseCursorParticleBuilder);
             }
 
-
-		switch (loopState)
-		{
-		    case INIT_STATE:                                //todo das stimmt no ned ganz human iplayer und tc !!!!
-			                                                loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
-			                                                break;
-		    case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();			                break;
-		    case HUMAN_SELECT_MEEPLE:						loopState =  humanSelectMeeple(inputEvents);				break;
-            case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();							break;
-		    case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();		                break;
-		    case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple(elapsedTime);			break;
-		    case I_PLAYER_SELECT_MEEPLE_POSITION:			loopState = i_playerSelectMeeplePosition();                 break;
-		    case HUMAN_SELECT_MEEPLE_POSITION:				loopState = humanSelectMeeplePosition(inputEvents);		    break;
-		    case TC_START_SELECT_MEEPLE_POSITION:			loopState = tcStartSelectMeeplePosition();					break;
-		    case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:		loopState = tcWaitForSelectedMeeplePosition(); 	            break;
-		    case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);		break;
-		    case CHECK_END_CONDITION:						loopState = checkEndCondition();							break;
-		    case DISPLAY_END_SCREEN:			            gameMenuDecision = displayEndscreen(inputEvents, elapsedTime); break;
-		}
+          
+        if (inputEvents.hasFocus){
+		    switch (loopState)
+		    {
+		        case INIT_STATE:                                //todo das stimmt no ned ganz human iplayer und tc !!!!
+			                                                    loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
+			                                                    break;
+		        case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();			                break;
+		        case HUMAN_SELECT_MEEPLE:						loopState =  humanSelectMeeple(inputEvents);				break;
+                case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();							break;
+		        case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();		                break;
+		        case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple(elapsedTime);			break;
+		        case I_PLAYER_SELECT_MEEPLE_POSITION:			loopState = i_playerSelectMeeplePosition();                 break;
+		        case HUMAN_SELECT_MEEPLE_POSITION:				loopState = humanSelectMeeplePosition(inputEvents);		    break;
+		        case TC_START_SELECT_MEEPLE_POSITION:			loopState = tcStartSelectMeeplePosition();					break;
+		        case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:		loopState = tcWaitForSelectedMeeplePosition(); 	            break;
+		        case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);		break;
+		        case CHECK_END_CONDITION:						loopState = checkEndCondition();							break;
+		        case DISPLAY_END_SCREEN:			            gameMenuDecision = displayEndscreen(inputEvents, elapsedTime); break;
+		    }
+        }
 
 		std::string title("4Wins by Jakob M., Sebastian S. and Simon D.   @");
 		title.append(std::to_string(fps));
@@ -278,6 +288,7 @@ GameMenuDecision::Enum Game::runGame(){
             firstFrameOfState = false;
         }
 	}
+    backgroundMusic->stop();
     return gameMenuDecision;
 }
 
@@ -291,7 +302,7 @@ void Game::createMeepleDust(sf::FloatRect fieldBounds){
 }
 
 InputEvents Game::pollEvents(){
-    static InputEvents events = { false, false, false, { 0, 0 } };
+    static InputEvents events = { false, false, false, true, { 0, 0 } };
 
     events.pressedLeftMouse = false;
     events.releasedLeftMouse = false;
@@ -334,9 +345,14 @@ InputEvents Game::pollEvents(){
 				window->close();
 				break;
             case sf::Event::LostFocus:
+                events.hasFocus = false;
+                backgroundMusic->pause();
                 soundManager->getMusic(SoundManager::SHEEP)->play();
                 break;
-		    default: break;
+            case sf::Event::GainedFocus:
+                events.hasFocus = true;
+                backgroundMusic->play();
+                break;
 		}
 	}
     return events;
@@ -605,6 +621,10 @@ GameMenuDecision::Enum Game::displayEndscreen(InputEvents inputEvents, float ela
         for (uint8_t i = 0; i < 4; i++){
             colorAnimations[i].init(4, i*20);
         }        
+        backgroundMusic->stop();
+        backgroundMusic = soundManager->getMusic(SoundManager::WIN_MUSIC);
+        backgroundMusic->setPlayingOffset(sf::seconds(36.f));
+        backgroundMusic->play();
     }
 
     //Animate rainbow-colors on the meeples, which were responsible for the winning-combination:  

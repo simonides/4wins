@@ -16,12 +16,18 @@ SoundManager::SoundManager(){
 
 
 void SoundManager::loadResourcesFromFileSys(){
-	if (!backgroundMusic.openFromFile(WORKING_DIR + "sounds/backgroundCancelingtheApocalypse.ogg")){
-		std::cerr << "Couldn't load the music file: backgroundCancelingtheApocalypse" << std::endl;
-		assert(false);
-	}
-	backgroundMusic.setLoop(true);
-	backgroundMusic.setVolume(VOLUME_BACKGROUND);
+    if (!backgroundMusic.openFromFile(WORKING_DIR + "sounds/backgroundCancelingtheApocalypse.ogg")){
+        std::cerr << "Couldn't load the music file: backgroundCancelingtheApocalypse" << std::endl;
+        assert(false);
+    }
+    backgroundMusic.setLoop(true);
+    backgroundMusic.setVolume(VOLUME_BACKGROUND);
+    if (!winMusic.openFromFile(WORKING_DIR + "sounds/winMusic.ogg")){
+        std::cerr << "Couldn't load the music file: winMusic" << std::endl;
+        assert(false);
+    }
+    winMusic.setLoop(true);
+    winMusic.setVolume(VOLUME_EFFECTS);
 
     if (!sheep.openFromFile(WORKING_DIR + "sounds/sheep.ogg")){
         std::cerr << "Couldn't load the sound file: sheep" << std::endl;
@@ -60,6 +66,7 @@ void SoundManager::loadResourcesFromFileSys(){
 sf::Music* SoundManager::getMusic(Music type){
 	switch (type){
 	    case BACKGROUND:	    return &backgroundMusic;
+        case WIN_MUSIC:         return &winMusic;
 
         case SHEEP:             return &sheep;
         case MEEPLE_DROP:       return &meepleDrop;

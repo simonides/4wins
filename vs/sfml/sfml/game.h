@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio/Music.hpp>
 #include <cstdint>
 #include <vector>
 
@@ -58,6 +59,7 @@ struct InputEvents{
     bool pressedLeftMouse;
     bool releasedLeftMouse;
     bool rightMouseButtonPressed;
+    bool hasFocus;
 
     sf::Vector2f mousePosition;
 };
@@ -69,6 +71,7 @@ private:
     SoundManager* soundManager;
 
 	RBackground* background;
+    sf::Music* backgroundMusic;
 
 	enum LoopState{
 		INIT_STATE,
