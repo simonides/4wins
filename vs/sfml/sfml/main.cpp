@@ -24,7 +24,7 @@ sf::RenderWindow* setupWindow(){
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE), GAME_TITLE);
 	window->setPosition(sf::Vector2i(0, 0));
 	//window->setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
-	//window->setFramerateLimit(2);
+	window->setFramerateLimit(60);
 	window->setSize(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));// 16:9
 	return window;
 }
@@ -49,7 +49,7 @@ using namespace FourWins;
 
 int main(){
 	//AI_testFunction();
-	ResourceManager resourceLoader;
+	ResourceManager resourceManager;
     SoundManager soundManager;
 	sf::RenderWindow* window = setupWindow();
 
@@ -78,11 +78,11 @@ int main(){
     players[1]->meeplePositionThinkTime = { 1, 3 };
     players[1]->meepleChoosingThinkTime = { 1, 2 };
 
-    Game* game = new Game(*window, players, resourceLoader);
+    Game* game = new Game(*window, players, resourceManager, soundManager);
 
     GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::REPLAY;
 
-	soundManager.getMusic(SoundManager::BACKGROUND1)->play();
+	soundManager.getMusic(SoundManager::BACKGROUND)->play();
     while (window->isOpen()){
         if (gameMenuDecision == GameMenuDecision::BACK_TO_MENU){
             //menu->loop();

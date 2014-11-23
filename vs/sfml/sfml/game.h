@@ -12,6 +12,8 @@
 #include "ColorAnimation.h"
 #include "helper.h"
 
+
+class SoundManager;
 class RBackground;
 class ParticleBuilder;
 class ParticleSystem;
@@ -21,6 +23,7 @@ class I_Player;
 class RBoard;
 class Board;
 class RBag;
+
 
 struct GameMenuDecision{
     enum Enum{
@@ -63,6 +66,8 @@ class Game{
 private:
 	sf::RenderWindow* window;
 	ResourceManager* resourceManager;
+    SoundManager* soundManager;
+
 	RBackground* background;
 
 	enum LoopState{
@@ -159,7 +164,7 @@ private:
 	    void createMeepleDust(sf::FloatRect fieldBounds);        
     Game& operator = (const Game&);
 public:
-    Game(sf::RenderWindow& window, Player* players[2], ResourceManager& resourceLoader); //Initialises the game with 2 players
+    Game(sf::RenderWindow& window, Player* players[2], ResourceManager& resourceLoader, SoundManager& soundManager); //Initialises the game with 2 players
 	virtual ~Game();
 	GameMenuDecision::Enum runGame();           //Runs the game, until it is over; returns the winner
 

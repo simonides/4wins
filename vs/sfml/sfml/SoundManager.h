@@ -5,24 +5,24 @@
 
 class SoundManager{
 private:
-	sf::Sound sound1;
+    sf::Music sheep;
+    sf::Music meepleDrop;
+    sf::Music meepleWinDrop;
+    sf::Music gameStart;
+    sf::Music select;
+    sf::Music ohYeah[5];
 
-	sf::Music backgroundMusic1;
-	sf::Music backgroundMusic2;
-	sf::Music backgroundMusic3;
+	sf::Music backgroundMusic;
 
 public:	
     enum Music{
-        BACKGROUND1, BACKGROUND2, BACKGROUND3
-    };
-    enum Sound{
-        SHEEP
+        BACKGROUND,// BACKGROUND2, BACKGROUND3,
+        SHEEP, MEEPLE_DROP, MEEPLE_WIN_DROP, GAME_START, SELECT, OH_YEAH
     };
 
     SoundManager();
 	void loadResourcesFromFileSys();
 	sf::Music* getMusic(Music type);
-    sf::Sound* getSound(Sound type);
 };
 
 

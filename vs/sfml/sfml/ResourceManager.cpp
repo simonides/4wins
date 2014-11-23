@@ -10,7 +10,7 @@ ResourceManager::ResourceManager(){
 
 void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 {
-	if (!roboto.loadFromFile(WORKING_DIR + "Fonts\\roboto\\roboto-black.ttf")){
+	if (!roboto.loadFromFile(WORKING_DIR + "Fonts/roboto/roboto-black.ttf")){
 		std::cerr << "Couldn't load the Font: roboto-black.ttf" << std::endl;
 		assert(false);
 	}
