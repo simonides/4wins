@@ -70,10 +70,15 @@ void RBoard::setHoveredField(const BoardPos boardPos){
 	}
 }
 
+
 sf::FloatRect RBoard::getFieldGlobalBounds(const BoardPos boardPos) const{
 	return fields[boardPos.x][boardPos.y]->getGlobalBounds();
 }
 
+sf::Vector2f RBoard::getFieldCoords(const BoardPos boardPos) const{
+    sf::FloatRect bounds = fields[boardPos.x][boardPos.y]->getGlobalBounds();
+    return{ bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f };
+}
 
 
 void RBoard::initFields(sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied){

@@ -69,27 +69,29 @@ int main(){
     players[0]->player = nullptr;
     players[0]->controller = tc1;
 	players[0]->playerAvatar = ResourceLoader::ELLE;
+    players[0]->meeplePositionThinkTime = { 0, 1 };
+    players[0]->meepleChoosingThinkTime = { 0, 1 };
 
     players[1] = new Player();
     players[1]->type = Player::TC;
     players[1]->player = nullptr;
     players[1]->controller = tc2;
-	players[1]->playerAvatar = ResourceLoader::RONALD;
+    players[1]->playerAvatar = ResourceLoader::RONALD;
+    players[1]->meeplePositionThinkTime = { 2, 5 };
+    players[1]->meepleChoosingThinkTime = { 1, 2 };
 
     Game* game = new Game(*window, players, resourceLoader);
 
-    GameReturn returnValue = REPLAY;
-
-
+    GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::REPLAY;
 
 	soundManager.getMusic(BACKGROUND1)->play();
     while (window->isOpen() /*&& !exitGame*/){
-        //if (returnValue == BACK_TO_MENU){
+        if (gameMenuDecision == GameMenuDecision::BACK_TO_MENU){
             //menu->loop();
-        //}
+        }
         		
-		returnValue = game->runGame();
-		if (returnValue == EXIT_GAME){
+		gameMenuDecision = game->runGame();
+        if (gameMenuDecision == GameMenuDecision::EXIT_GAME){
             /*exitGame = true;*/
             break;
 		}

@@ -30,3 +30,10 @@ float getAverage(int* intArray, unsigned int length){
     }
     return sum / (float)length;
 }
+
+float Interval::get() const{
+    assert(max >= min);
+    float random = ((float)rand()) / (float)RAND_MAX;
+    return  min + random * (max - min);
+}
+

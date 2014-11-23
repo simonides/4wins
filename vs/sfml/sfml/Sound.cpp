@@ -29,11 +29,10 @@ sf::Music* Sound::getMusic(MusicType type)
 {
 	switch (type)
 	{
-	case BACKGROUND1:			return &backgroundMusic1;
-	case BACKGROUND2:			return &backgroundMusic1;		// not used by now
-	case BACKGROUND3:			return &backgroundMusic1;		// not used by now
-	default: break;
-
+	    case BACKGROUND1:			return &backgroundMusic1;
+	    case BACKGROUND2:			return &backgroundMusic1;		// not used by now
+	    case BACKGROUND3:			return &backgroundMusic1;		// not used by now
+        default: assert(false); return &backgroundMusic1;
 	}
 }
 

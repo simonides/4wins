@@ -25,6 +25,7 @@ public:
 	void setHoveredField(const BoardPos boardPos);
 
 	sf::FloatRect getFieldGlobalBounds(const BoardPos boardPos) const;
+    sf::Vector2f getFieldCoords(const BoardPos boardPos) const;     //Returns the coordinates of the center of the field within the window
 
 };
 

@@ -9,3 +9,13 @@ void handleResizeWindowEvent(sf::RenderWindow* window);
 
 int getMaximum(int* intArray, unsigned int length);         //Returns the max. value within an int-array
 float getAverage(int* intArray, unsigned int length);       //Returns the averaage value within an int-array
+
+
+struct Interval{
+    float min;
+    float max;
+    float get() const;
+};
+
+
+

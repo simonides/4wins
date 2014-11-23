@@ -9,13 +9,6 @@
 
 
 
-float Interval::get() const{
-    assert(max >= min);
-    float random = ((float)rand()) / (float)RAND_MAX;
-    return  min + random * (max - min);
-}
-
-
 
 
 /*ParticleBuilder::ParticleBuilder(sf::Vector2f position, Interval diameter, Interval speed, Interval angle, Interval colorSpeed, Interval fadeoutSpeed) :

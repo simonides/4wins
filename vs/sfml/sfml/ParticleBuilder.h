@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #include "ColorAnimation.h"
-
+#include "helper.h"
 
 struct Particle{
     //Position:
@@ -21,14 +21,6 @@ struct Particle{
     //Rotation:
         float rotationSpeed;
 };
-
-
-struct Interval{
-    float min;
-    float max;
-    float get() const;
-};
-
 
 
 class ParticleBuilder{
