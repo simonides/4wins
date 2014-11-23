@@ -199,63 +199,39 @@ GameReturn Game::runGame(){
 			//goto ?
 			break;
 
-		case I_PLAYER_SELECT_MEEPLE:
-			loopState = i_playerSelectMeeple();
-			//todo: goto??
-			break;
+		case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();	/*todo: goto?? */		break;
 
-		case HUMAN_SELECT_MEEPLE:
-			loopState =  humanSelectMeeple();
-			break;
+		case HUMAN_SELECT_MEEPLE:						loopState =  humanSelectMeeple();							break;
 
-        case TC_START_SELECT_MEEPLE:
-			loopState = tcStartSelectMeeple();
-			break;
+        case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();							break;
 
-		case TC_WAIT_FOR_SELECTED_MEEPLE:
-			loopState = tcWaitForSelectedMeeple();
-			break;
-			//fall through not possible
+		case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();/*todo: goto?? */		break;
 
-		case HIGHLIGHT_SELECTED_MEEPLE:
-			loopState = highlightSelectedMeeple();
-			break;
+		case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple();						break;
 
-		case I_PLAYER_SELECT_MEEPLE_POSITION:
-			loopState = i_playerSelectMeeplePosition();
-			//todo: goto??
-			break;
+		case I_PLAYER_SELECT_MEEPLE_POSITION:			loopState = i_playerSelectMeeplePosition();/*todo: goto??*/ break;
 
-		case HUMAN_SELECT_MEEPLE_POSITION:
-			loopState = humanSelectMeeplePosition();
-			break;
+		case HUMAN_SELECT_MEEPLE_POSITION:				loopState = humanSelectMeeplePosition();					break;
 
-		case TC_START_SELECT_MEEPLE_POSITION:
-			loopState = tcStartSelectMeeplePosition();
-			//no .... intentional fall through
-			break;
+		case TC_START_SELECT_MEEPLE_POSITION:			loopState = tcStartSelectMeeplePosition();					break;
 
-		case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:
-			loopState = tcWaitForSelectedMeeplePosition();
-			//goto?
-			break;
-		case MOVE_MEEPLE_TO_SELECTED_POSITION:
-			loopState = MoveMeepleToSelectedPosition();
-			break;
+		case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:		loopState = tcWaitForSelectedMeeplePosition(); /*goto?*/	break;
 
-		case CHECK_END_CONDITION:
-			loopState = checkEndCondition();
-			break;
+		case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = MoveMeepleToSelectedPosition();					break;
 
-		case DISPLAY_END_SCREEN:
-            gameReturn = displayEndscreen(elapsedTime);
-			break;
+		case CHECK_END_CONDITION:						loopState = checkEndCondition();							break;
+
+		case DISPLAY_END_SCREEN:			            gameReturn = displayEndscreen(elapsedTime);					break;
 		}
 
 		std::string title("4Wins by Jakob M., Sebastian S. and Simon D.   @");
 		title.append(std::to_string(fps));
 		title.append(" fps");
 		window->setTitle(title);
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//draw
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		window->clear(sf::Color::White);
 

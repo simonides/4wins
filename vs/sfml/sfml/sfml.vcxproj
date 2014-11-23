@@ -113,6 +113,7 @@
     <ClCompile Include="Menu\Menu.cpp" />
     <ClCompile Include="Menu\MenuConstants.cpp" />
     <ClCompile Include="RandomAI.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StupidAI.cpp" />
     <ClCompile Include="ThinkingAI.cpp" />
     <ClCompile Include="ThreadController.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="RandomAI.h" />
     <ClInclude Include="Menu\Listbox.h" />
     <ClInclude Include="RMeeple.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="StupidAI.h" />
     <ClInclude Include="ThinkingAI.h" />
     <ClInclude Include="ThreadController.h" />

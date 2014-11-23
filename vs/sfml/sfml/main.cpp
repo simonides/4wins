@@ -16,6 +16,7 @@
 #include "ResourceLoader.h"
 
 #include "Menu/Menu.h"
+#include "Sound.h"
 
 const std::string GAME_TITLE = "4 Wins by ...";
 
@@ -49,6 +50,7 @@ using namespace FourWins;
 int main(){
 	//AI_testFunction();
 	ResourceLoader resourceLoader;
+	Sound soundManager;
 	sf::RenderWindow* window = setupWindow();
 
 	Menu::MainMenu* menu = new Menu::MainMenu(*window);
@@ -63,33 +65,28 @@ int main(){
     
     Player* players[2];
     players[0] = new Player();
-    players[0]->type = Player::TC;
+    players[0]->type = Player::HUMAN;
     players[0]->player = nullptr;
     players[0]->controller = tc1;
+	players[0]->playerAvatar = ResourceLoader::ELLE;
 
     players[1] = new Player();
     players[1]->type = Player::TC;
     players[1]->player = nullptr;
     players[1]->controller = tc2;
-
-
-	//Player* human = new Player();
-	//human->type = Player::HUMAN;
-	//human->player = nullptr;
-
-	//Player* human2 = new Player();
-	//human2->type = Player::HUMAN;
-	//human2->player = nullptr;
-
+	players[1]->playerAvatar = ResourceLoader::RONALD;
 
     Game* game = new Game(*window, players, resourceLoader);
 
     GameReturn returnValue = REPLAY;
 
+
+
+	soundManager.getMusic(BACKGROUND1)->play();
     while (window->isOpen() /*&& !exitGame*/){
-        if (returnValue == BACK_TO_MENU){
+        //if (returnValue == BACK_TO_MENU){
             //menu->loop();
-        }
+        //}
         		
 		returnValue = game->runGame();
 		if (returnValue == EXIT_GAME){
@@ -107,8 +104,6 @@ int main(){
     delete player1;
 	delete menu;
 	delete window;
-
-
 
 	return 0;
 }

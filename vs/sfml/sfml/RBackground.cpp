@@ -13,6 +13,7 @@ const float ANIMATION_SPEED = 250.f;
 const float WINDOW_POSITION_FROM_TOP = 13.f;
 const float LEFT_WINDOW_POSITION_FROM_LEFT = 35.f;
 const float RIGHT_WINDOW_POSITION_FROM_LEFT = 986.f;
+
 RBackground::RBackground(ResourceLoader& resourceLoader, Player& p1, Player& p2)
 	: closeLeftWindow(true), closeRightWindow(true)
 {

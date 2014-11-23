@@ -41,7 +41,7 @@ public:
 	enum ResourceRect
 	{
 		BACKGROUND, BACKGROUND_WINDOW, 
-		MR_PROPER, UNCLE_BENS, RONALD, SMILEY
+		MR_PROPER, UNCLE_BENS, RONALD, SMILEY, ELLE
 	};
 	ResourceLoader();
 	~ResourceLoader();

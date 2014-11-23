@@ -116,6 +116,7 @@ sf::IntRect ResourceLoader::getTextureRect(ResourceRect rectType) const
 	case MR_PROPER:			return sf::IntRect(128, 0, 128, 194);
 	case RONALD:			return sf::IntRect(256, 0, 128, 194);
 	case SMILEY:			return sf::IntRect(384, 0, 128, 194);
+	case ELLE:				return sf::IntRect(0, 194, 128, 194);
 	case BACKGROUND:		return sf::IntRect(0, 0, 135, 68);
 	case BACKGROUND_WINDOW: return sf::IntRect(4, 70, 31, 49);
 	default:				return sf::IntRect(0, 0, 16, 16);//default something

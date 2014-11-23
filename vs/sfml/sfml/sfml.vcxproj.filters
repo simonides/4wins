@@ -138,6 +138,9 @@
     <ClCompile Include="RBackground.cpp">
       <Filter>Source Files\REntities</Filter>
     </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -226,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="RBackground.h">
       <Filter>Header Files\REntities</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
