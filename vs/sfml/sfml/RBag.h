@@ -6,21 +6,19 @@
 class RMeeple;
 class Meeple;
 
-class RBag
-{
+class RBag{
 private:
 	std::vector<RMeeple*> usedRMeeples;
 	std::vector<RMeeple*> rMeeples;
 
 public:
-	RBag();
 	~RBag();
 	void draw(sf::RenderWindow& window);
 
-	RMeeple* getRMeepleAtPosition(sf::Vector2f& position);
-//Todo
-	RMeeple* isPassedMeepleInUsed(const Meeple* meeple) const;
-	RMeeple* isPassedMeepleInUnused(const Meeple* meeple) const;
+	RMeeple* getRMeepleAtPosition(sf::Vector2f& position);  
+
+	RMeeple* getRmeepleFromUsed(const Meeple* meeple) const;
+    RMeeple* getRmeepleFromUnused(const Meeple* meeple);
 
 	void changeRMeepleToUsed(const RMeeple& rMeeple);
 

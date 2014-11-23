@@ -5,15 +5,15 @@
 #include "Board.h"
 #include "RMeeple.h"
 
-enum Shape{
-	OCCUPIED,
-	NOT_OCCUPIED
+struct FieldShape{
+    enum Enum{
+        OCCUPIED,
+        NOT_OCCUPIED
+    };
 };
 
-class RField
-{
-	
 
+class RField{
 private:
 
 	sf::RectangleShape fieldShape;
@@ -23,21 +23,16 @@ private:
 
 	BoardPos posOnBoard; //mapps tointernal state of ai
 
-	Shape shape;
+    FieldShape::Enum shape;
 
 public:
 	RField(const BoardPos& posOnBoard, sf::Vector2f& initPos, sf::Texture& fieldShape, sf::Texture& occupiedShape);
-	~RField();
-
+    void setShape(FieldShape::Enum shape);
+	
 	void draw(sf::RenderWindow& window) const;
 
 	bool containsPosition(sf::Vector2f& position) const;
-
-	void setShape(Shape shape);
-
-	sf::FloatRect getGlobalBounds() const;
-
+    sf::FloatRect getGlobalBounds() const;
 	BoardPos getBoardPos() const;
-
 };
 

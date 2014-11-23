@@ -20,7 +20,6 @@ private:
 
 public:
 	RBackground(ResourceManager& resourceLoader,Player& p1, Player& p2);
-	~RBackground();
 	
 	void draw(sf::RenderWindow& window) const;
 

@@ -3,7 +3,7 @@
 #include <SFML/System/Utf.hpp>
 
 namespace sf{
-    class Color;
+    class Color; 
 }
 
 

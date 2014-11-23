@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 #include <cstdint>
 #include <vector>
@@ -51,16 +52,20 @@ struct Player{
     Interval meepleChoosingThinkTime;   //For TC/I_Player only: how long the AI thinks about the meeple to choose
 };
 
+struct InputEvents{
+    bool pressedLeftMouse;
+    bool releasedLeftMouse;
+    bool rightMouseButtonPressed;
 
+    sf::Vector2f mousePosition;
+};
 
-class Game
-{
+class Game{
 private:
 	sf::RenderWindow* window;
-	ResourceManager* resourceLoader;
+	ResourceManager* resourceManager;
 	RBackground* background;
 
-	//gameloop
 	enum LoopState{
 		INIT_STATE,
 		//Select Meeple for opponent
@@ -80,105 +85,85 @@ private:
     Board* logicalBoard;					
     RBoard* board;
     Player* players[2];
-    GameState* gameStates[2];               //stores the gamestate for player 1 (buffered)
+    GameState* gameStates[2];                       //stores the gamestate for player 1 (buffered)
+    std::vector<RMeeple*> meeplesToDrawAndSort;     //Contains all 16 meeples (additionally to the bags) in order to sort them for drawing
 
-
-
-
-	//GameReturn runGameSwitch;
-	bool pressedLeftMouse;
-	bool releasedLeftMouse;
-    bool rightMouseButtonPressed;
-
-	sf::Vector2f mousePosRelativeToMeepleBoundary;
-	sf::Vector2f convertedMousePos;
-	sf::Vector2f lastValidPosition;
-
-	RMeeple* rMeepleToSet;
-	std::vector<RMeeple*> meeplesToDrawAndSort;
-
-
-    
 
 	    const sf::Color HOVERED_MEEPLE_GLOW_COLOR;
 	    const sf::Color SELECTED_MEEPLE_GLOW_COLOR;
     
 	//endscreen
+        const sf::Vector2f GAME_MENU_BUTTON_SIZE;
+        const sf::Color GAME_MENU_BUTTON_COLOR;
+        const sf::Color GAME_MENU_BUTTON_HOVER_COLOR;
 	    sf::RectangleShape* hoveredButtonPtr;
 	    sf::RectangleShape exitButton;
 	    sf::RectangleShape restartButton;
 	    sf::RectangleShape menuButton;
-        const sf::Vector2f GAME_MENU_BUTTON_SIZE;
-        const sf::Color GAME_MENU_BUTTON_COLOR;
-        const sf::Color GAME_MENU_BUTTON_HOVER_COLOR;
-
-
+        
 	//Particles:
         ParticleSystem* particleSystem;                 //Particle controller: renders and simulates all particles
         ParticleBuilder* dustBuilder;                   //produces dust-particles
         ParticleBuilder* mouseCursorParticleBuilder;    //produces snow when mouse right-click
         ParticleBuilder* endScreenParticleBuilder;      //produces stars at the end of the game
-
-
+        
     //loopvars
-        const Meeple* meepleToSet;              //The meeple that has been selected by the Player (has to be set by the opponent). It's glow has the color SELECTED_MEEPLE_GLOW_COLOR
-        RMeeple* hoveredMeeple;                 //Hovered meeple, while the Player chooses a meeple for the opponent
-        BoardPos posMeepleTo;
-        bool dragMeeple;
-        bool firstFrameOfState;                 //Is set to true for exacly one frame, everytime the state changes
-
-	//State functions:
+        RMeeple* selectedMeeple;                        //The meeple that has been selected by the Player (has to be positioned by the opponent). It's glow has the color SELECTED_MEEPLE_GLOW_COLOR
+        BoardPos selectedBoardPos;                      //the BoardPos, where the selected meeple should be placed
+        bool firstFrameOfState;                         //Is set to true for exacly one frame, everytime the state changes
+   
+    //humanSelectMeeplePosition
+        RMeeple* hoveredMeeple;                         //Hovered meeple, while the Player chooses a meeple for the opponent
+    
+    //humanSelectMeeplePosition
+        bool draggingMeeple;                            //true: the user is currently dragging a meeple around
+        sf::Vector2f draggedMeepleMouseOffset;          //When the user drags a meeple: offset of the mouse position to the meeple's (center-)position
+        sf::Vector2f originalMeeplePosition;            //When the user drags a meeple: original meeple position (if the user places it at an invalid position, the meeple is put bag on it's original place)
+        
+    //moveMeepleToSelectedPosition - animation/interpolation
+        const float MOVE_MEEPLE_ANIMATION_SPEED;
+        const Interval MOVE_MEEPLE_ANIMATION_MAX_LIFT_DISTANCE;     //max. y-distance between the meeple's route and the shortest path. Animated with a sinus
+        sf::Vector2f initialPosition;
+        sf::Vector2f targetPosition;        
+        float moveMeepleAnimationDistance;
+        float moveMeepleAnimationProgress;
+        float moveMeepleAnimationMaxLiftDistance;
+        
+    //moveMeepleToSelectedPosition & highlightSelectedMeeple
+        float remainingThinkTime;                       //Remaining time, until the animation starts
+                        
+    //End-Screen: rainbow-animation  for winCombination
+        RMeeple* winningCombiRMeeples[4];
+        ColorAnimation colorAnimations[4];              //Animations for all meeples in the winCombination
+    
+    //State functions:
 	    LoopState i_playerSelectMeeple();
-	    LoopState humanSelectMeeple();
+        LoopState humanSelectMeeple(InputEvents inputEvents);
 	    LoopState tcStartSelectMeeple();
 	    LoopState tcWaitForSelectedMeeple();
         LoopState highlightSelectedMeeple(float elapsedTime);
 
 	    LoopState i_playerSelectMeeplePosition();
-	    LoopState humanSelectMeeplePosition();
+        LoopState humanSelectMeeplePosition(InputEvents inputEvents);
 
 	    LoopState tcStartSelectMeeplePosition();
 	    LoopState tcWaitForSelectedMeeplePosition();
         LoopState moveMeepleToSelectedPosition(float elapsedTime);
 	
 	    LoopState checkEndCondition();
-        GameMenuDecision::Enum displayEndscreen(float elapsedTime);
-
-    //moveMeepleToSelectedPosition - animation/interpolation
-        sf::Vector2f initialPosition;
-        sf::Vector2f targetPosition;
+        GameMenuDecision::Enum displayEndscreen(InputEvents inputEvents, float elapsedTime);
         
-        float moveMeepleAnimationDistance;
-        float moveMeepleAnimationProgress;
-        float moveMeepleAnimationMaxLiftDistance;
-        const float MOVE_MEEPLE_ANIMATION_SPEED;
-        //const Interval MOVE_MEEPLE_ANIMATION_DROP_OFF_DISTANCE; //The distance 
-        const Interval MOVE_MEEPLE_ANIMATION_MAX_LIFT_DISTANCE;     //max. y-distance between the meeple's route and the shortest path. Animated with a sinus
-    
-    //moveMeepleToSelectedPosition & highlightSelectedMeeple
-        float remainingThinkTime;                       //Remaining time, until the animation starts
-
-
-
-        
-    //End-Screen: rainbow-animation  for winCombination
-        RMeeple* winningCombiRMeeples[4];
-        ColorAnimation colorAnimations[4];     //Animations for all meeples in the winCombination
-
-
-	// other functions
-	void switchPlayers();
-	void initMeeples();
-	//sf::Color rainbow(float progress) const; // TODO gehört raus :D
-    void createMeepleDust(sf::FloatRect fieldBounds);
-    void pollEvents();
-
+	//Misc
+	    void initMeeples();
+        InputEvents pollEvents();
+        void reset();                               //Reinitialises the object for another round
+        void switchActivePlayer();
+	    void createMeepleDust(sf::FloatRect fieldBounds);        
     Game& operator = (const Game&);
 public:
     Game(sf::RenderWindow& window, Player* players[2], ResourceManager& resourceLoader); //Initialises the game with 2 players
 	virtual ~Game();
-	void reset();                               //Reinitialises the object for another round
-    GameMenuDecision::Enum runGame();           //Runs the game, until it is over; returns the winner
+	GameMenuDecision::Enum runGame();           //Runs the game, until it is over; returns the winner
 
 };
 

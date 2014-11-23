@@ -114,8 +114,7 @@ float RMeeple::getYPos() const{
 	return shape.getGlobalBounds().top + shape.getGlobalBounds().height;
 }
 
-sf::Vector2f RMeeple::getGlobalOrigin() const
-{
+sf::Vector2f RMeeple::getCoords() const{
 	sf::Vector2f returnVal;
 	returnVal.x = shape.getGlobalBounds().left + shape.getOrigin().x;
 	returnVal.y = shape.getGlobalBounds().top + shape.getOrigin().y;

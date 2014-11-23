@@ -15,8 +15,7 @@ const float LEFT_WINDOW_POSITION_FROM_LEFT = 35.f;
 const float RIGHT_WINDOW_POSITION_FROM_LEFT = 986.f;
 
 RBackground::RBackground(ResourceManager& resourceLoader, Player& p1, Player& p2)
-	: closeLeftWindow(true), closeRightWindow(true)
-{
+	: closeLeftWindow(true), closeRightWindow(true){
 	background.setSize(sf::Vector2f(static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE)));
 	background.setTexture(resourceLoader.getTexture(ResourceManager::BACKGROUND_TEX));
 	background.setTextureRect(resourceLoader.getTextureRect(ResourceManager::BACKGROUND));
@@ -48,13 +47,7 @@ RBackground::RBackground(ResourceManager& resourceLoader, Player& p1, Player& p2
 }
 
 
-RBackground::~RBackground()
-{
-}
-
-
-void RBackground::draw(sf::RenderWindow& window) const
-{
+void RBackground::draw(sf::RenderWindow& window) const{
 	window.draw(avatarPlayer1);
 	window.draw(avatarPlayer2);
 	window.draw(leftWindow);
@@ -63,19 +56,16 @@ void RBackground::draw(sf::RenderWindow& window) const
 }
 
 
-void  RBackground::setLeftWindow(bool closeWindow)
-{
+void  RBackground::setLeftWindow(bool closeWindow){
 	closeLeftWindow = closeWindow;
 }
 
-void  RBackground::setRightWindow(bool closeWindow)
-{
+void  RBackground::setRightWindow(bool closeWindow){
 	closeRightWindow = closeWindow;
 }
 
 
-void  RBackground::update(float elapsedTime)
-{
+void  RBackground::update(float elapsedTime){
 	//left Window
 	//close
 	if (closeLeftWindow && leftWindow.getPosition().x > LEFT_WINDOW_POSITION_FROM_LEFT )

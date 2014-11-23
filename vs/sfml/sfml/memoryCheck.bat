@@ -1,1 +1,1 @@
-drmemory -leaks_only -- sfml.exe
+drmemory -leaks_only -- ../Debug/sfml.exe

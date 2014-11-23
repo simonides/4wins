@@ -56,8 +56,6 @@ int main(){
 	Menu::MainMenu* menu = new Menu::MainMenu(*window);
 	menu->init();
 	
-    //bool exitGame = false;
-
 	I_Player* player1 = new StupidAI();
     I_Player* player2 = new SmartAI(true, true);
     ThreadController* tc1 = new ThreadController(*player1);
@@ -69,15 +67,15 @@ int main(){
     players[0]->player = nullptr;
     players[0]->controller = tc1;
 	players[0]->playerAvatar = ResourceManager::ELLE;
-    players[0]->meeplePositionThinkTime = { 0, 1 };
-    players[0]->meepleChoosingThinkTime = { 0, 1 };
+    players[0]->meeplePositionThinkTime = { 0, 0.4 };
+    players[0]->meepleChoosingThinkTime = { 0, 0.4 };
 
     players[1] = new Player();
     players[1]->type = Player::TC;
     players[1]->player = nullptr;
     players[1]->controller = tc2;
     players[1]->playerAvatar = ResourceManager::RONALD;
-    players[1]->meeplePositionThinkTime = { 2, 5 };
+    players[1]->meeplePositionThinkTime = { 1, 3 };
     players[1]->meepleChoosingThinkTime = { 1, 2 };
 
     Game* game = new Game(*window, players, resourceLoader);
@@ -85,17 +83,15 @@ int main(){
     GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::REPLAY;
 
 	soundManager.getMusic(SoundManager::BACKGROUND1)->play();
-    while (window->isOpen() /*&& !exitGame*/){
+    while (window->isOpen()){
         if (gameMenuDecision == GameMenuDecision::BACK_TO_MENU){
             //menu->loop();
         }
         		
 		gameMenuDecision = game->runGame();
         if (gameMenuDecision == GameMenuDecision::EXIT_GAME){
-            /*exitGame = true;*/
             break;
 		}
-        game->reset();
 	}
     delete game;
     delete players[0];

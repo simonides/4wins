@@ -48,14 +48,14 @@ int SmartAI::getPointsForCombination(const GameState& gameState, const WinCombin
 
 int SmartAI::getPointsForCombination_combineMeeples(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{
     //Returns points, if we can form similarities by placing a meeple
-    //take each property of the meepleToSet
+    //take each property of the selectedMeeple
     //count the number of meeples in the combination, which have the same property
     //  if this number is 3, return a huge number (we win, if we set the meeple there)
     //  if the numer is 2: check, if the opponent has meeples which could win the combination. return a low number, depending on the amount of meeples the opponent has
     //  if 1: return a small number
 
     int m, p;
-    //The following values store the number of meeples, who share the same property as the meepleToSet
+    //The following values store the number of meeples, who share the same property as the selectedMeeple
     uint8_t match[4] = { 0 };
     uint8_t empty = 0;
 

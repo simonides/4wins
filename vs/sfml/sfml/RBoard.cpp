@@ -62,11 +62,11 @@ BoardPos RBoard::getBoardPosForPosititon(sf::Vector2f& position) const{
 
 void RBoard::setHoveredField(const BoardPos boardPos){
 	if (hoveredField.x < 4 && hoveredField.y < 4){
-		fields[hoveredField.x][hoveredField.y]->setShape(NOT_OCCUPIED);
+		fields[hoveredField.x][hoveredField.y]->setShape(FieldShape::NOT_OCCUPIED);
 	}
 	hoveredField = boardPos;
 	if (boardPos.x < 4 && boardPos.y < 4){
-		fields[boardPos.x][boardPos.y]->setShape(OCCUPIED);
+        fields[boardPos.x][boardPos.y]->setShape(FieldShape::OCCUPIED);
 	}
 }
 
@@ -101,44 +101,23 @@ void RBoard::initFields(sf::Texture& fieldTexture, sf::Texture& fieldTextureOccu
 }
 
 BoardPos RBoard::getBoardPosforCounter(uint8_t counter){
-	switch (counter)
-	{
-	case 0:
-		return{ 0, 0 };
-	case 2:
-		return{ 1, 0 };
-	case 5:
-		return{ 2, 0 };
-	case 9:
-		return{ 3, 0 };
-	
-	case 1:
-		return{ 0, 1 };
-	case 4:
-		return{ 1, 1 };
-	case 8:
-		return{ 2, 1 };
-	case 12:
-		return{ 3, 1 };
-
-	case 3:
-		return{ 0, 2 };
-	case 7:
-		return{ 1, 2 };
-	case 11:
-		return{ 2, 2 };
-	case 14:
-		return{ 3, 2 };
-
-	case 6:
-		return{ 0, 3 };
-	case 10:
-		return{ 1, 3 };
-	case 13:
-		return{ 2, 3 };
-	case 15:
-		return{ 3, 3 };
-	default:
-		return{ 42, 42 };
-	}
+    switch (counter){
+        case 0:	    return{ 0, 0 };
+        case 2:		return{ 1, 0 };
+        case 5:		return{ 2, 0 };
+        case 9:		return{ 3, 0 };
+        case 1:		return{ 0, 1 };
+        case 4:		return{ 1, 1 };
+        case 8:		return{ 2, 1 };
+        case 12:	return{ 3, 1 };
+        case 3:		return{ 0, 2 };
+        case 7:		return{ 1, 2 };
+        case 11:	return{ 2, 2 };
+        case 14:	return{ 3, 2 };
+        case 6:		return{ 0, 3 };
+        case 10:	return{ 1, 3 };
+        case 13:	return{ 2, 3 };
+        case 15:	return{ 3, 3 };
+        default:	assert(false); return{ 42, 42 };
+    }
 }
