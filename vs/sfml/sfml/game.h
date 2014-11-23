@@ -22,7 +22,6 @@ class RBoard;
 class Board;
 class RBag;
 
-
 struct GameMenuDecision{
     enum Enum{
         REPLAY,
@@ -87,8 +86,7 @@ private:
     Player* players[2];
     GameState* gameStates[2];                       //stores the gamestate for player 1 (buffered)
     std::vector<RMeeple*> meeplesToDrawAndSort;     //Contains all 16 meeples (additionally to the bags) in order to sort them for drawing
-
-
+    
 	    const sf::Color HOVERED_MEEPLE_GLOW_COLOR;
 	    const sf::Color SELECTED_MEEPLE_GLOW_COLOR;
     

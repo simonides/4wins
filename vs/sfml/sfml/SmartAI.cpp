@@ -53,7 +53,7 @@ int SmartAI::getPointsForCombination_combineMeeples(const GameState& gameState, 
     //  if this number is 3, return a huge number (we win, if we set the meeple there)
     //  if the numer is 2: check, if the opponent has meeples which could win the combination. return a low number, depending on the amount of meeples the opponent has
     //  if 1: return a small number
-
+    
     int m, p;
     //The following values store the number of meeples, who share the same property as the selectedMeeple
     uint8_t match[4] = { 0 };
