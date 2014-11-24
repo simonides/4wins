@@ -63,7 +63,7 @@ int main(){
     
     Player* players[2];
     players[0] = new Player();
-    players[0]->type = Player::TC;
+    players[0]->type = Player::HUMAN;
     players[0]->player = nullptr;
     players[0]->controller = tc1;
 	players[0]->playerAvatar = ResourceManager::ELLE;
@@ -80,7 +80,7 @@ int main(){
 
     Game* game = new Game(*window, players, resourceManager, soundManager);
 
-    GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::REPLAY;
+    GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::BACK_TO_MENU;
 
     while (window->isOpen()){
         if (gameMenuDecision == GameMenuDecision::BACK_TO_MENU){

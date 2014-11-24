@@ -175,6 +175,10 @@ void Game::reset(){
 	players[1]->logicalMeepleBag->reset();
 	players[1]->rbag->reset();
 
+    exitButton.setFillColor(GAME_MENU_BUTTON_COLOR);
+    restartButton.setFillColor(GAME_MENU_BUTTON_COLOR);
+    menuButton.setFillColor(GAME_MENU_BUTTON_COLOR);
+
     hoveredButtonPtr = nullptr;    
 
     selectedMeeple = nullptr;
@@ -318,8 +322,8 @@ InputEvents Game::pollEvents(){
                         break;
                     case sf::Mouse::Right:
                         events.rightMouseButtonPressed = true;
-						/*background->setLeftWindow(true);
-						background->setRightWindow(true);*/
+						background->setLeftWindow(true);
+						background->setRightWindow(true);
                         break;
                     default: break;
                 }
@@ -331,8 +335,8 @@ InputEvents Game::pollEvents(){
 					    break;
                     case sf::Mouse::Right:
                         events.rightMouseButtonPressed = false;
-						/*background->setLeftWindow(false);
-						background->setRightWindow(false);*/
+						background->setLeftWindow(false);
+						background->setRightWindow(false);
                         break;
 				    default: break;
 				}
