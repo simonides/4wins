@@ -9,6 +9,8 @@
 #include <SFML/System.hpp>
 #include <SFML/System/Clock.hpp>
 
+#include "SoundManager.h"
+
 #include "Meeple.h"
 #include "MeepleBag.h"
 #include "Board.h"
@@ -32,11 +34,14 @@
 
 
 #define DUST_X_OFFSET -10     //X-Offset for producing dust when placing a meeple
+#define OH_YEAH_PROPABILITY 25
 
-Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resourceManager) :
+Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resourceManager, SoundManager& soundManager) :
             window(&window), 
             resourceManager(&resourceManager),
+            soundManager(&soundManager),
             background(new RBackground(resourceManager, *_players[0], *_players[1])),
+            backgroundMusic(nullptr),
 
             activePlayerIndex(1),
             logicalBoard(new Board()),
@@ -170,6 +175,10 @@ void Game::reset(){
 	players[1]->logicalMeepleBag->reset();
 	players[1]->rbag->reset();
 
+    exitButton.setFillColor(GAME_MENU_BUTTON_COLOR);
+    restartButton.setFillColor(GAME_MENU_BUTTON_COLOR);
+    menuButton.setFillColor(GAME_MENU_BUTTON_COLOR);
+
     hoveredButtonPtr = nullptr;    
 
     selectedMeeple = nullptr;
@@ -199,6 +208,14 @@ GameMenuDecision::Enum Game::runGame(){
     GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::KEEP_PLAYING;
     InputEvents inputEvents;
 
+    soundManager->getMusic(SoundManager::GAME_START)->play();
+
+    if (backgroundMusic != nullptr){
+        backgroundMusic->stop();
+    }
+    backgroundMusic = soundManager->getMusic(SoundManager::BACKGROUND);
+    backgroundMusic->play();
+
     while (window->isOpen() && gameMenuDecision == GameMenuDecision::KEEP_PLAYING){
         elapsedTime = clock.getElapsedTime().asSeconds();
 	    float fps = 1.f / elapsedTime;
@@ -206,30 +223,32 @@ GameMenuDecision::Enum Game::runGame(){
         inputEvents = pollEvents();
 
         //Snow-Animation
-            if (inputEvents.rightMouseButtonPressed && rand() % 5 == 0){
+            if (inputEvents.rightMouseButtonPressed){            //It's ok that the number of particles might decrease at lower frame rates
                 mouseCursorParticleBuilder->setPosition(inputEvents.mousePosition);
                 particleSystem->newParticleCloud(1, *mouseCursorParticleBuilder);
             }
 
-
-		switch (loopState)
-		{
-		    case INIT_STATE:                                //todo das stimmt no ned ganz human iplayer und tc !!!!
-			                                                loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
-			                                                break;
-		    case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();			                break;
-		    case HUMAN_SELECT_MEEPLE:						loopState =  humanSelectMeeple(inputEvents);				break;
-            case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();							break;
-		    case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();		                break;
-		    case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple(elapsedTime);			break;
-		    case I_PLAYER_SELECT_MEEPLE_POSITION:			loopState = i_playerSelectMeeplePosition();                 break;
-		    case HUMAN_SELECT_MEEPLE_POSITION:				loopState = humanSelectMeeplePosition(inputEvents);		    break;
-		    case TC_START_SELECT_MEEPLE_POSITION:			loopState = tcStartSelectMeeplePosition();					break;
-		    case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:		loopState = tcWaitForSelectedMeeplePosition(); 	            break;
-		    case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);		break;
-		    case CHECK_END_CONDITION:						loopState = checkEndCondition();							break;
-		    case DISPLAY_END_SCREEN:			            gameMenuDecision = displayEndscreen(inputEvents, elapsedTime); break;
-		}
+          
+        if (inputEvents.hasFocus){
+		    switch (loopState)
+		    {
+		        case INIT_STATE:                                //todo das stimmt no ned ganz human iplayer und tc !!!!
+			                                                    loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
+			                                                    break;
+		        case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();			                break;
+		        case HUMAN_SELECT_MEEPLE:						loopState =  humanSelectMeeple(inputEvents);				break;
+                case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();							break;
+		        case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();		                break;
+		        case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple(elapsedTime);			break;
+		        case I_PLAYER_SELECT_MEEPLE_POSITION:			loopState = i_playerSelectMeeplePosition();                 break;
+		        case HUMAN_SELECT_MEEPLE_POSITION:				loopState = humanSelectMeeplePosition(inputEvents);		    break;
+		        case TC_START_SELECT_MEEPLE_POSITION:			loopState = tcStartSelectMeeplePosition();					break;
+		        case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:		loopState = tcWaitForSelectedMeeplePosition(); 	            break;
+		        case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);		break;
+		        case CHECK_END_CONDITION:						loopState = checkEndCondition();							break;
+		        case DISPLAY_END_SCREEN:			            gameMenuDecision = displayEndscreen(inputEvents, elapsedTime); break;
+		    }
+        }
 
 		std::string title("4Wins by Jakob M., Sebastian S. and Simon D.   @");
 		title.append(std::to_string(fps));
@@ -273,6 +292,7 @@ GameMenuDecision::Enum Game::runGame(){
             firstFrameOfState = false;
         }
 	}
+    backgroundMusic->stop();
     return gameMenuDecision;
 }
 
@@ -285,14 +305,8 @@ void Game::createMeepleDust(sf::FloatRect fieldBounds){
     particleSystem->newParticleCloud(20, *dustBuilder);
 }
 
-
-
-
-
-
-
 InputEvents Game::pollEvents(){
-    static InputEvents events = { false, false, false, { 0, 0 } };
+    static InputEvents events = { false, false, false, true, { 0, 0 } };
 
     events.pressedLeftMouse = false;
     events.releasedLeftMouse = false;
@@ -308,17 +322,12 @@ InputEvents Game::pollEvents(){
                         break;
                     case sf::Mouse::Right:
                         events.rightMouseButtonPressed = true;
-						/*background->setLeftWindow(true);
-						background->setRightWindow(true);*/
+						background->setLeftWindow(true);
+						background->setRightWindow(true);
                         break;
-                    case sf::Mouse::Middle:
-                    case sf::Mouse::XButton1:
-                    case sf::Mouse::XButton2:
-                    case sf::Mouse::ButtonCount:
                     default: break;
                 }
                 break;
-
 			case sf::Event::MouseButtonReleased:
 				switch (event.mouseButton.button){
 				    case sf::Mouse::Left:
@@ -326,21 +335,12 @@ InputEvents Game::pollEvents(){
 					    break;
                     case sf::Mouse::Right:
                         events.rightMouseButtonPressed = false;
-						/*background->setLeftWindow(false);
-						background->setRightWindow(false);*/
+						background->setLeftWindow(false);
+						background->setRightWindow(false);
                         break;
-				    case sf::Mouse::Middle: 
-				    case sf::Mouse::XButton1: 
-				    case sf::Mouse::XButton2: 
-				    case sf::Mouse::ButtonCount: 
 				    default: break;
 				}
 				break;
-
-			/*case sf::Event::MouseMoved:
-				convertedMousePos = window->mapPixelToCoords(mousepos);
-				break;*/
-
 			case sf::Event::Resized:
 				handleResizeWindowEvent(window);
 				break;
@@ -348,19 +348,28 @@ InputEvents Game::pollEvents(){
 			case sf::Event::Closed:
 				window->close();
 				break;
-
-			default:
-				break;
+            case sf::Event::LostFocus:
+                events.hasFocus = false;
+                backgroundMusic->pause();
+                soundManager->getMusic(SoundManager::SHEEP)->play();
+                break;
+            case sf::Event::GainedFocus:
+                events.hasFocus = true;
+                backgroundMusic->play();
+                break;
 		}
 	}
     return events;
 }
 
-
 void Game::switchActivePlayer(){
 	++activePlayerIndex;
 	activePlayerIndex %= 2;
 }
+
+
+
+
 
 Game::LoopState Game::i_playerSelectMeeple(){
 	assert(players[activePlayerIndex]->type == Player::I_PLAYER);
@@ -381,6 +390,7 @@ Game::LoopState Game::humanSelectMeeple(InputEvents inputEvents){
 
             switchActivePlayer();
             hoveredMeeple = nullptr;
+            soundManager->getMusic(SoundManager::SELECT)->play();
             if (players[activePlayerIndex]->type == Player::TC){
                 return TC_START_SELECT_MEEPLE_POSITION;
             }
@@ -431,7 +441,7 @@ Game::LoopState Game::highlightSelectedMeeple(float elapsedTime){
     }   
 	 	
 	selectedMeeple->setGlow(&SELECTED_MEEPLE_GLOW_COLOR);
-	
+    soundManager->getMusic(SoundManager::SELECT)->play();
 	switchActivePlayer();
     return players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE_POSITION : TC_START_SELECT_MEEPLE_POSITION;
 }
@@ -464,7 +474,12 @@ Game::LoopState Game::humanSelectMeeplePosition(InputEvents inputEvents){
 		sf::Vector2f lookupPos = selectedMeeple->getCoords();
 		BoardPos pos = board->getBoardPosForPosititon(lookupPos);
 		if ((pos.x < 4 && pos.y < 4) && logicalBoard->isFieldEmpty(pos)){
-            selectedMeeple->setPosition(board->getFieldCoords(pos));                       
+            /*The following code can be used to change the sound volume + dust number relative to the distance of the meeple <-> field...
+            sf::Vector2f meepleDropOffCoords = selectedMeeple->getPosition();
+            sf::Vector2f fieldCoords = board->getFieldCoords(pos);
+            sf::Vector2f diff(fieldCoords.x - meepleDropOffCoords.x, fieldCoords.y - meepleDropOffCoords.y);
+            float distanceToField = sqrt(diff.x * diff.x + diff.y * diff.y);*/
+            selectedMeeple->setPosition(board->getFieldCoords(pos));
 			players[activePlayerIndex]->rbag->changeRMeepleToUsed(*selectedMeeple);
 
             Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*(selectedMeeple->getLogicalMeeple()));
@@ -472,9 +487,11 @@ Game::LoopState Game::humanSelectMeeplePosition(InputEvents inputEvents){
 			selectedMeeple->setGlow(nullptr);
 			selectedMeeple = nullptr;
 			board->setHoveredField({ 42, 42 });
-
+            soundManager->getMusic(SoundManager::MEEPLE_DROP)->play();
+            if (rand()%100 <= OH_YEAH_PROPABILITY){
+                soundManager->getMusic(SoundManager::OH_YEAH)->play();
+            }
             createMeepleDust(board->getFieldGlobalBounds(pos));
-
 			return CHECK_END_CONDITION;
 		}
 		selectedMeeple->setPosition(originalMeeplePosition);
@@ -537,7 +554,10 @@ Game::LoopState Game::moveMeepleToSelectedPosition(float elapsedTime){
         logicalBoard->setMeeple(selectedBoardPos, *placeMe);
 
         selectedMeeple->setPosition(targetPosition);
-
+        soundManager->getMusic(SoundManager::MEEPLE_DROP)->play();
+        if (rand() % 100 <= OH_YEAH_PROPABILITY){
+            soundManager->getMusic(SoundManager::OH_YEAH)->play();
+        }
         createMeepleDust(board->getFieldGlobalBounds(selectedBoardPos));
         return CHECK_END_CONDITION;
     }
@@ -554,11 +574,13 @@ Game::LoopState Game::checkEndCondition(){
 	#if PRINT_WINNER_PER_ROUND
 		std::cout << "Player " << activePlayerIndex + 1 << " wins!" << std::endl;
 	#endif
-
+            
+    //The meeple has just been placed. Sound is played soon
 	selectedMeeple = nullptr;
-
+    
 	const WinCombination* combi = logicalBoard->checkWinSituation();
-	if (combi != nullptr){
+	
+    if (combi != nullptr){
 		for (uint8_t i = 0; i < 4; ++i){
 			RMeeple* temp = players[activePlayerIndex]->rbag->getRmeepleFromUsed(combi->meeples[i]);
 			if (temp == nullptr){
@@ -568,8 +590,10 @@ Game::LoopState Game::checkEndCondition(){
 			}
 			assert(winningCombiRMeeples[i] != nullptr);
 		}
+        soundManager->getMusic(SoundManager::MEEPLE_WIN_DROP)->play();
 		return DISPLAY_END_SCREEN;
 	}
+    
 	if (activePlayerIndex == 1 && logicalBoard->isFull()){
 	    #if PRINT_WINNER_PER_ROUND
 			    std::cout << "Tie! There is no winner." << std::endl;
@@ -601,6 +625,10 @@ GameMenuDecision::Enum Game::displayEndscreen(InputEvents inputEvents, float ela
         for (uint8_t i = 0; i < 4; i++){
             colorAnimations[i].init(4, i*20);
         }        
+        backgroundMusic->stop();
+        backgroundMusic = soundManager->getMusic(SoundManager::WIN_MUSIC);
+        backgroundMusic->setPlayingOffset(sf::seconds(36.f));
+        backgroundMusic->play();
     }
 
     //Animate rainbow-colors on the meeples, which were responsible for the winning-combination:  
@@ -634,6 +662,7 @@ GameMenuDecision::Enum Game::displayEndscreen(InputEvents inputEvents, float ela
             menuButton.setFillColor(GAME_MENU_BUTTON_HOVER_COLOR);
             hoveredButtonPtr = &menuButton;
             if (inputEvents.releasedLeftMouse){
+                soundManager->getMusic(SoundManager::SHEEP)->play();
                 return GameMenuDecision::BACK_TO_MENU;
             }
 	    }

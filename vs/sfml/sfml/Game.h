@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio/Music.hpp>
 #include <cstdint>
 #include <vector>
 
@@ -12,6 +13,8 @@
 #include "ColorAnimation.h"
 #include "helper.h"
 
+
+class SoundManager;
 class RBackground;
 class ParticleBuilder;
 class ParticleSystem;
@@ -56,6 +59,7 @@ struct InputEvents{
     bool pressedLeftMouse;
     bool releasedLeftMouse;
     bool rightMouseButtonPressed;
+    bool hasFocus;
 
     sf::Vector2f mousePosition;
 };
@@ -64,7 +68,10 @@ class Game{
 private:
 	sf::RenderWindow* window;
 	ResourceManager* resourceManager;
+    SoundManager* soundManager;
+
 	RBackground* background;
+    sf::Music* backgroundMusic;
 
 	enum LoopState{
 		INIT_STATE,
@@ -87,8 +94,7 @@ private:
     Player* players[2];
     GameState* gameStates[2];                       //stores the gamestate for player 1 (buffered)
     std::vector<RMeeple*> meeplesToDrawAndSort;     //Contains all 16 meeples (additionally to the bags) in order to sort them for drawing
-
-
+    
 	    const sf::Color HOVERED_MEEPLE_GLOW_COLOR;
 	    const sf::Color SELECTED_MEEPLE_GLOW_COLOR;
     
@@ -161,7 +167,7 @@ private:
 	    void createMeepleDust(sf::FloatRect fieldBounds);        
     Game& operator = (const Game&);
 public:
-    Game(sf::RenderWindow& window, Player* players[2], ResourceManager& resourceLoader); //Initialises the game with 2 players
+    Game(sf::RenderWindow& window, Player* players[2], ResourceManager& resourceLoader, SoundManager& soundManager); //Initialises the game with 2 players
 	virtual ~Game();
 	GameMenuDecision::Enum runGame();           //Runs the game, until it is over; returns the winner
 
