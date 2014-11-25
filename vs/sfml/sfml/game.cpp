@@ -35,6 +35,7 @@
 
 #define DUST_X_OFFSET -10     //X-Offset for producing dust when placing a meeple
 #define OH_YEAH_PROPABILITY 25
+#include <iostream>
 
 Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resourceManager, SoundManager& soundManager) :
             window(&window), 
@@ -234,7 +235,7 @@ GameMenuDecision::Enum Game::runGame(){
 		    {
 		        case INIT_STATE:                                //todo das stimmt no ned ganz human iplayer und tc !!!!
 			                                                    loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
-			                                                    break;
+																break;
 		        case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();			                break;
 		        case HUMAN_SELECT_MEEPLE:						loopState =  humanSelectMeeple(inputEvents);				break;
                 case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();							break;
@@ -365,6 +366,17 @@ InputEvents Game::pollEvents(){
 void Game::switchActivePlayer(){
 	++activePlayerIndex;
 	activePlayerIndex %= 2;
+
+	if (activePlayerIndex == 0)
+	{
+		background->setLeftWindow(false);
+		background->setRightWindow(true);
+	}
+	else
+	{
+		background->setLeftWindow(true);
+		background->setRightWindow(false);
+	}
 }
 
 
