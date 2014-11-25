@@ -66,7 +66,7 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resou
             particleSystem( new ParticleSystem(*resourceManager.getTexture(ResourceManager::PARTICLE_SPRITE), sf::Vector2u(4, 2)) ),
             dustBuilder( new ParticleBuilder( { 300, 300 }, { 5, 30 }) ),
             mouseCursorParticleBuilder( new ParticleBuilder({ 300, 300 }, { 5, 30 }) ),
-            endScreenParticleBuilder( new ParticleBuilder({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 }) ), 
+            endScreenParticleBuilder( new ParticleBuilder({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 10, 30 }) ), 
     
             selectedMeeple(nullptr),  
             selectedBoardPos(),
@@ -128,12 +128,12 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resou
             ->setPath({ 5, 150 })
             ->setGravity(120, 90)
             ->setRotation({ 0, 600 }, { 0.1, 3.5 });   
-        endScreenParticleBuilder->setSprites({ 0, 1 }, { 0, 1 })
+        endScreenParticleBuilder->setSprites({ 0, 2 }, { 0, 2 })
             ->setDynamicColor()
             ->setPath({ 10, 200 }, { 275, 350 })
             ->setGravity(30)
             ->setRotation({ 100, 600 }, { -1, 3 })
-            ->setFadeoutSpeed({ 35, 65 });
+            ->setFadeoutSpeed({ 35, 55 });
 }
 
 
@@ -618,7 +618,7 @@ Game::LoopState Game::checkEndCondition(){
 GameMenuDecision::Enum Game::displayEndscreen(InputEvents inputEvents, float elapsedTime){
 	assert(winningCombiRMeeples[0] != nullptr && winningCombiRMeeples[1] != nullptr && winningCombiRMeeples[2] != nullptr && winningCombiRMeeples[3] != nullptr);
 
-    if (firstFrameOfState || rand() % 100 < 50){
+    if (firstFrameOfState || rand() % 100 < 70){
 		int particle_count = 1;
 		endScreenParticleBuilder->setPosition({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 5, 30 })
 			->setPath({ 10, 200 }, { 275, 350 });
