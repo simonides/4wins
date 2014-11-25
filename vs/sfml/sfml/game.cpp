@@ -639,8 +639,8 @@ GameMenuDecision::Enum Game::displayEndscreen(InputEvents inputEvents, float ela
         }        
         backgroundMusic->stop();
         backgroundMusic = soundManager->getMusic(SoundManager::WIN_MUSIC);
-        backgroundMusic->setPlayingOffset(sf::seconds(36.f));
         backgroundMusic->play();
+        backgroundMusic->setPlayingOffset(sf::seconds(36.f));
     }
 
     //Animate rainbow-colors on the meeples, which were responsible for the winning-combination:  

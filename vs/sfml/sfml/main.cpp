@@ -71,7 +71,7 @@ int main(){
     players[0]->meepleChoosingThinkTime = { 0, 0.4 };
 
     players[1] = new Player();
-    players[1]->type = Player::TC;
+    players[1]->type = Player::HUMAN;
     players[1]->player = nullptr;
     players[1]->controller = tc2;
     players[1]->playerAvatar = ResourceManager::RONALD;
