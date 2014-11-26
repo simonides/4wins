@@ -21,6 +21,8 @@ private:
 	sf::Texture particleSprite;
 	sf::Texture avatarSprite;
 
+	sf::Texture menuAtlas;
+
 	void loadResourcesFromFileSys(bool setSmooth); // invoked by the constructor
 
 public:
@@ -36,13 +38,15 @@ public:
 		BACKGROUND_TEX,
 		EXIT_BTN_TEX, RELOAD_BTN_TEX, MENU_BTN_TEX,
 		PARTICLE_SPRITE,
-		AVATAR_SPRITE
+		AVATAR_SPRITE,
+		MENU_ATLAS
 	};
 
 	enum ResourceRect
 	{
-		BACKGROUND, BACKGROUND_WINDOW, 
-		MR_PROPER, UNCLE_BENS, RONALD, SMILEY, ELLE
+		BACKGROUND, BACKGROUND_WINDOW,
+		MR_PROPER, UNCLE_BENS, RONALD, SMILEY, ELLE,
+		MENU_HEADLINE, MENU_STARTBTN, MENU_STARTBTN_H, MENU_FRAME_UP, MENU_FRAME_DOWN
 	};
 	ResourceManager();
 

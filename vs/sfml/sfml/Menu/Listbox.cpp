@@ -34,9 +34,7 @@ void FourWins::Menu::Listbox::init()
 	this->container->setFillColor(Menu::BACKGROUND_COLOR);
 
 	this->topBox->setSize(sf::Vector2f(208.0f, 30.0f));
-	this->topBox->setTextureRect(sf::IntRect(851, 0, 208, 30));
 	this->bottomBox->setSize(sf::Vector2f(208.0f, 30.0f));
-	this->bottomBox->setTextureRect(sf::IntRect(851, 32, 208, 30));
 
 	for (unsigned int i = 0; i < Listbox::ENTRY_COUNT; ++i)
 	{
@@ -91,6 +89,16 @@ void FourWins::Menu::Listbox::setStringForEntry(unsigned int index, const sf::St
 	{
 		this->entries[index].setString(text);
 	}
+}
+
+void FourWins::Menu::Listbox::setTopTextureRect(const sf::IntRect &rect)
+{
+	this->topBox->setTextureRect(rect);
+}
+
+void FourWins::Menu::Listbox::setBottomTextureRect(const sf::IntRect &rect)
+{
+	this->bottomBox->setTextureRect(rect);
 }
 
 unsigned char FourWins::Menu::Listbox::getValueOfActive() const

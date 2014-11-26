@@ -54,7 +54,7 @@ int main(){
 	sf::RenderWindow* window = setupWindow();
 
 	Menu::MainMenu* menu = new Menu::MainMenu(*window);
-	menu->init();
+	menu->init(resourceManager);
 	
 	I_Player* player1 = new StupidAI();
     I_Player* player2 = new SmartAI(true, true);
@@ -84,7 +84,7 @@ int main(){
 
     while (window->isOpen()){
         if (gameMenuDecision == GameMenuDecision::BACK_TO_MENU){
-            //menu->loop();
+            menu->loop();
         }
         		
 		gameMenuDecision = game->runGame();

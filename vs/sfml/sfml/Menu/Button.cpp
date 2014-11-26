@@ -22,16 +22,6 @@ FourWins::Menu::Button::~Button()
 
 void FourWins::Menu::Button::init()
 {
-	this->textureRect->left = 500;
-	this->textureRect->top = 0;
-	this->textureRect->width = 350;
-	this->textureRect->height = 60;
-
-	this->textureHighlightRect->left = 500;
-	this->textureHighlightRect->top = 64;
-	this->textureHighlightRect->width = 350;
-	this->textureHighlightRect->height = 60;
-
 	this->background->setSize(sf::Vector2f(350.0f, 60.0f));
 	this->background->setPosition(sf::Vector2f(500.0f, 550.0f));
 	this->background->setTextureRect(*this->textureRect);

@@ -77,6 +77,12 @@ void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 		assert(false);
 	}
 	menuButtonTexture.setSmooth(setSmooth);
+
+	if (!menuAtlas.loadFromFile(WORKING_DIR + "menu_atlas.png")){
+		std::cerr << "Couldn't load the texture: menu_atlas" << std::endl;
+		assert(false);
+	}
+	menuAtlas.setSmooth(setSmooth);
 }
 
 
@@ -95,6 +101,7 @@ sf::Texture* ResourceManager::getTexture(ResourceTexture textureType)
 	case MENU_BTN_TEX:			return &menuButtonTexture;
 	case PARTICLE_SPRITE:		return &particleSprite;
 	case AVATAR_SPRITE:			return &avatarSprite;
+	case MENU_ATLAS:			return &menuAtlas;
 	default:					return &exitButtonTexture;
 	
 
@@ -113,6 +120,11 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case ELLE:				return sf::IntRect(0, 194, 128, 194);
 	case BACKGROUND:		return sf::IntRect(0, 0, 135, 68);
 	case BACKGROUND_WINDOW: return sf::IntRect(4, 70, 31, 49);
+	case MENU_HEADLINE:		return sf::IntRect(0, 0, 500, 140);
+	case MENU_STARTBTN:		return sf::IntRect(500, 0, 350, 60);
+	case MENU_STARTBTN_H:	return sf::IntRect(500, 64, 350, 60);
+	case MENU_FRAME_UP:		return sf::IntRect(851, 0, 208, 30);
+	case MENU_FRAME_DOWN:	return sf::IntRect(851, 32, 208, 30);
 	default:				return sf::IntRect(0, 0, 16, 16);//default something
 	}
 }

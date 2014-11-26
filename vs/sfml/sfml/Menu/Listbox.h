@@ -42,6 +42,8 @@ namespace FourWins
 			void setTexture(const sf::Texture *texture);
 			void setValueForEntry(unsigned int index, unsigned char value);
 			void setStringForEntry(unsigned int index, const sf::String &text);
+			void setTopTextureRect(const sf::IntRect &rect);
+			void setBottomTextureRect(const sf::IntRect &rect);
 			unsigned char getValueOfActive() const;
 			void update(const sf::Event &e, const sf::Vector2f &mousePosition);
 			void draw();

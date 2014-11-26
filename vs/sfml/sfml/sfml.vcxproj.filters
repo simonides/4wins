@@ -153,10 +153,10 @@
     <ClCompile Include="ParticleBuilder.cpp">
       <Filter>Source Files\ParticleSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Menu\ListboxEntry.cpp">
+    <ClCompile Include="Menu\Checkbox.cpp">
       <Filter>Source Files\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="Menu\Checkbox.cpp">
+    <ClCompile Include="Menu\ListboxEntry.cpp">
       <Filter>Source Files\Menu</Filter>
     </ClCompile>
   </ItemGroup>
@@ -251,10 +251,10 @@
     <ClInclude Include="ParticleSystem.h">
       <Filter>Header Files\ParticleSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Menu\ListboxEntry.h">
+    <ClInclude Include="Menu\Checkbox.h">
       <Filter>Header Files\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="Menu\Checkbox.h">
+    <ClInclude Include="Menu\ListboxEntry.h">
       <Filter>Header Files\Menu</Filter>
     </ClInclude>
   </ItemGroup>

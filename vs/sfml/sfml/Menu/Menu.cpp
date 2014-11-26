@@ -4,6 +4,7 @@
 #include "../config.h"
 #include "../helper.h"
 #include "../ThinkingAI.h"
+#include "../ResourceManager.h"
 #include "MenuConstants.h"
 #include "Listbox.h"
 #include "Checkbox.h"
@@ -15,9 +16,6 @@ using namespace FourWins;
 
 FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window) :
 	window(&window),
-	font(new sf::Font()),
-	textureAtlas(new sf::Texture()),
-	backgroundTexture(new sf::Texture()),
 	backgroundShape(new sf::RectangleShape()),
 	headlineShape(new sf::RectangleShape()),
 	labelPlayer1(new sf::Text()),
@@ -31,9 +29,6 @@ FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window) :
 
 FourWins::Menu::MainMenu::~MainMenu()
 {
-	delete this->font;
-	delete this->textureAtlas;
-	delete this->backgroundTexture;
 	delete this->backgroundShape;
 	delete this->headlineShape;
 	delete this->labelPlayer1;
@@ -43,37 +38,37 @@ FourWins::Menu::MainMenu::~MainMenu()
 	delete this->btnStart;
 }
 
-void FourWins::Menu::MainMenu::init()
+void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 {
-	if (!loadRessources())
-	{
-		std::cerr << "error: ressources missing." << std::endl;
-		exit(-1);
-	}
+	const sf::Texture *menuAtlas = resourceManager.getTexture(resourceManager.MENU_ATLAS);
+	const sf::Font *font = resourceManager.getFont(resourceManager.ROBOTO);
 
-	this->backgroundShape->setTexture(this->backgroundTexture);
+	this->backgroundShape->setTexture(resourceManager.getTexture(resourceManager.BACKGROUND_TEX));
+	this->backgroundShape->setTextureRect(resourceManager.getTextureRect(resourceManager.BACKGROUND));
 	this->backgroundShape->setSize(sf::Vector2f(static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE)));
 
-	this->headlineShape->setTexture(this->textureAtlas);
+	this->headlineShape->setTexture(menuAtlas);
 	this->headlineShape->setTextureRect(sf::IntRect(0, 0, 500, 140));
 	this->headlineShape->setSize(sf::Vector2f(500.0f, 140.0f));
 	this->headlineShape->setPosition(sf::Vector2f(425.0f, 40.0f));
 
-	this->labelPlayer1->setFont(*this->font);
+	this->labelPlayer1->setFont(*font);
 	this->labelPlayer1->setString("Select player 1:");
 	this->labelPlayer1->setCharacterSize(30u);
 	this->labelPlayer1->setColor(Menu::LABEL_COLOR);
-	this->labelPlayer1->setPosition(sf::Vector2f(400.0f, 200.0f));
+	this->labelPlayer1->setPosition(sf::Vector2f(417.0f, 200.0f));
 
-	this->labelPlayer2->setFont(*this->font);
+	this->labelPlayer2->setFont(*font);
 	this->labelPlayer2->setString("Select player 2:");
 	this->labelPlayer2->setCharacterSize(30u);
 	this->labelPlayer2->setColor(Menu::LABEL_COLOR);
-	this->labelPlayer2->setPosition(sf::Vector2f(700.0f, 200.0f));
+	this->labelPlayer2->setPosition(sf::Vector2f(725.0f, 200.0f));
 
 	this->lbPlayer1->init();
-	this->lbPlayer1->setFont(*this->font);
-	this->lbPlayer1->setTexture(this->textureAtlas);
+	this->lbPlayer1->setFont(*font);
+	this->lbPlayer1->setTexture(menuAtlas);
+	this->lbPlayer1->setTopTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_UP));
+	this->lbPlayer1->setBottomTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_DOWN));
 	this->lbPlayer1->setPosition(sf::Vector2f(437.0f, 275.0f));
 	this->lbPlayer1->setStringForEntry(0, "Human Player");
 	this->lbPlayer1->setValueForEntry(0, 'h');
@@ -87,8 +82,10 @@ void FourWins::Menu::MainMenu::init()
 	this->lbPlayer1->setValueForEntry(4u, 't');
 
 	this->lbPlayer2->init();
-	this->lbPlayer2->setFont(*this->font);
-	this->lbPlayer2->setTexture(this->textureAtlas);
+	this->lbPlayer2->setFont(*font);
+	this->lbPlayer2->setTexture(menuAtlas);
+	this->lbPlayer2->setTopTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_UP));
+	this->lbPlayer2->setBottomTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_DOWN));
 	this->lbPlayer2->setPosition(sf::Vector2f(745.0f, 275.0f));
 	this->lbPlayer2->setStringForEntry(0, "Human Player");
 	this->lbPlayer2->setValueForEntry(0, 'h');
@@ -102,13 +99,15 @@ void FourWins::Menu::MainMenu::init()
 	this->lbPlayer2->setValueForEntry(4u, 't');
 
 	this->cb->init();
-	this->cb->setFont(*this->font);
+	this->cb->setFont(*font);
 	this->cb->setLabelText("Think");
 	this->cb->setCharacterSize(24u);
 	this->cb->setPosition(sf::Vector2f(100.0f, 100.0f));
 
 	this->btnStart->init();
-	this->btnStart->setTexture(this->textureAtlas);
+	this->btnStart->setTexture(menuAtlas);
+	this->btnStart->setTextureRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN));
+	this->btnStart->setTextureHighlightRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN_H));
 }
 
 GameSettings FourWins::Menu::MainMenu::loop()
@@ -177,28 +176,6 @@ GameSettings FourWins::Menu::MainMenu::createSettings()
 	settings.playerTwo = thinking;
 
 	return settings;
-}
-
-bool FourWins::Menu::MainMenu::loadRessources()
-{
-	if (!this->font->loadFromFile(WORKING_DIR + "Fonts/roboto/Roboto-Regular.ttf"))
-	{
-		return false;
-	}
-
-	if (!this->backgroundTexture->loadFromFile(WORKING_DIR + "background2.png"))
-	{
-		return false;
-	}
-	this->backgroundTexture->setSmooth(true);
-
-	if (!this->textureAtlas->loadFromFile(WORKING_DIR + "menu_atlas.png"))
-	{
-		return false;
-	}
-	this->textureAtlas->setSmooth(true);
-
-	return true;
 }
 
 //if (event.type == sf::Event::KeyPressed){
