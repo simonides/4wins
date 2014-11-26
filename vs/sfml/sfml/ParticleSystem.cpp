@@ -8,9 +8,9 @@
 #include <cstdlib>
 
 #include "config.h"
-#include "ColorAnimator.h"
+#include "ColorAnimation.h"
 
-#define PARTICLE_DELETE_HORIZON 50          //If a particle is outside of the window with a distance of PARTICLE_DELETE_HORIZON units, it will be deleted
+#define PARTICLE_DELETE_HORIZON 30          //If a particle is outside of the window with a distance of PARTICLE_DELETE_HORIZON units, it will be deleted
 
 
 ParticleSystem::ParticleSystem(sf::Texture& particleSprites, sf::Vector2u spriteCount) : particleSprites(particleSprites), spriteCount(spriteCount){
@@ -45,25 +45,28 @@ void ParticleSystem::newParticleCloud(unsigned int newParticleCount, ParticleBui
 
 void ParticleSystem::update(float elapsedTime){
     assert(elapsedTime > 0);
+
     for (unsigned int i = 0; i < particleCount; ++i){
         //Path:
              particles[i].shape.move( particles[i].direction.x * elapsedTime,  particles[i].direction.y * elapsedTime);            
              particles[i].shape.move( particles[i].gravity.x * elapsedTime,  particles[i].gravity.y * elapsedTime);
         //Rotation:
              particles[i].shape.rotate( particles[i].rotationSpeed * elapsedTime);
-        //Color:
-             particles[i].colorProgress +=  particles[i].colorSpeed *elapsedTime;
-            while ( particles[i].colorProgress > 255){
-                 particles[i].colorProgress -= 255;
-                 particles[i].nextColor = ( particles[i].nextColor+1)%6;                
-            }
         //Transparency:
-             particles[i].alpha -=  particles[i].fadeoutSpeed *elapsedTime;
-             if ( particles[i].alpha < 0){  particles[i].alpha = 0; }
-             particles[i].shape.setFillColor(ColorAnimator::getInterpolatedColor( particles[i].nextColor,  particles[i].colorProgress, static_cast<sf::Uint8>( particles[i].alpha)));
+             particles[i].alpha -= particles[i].fadeoutSpeed * elapsedTime;
+             if (particles[i].alpha < 0){ particles[i].alpha = 0; }          
+        //Color:
+             if (!particles[i].staticColor){            //Do we have dynamic colors?
+                 particles[i].colorAnimation.animate(elapsedTime);              
+                 particles[i].shape.setFillColor(particles[i].colorAnimation.getColor(static_cast<sf::Uint8>(particles[i].alpha)));
+             }else{
+                 sf::Color color = particles[i].shape.getFillColor();
+                 color.a = static_cast<sf::Uint8>(particles[i].alpha);
+                 particles[i].shape.setFillColor(color);
+             }             
         //Delete if invisible:
             sf::Vector2f pos =  particles[i].shape.getPosition();
-            if( particles[i].alpha <= 0 || 
+            if( particles[i].alpha <= 0.1 || 
                 pos.x < -PARTICLE_DELETE_HORIZON || pos.x > WINDOW_WIDTH_TO_CALCULATE  + PARTICLE_DELETE_HORIZON ||
                 pos.y < -PARTICLE_DELETE_HORIZON || pos.y > WINDOW_HEIGHT_TO_CALCULATE + PARTICLE_DELETE_HORIZON ){
 

@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\..\sfml2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\sfml2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\..\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\..\sfml2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\sfml2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\..\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -58,11 +58,12 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-audio-d.lib;sfml-window-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-network-d.lib;sfml-window-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,30 +74,31 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>sfml-graphics.lib;sfml-audio.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-audio-s.lib;sfml-graphics-s.lib;sfml-network-s.lib;sfml-window-s.lib;sfml-system-s.lib;sndfile.lib;openal32.lib;jpeg.lib;glew.lib;freetype.lib;ws2_32.lib;gdi32.lib;opengl32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ColorAnimator.cpp" />
+    <ClCompile Include="ColorAnimation.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="GameSimulator.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="helper.cpp" />
-    <ClCompile Include="Menu\Checkbox.cpp" />
-    <ClCompile Include="Menu\ListboxEntry.cpp" />
     <ClCompile Include="ParticleBuilder.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="RBackground.cpp" />
     <ClCompile Include="RBag.cpp" />
     <ClCompile Include="RBoard.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RField.cpp" />
     <ClCompile Include="RMeeple.cpp" />
     <ClCompile Include="SmartAI.cpp" />
@@ -111,21 +113,22 @@
     <ClCompile Include="Menu\Menu.cpp" />
     <ClCompile Include="Menu\MenuConstants.cpp" />
     <ClCompile Include="RandomAI.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StupidAI.cpp" />
     <ClCompile Include="ThinkingAI.cpp" />
     <ClCompile Include="ThreadController.cpp" />
     <ClCompile Include="ThreadedGameSimulator.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ColorAnimator.h" />
+    <ClInclude Include="ColorAnimation.h" />
     <ClInclude Include="GameSimulator.h" />
     <ClInclude Include="GameState.h" />
-    <ClInclude Include="Menu\Checkbox.h" />
-    <ClInclude Include="Menu\ListboxEntry.h" />
     <ClInclude Include="ParticleBuilder.h" />
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="RBackground.h" />
     <ClInclude Include="RBag.h" />
     <ClInclude Include="RBoard.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RField.h" />
     <ClInclude Include="SmartAI.h" />
     <ClInclude Include="I_AI.h" />
@@ -141,6 +144,7 @@
     <ClInclude Include="RandomAI.h" />
     <ClInclude Include="Menu\Listbox.h" />
     <ClInclude Include="RMeeple.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StupidAI.h" />
     <ClInclude Include="ThinkingAI.h" />
     <ClInclude Include="ThreadController.h" />

@@ -104,7 +104,7 @@ int* ThinkingAI::buildScoreMap(const GameState& gameState, const Meeple& meepleT
     //go through the whole map, and add points if the meeple should be set there
     //  --> check all possible combinations, which can lead to a victory (4 in a row/col/diagonal)
     //  --> look at all meeples, that are already placed in the combination (0-4 meeples)
-    //  --> check, if these meeples have any similarities with the meepleToSet. Calculate matching-points - the more similarities, the better
+    //  --> check, if these meeples have any similarities with the selectedMeeple. Calculate matching-points - the more similarities, the better
     //  --> add the matching-points to all fields in the combination, where no meeple is currently placed
     //(Afterwards, go through the scoreMap, and choose the field with the most points)
 
@@ -174,7 +174,7 @@ BoardPos ThinkingAI::getOptimalScoreMapPosition(int* scoreMap, bool printScoreMa
 
 int ThinkingAI::getPointsForCombination(const GameState& gameState, const WinCombination& winCombination, const Meeple& meepleToSet) const{
     //returns points for all un-occupied fields in the winCombination (more points, if the AI should place it's meeple there)
-    // --> take each property of the meepleToSet
+    // --> take each property of the selectedMeeple
     // --> go through all meeples in the combination-set. If a meeple has the same property, add some points.
     // --> if the meeple has a different property, remove some points (we would block the field for further usage)
 

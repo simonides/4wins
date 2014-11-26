@@ -113,6 +113,7 @@ void FourWins::Menu::MainMenu::init()
 
 GameSettings FourWins::Menu::MainMenu::loop()
 {
+	startGame = false;
 	while (this->window->isOpen() && !this->startGame)
 	{
 		pollEvents();

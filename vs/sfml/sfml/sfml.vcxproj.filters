@@ -49,6 +49,18 @@
     <Filter Include="Source Files\Menu">
       <UniqueIdentifier>{ad006007-0ed7-43ae-b100-00ebd8a6f333}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resources">
+      <UniqueIdentifier>{8bbe236a-1d9c-4cde-834a-61d9972d531e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Resources">
+      <UniqueIdentifier>{4498b21b-0efd-44c4-b239-1c81fca530fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ParticleSystem">
+      <UniqueIdentifier>{191c3a44-bb4a-47be-9a8e-f8d1fe85d6f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ParticleSystem">
+      <UniqueIdentifier>{907cfa44-ee4d-4cec-a8ad-c97672466ff5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MeepleBag.cpp">
@@ -123,14 +135,23 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
+    <ClCompile Include="ColorAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RBackground.cpp">
+      <Filter>Source Files\REntities</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
-      <Filter>Source Files\Game</Filter>
+      <Filter>Source Files\ParticleSystem</Filter>
     </ClCompile>
     <ClCompile Include="ParticleBuilder.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorAnimator.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ParticleSystem</Filter>
     </ClCompile>
     <ClCompile Include="Menu\ListboxEntry.cpp">
       <Filter>Source Files\Menu</Filter>
@@ -212,14 +233,23 @@
     <ClInclude Include="GameState.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
-      <Filter>Header Files\Game</Filter>
+    <ClInclude Include="ColorAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RBackground.h">
+      <Filter>Header Files\REntities</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Header Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ParticleBuilder.h">
-      <Filter>Header Files\Game</Filter>
+      <Filter>Header Files\ParticleSystem</Filter>
     </ClInclude>
-    <ClInclude Include="ColorAnimator.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Header Files\ParticleSystem</Filter>
     </ClInclude>
     <ClInclude Include="Menu\ListboxEntry.h">
       <Filter>Header Files\Menu</Filter>

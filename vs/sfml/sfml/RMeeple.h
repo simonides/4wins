@@ -39,7 +39,7 @@ public:
 
 	float RMeeple::getYPos() const;
 		
-	sf::Vector2f RMeeple::getGlobalOrigin() const;
+	sf::Vector2f RMeeple::getCoords() const;
 
 	void reset();
 

@@ -13,7 +13,7 @@ private:
 	void RBoard::initFields(sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied);
 	BoardPos RBoard::getBoardPosforCounter(uint8_t counter);
 public:
-	RBoard(sf::Texture& boardTexture, sf::Texture& fieldTexture, sf::Texture& fieldTextureOccupied);
+	RBoard(sf::Texture& boardTexture,  sf::Texture& fieldTexture,  sf::Texture& fieldTextureOccupied);
 	~RBoard();
 	
 	void draw(sf::RenderWindow& window) const; 
@@ -25,6 +25,6 @@ public:
 	void setHoveredField(const BoardPos boardPos);
 
 	sf::FloatRect getFieldGlobalBounds(const BoardPos boardPos) const;
-
+    sf::Vector2f getFieldCoords(const BoardPos boardPos) const;     //Returns the coordinates of the center of the field within the window
 };
 

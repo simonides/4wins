@@ -1,14 +1,14 @@
 #include "RField.h"
 
 
-const float HEIGHT = 130.f;
-const float WIDTH = 130.f;
+const float FIELD_HEIGHT = 130.f;
+const float FIELD_WIDTH = 130.f;
 
 RField::RField(const BoardPos& posOnBoard, sf::Vector2f& initPos, sf::Texture& fieldShapeTex, sf::Texture& occupiedShapeTex)
-	: posOnBoard(posOnBoard),shape(NOT_OCCUPIED)
+: posOnBoard(posOnBoard), shape(FieldShape::NOT_OCCUPIED)
 {
-	fieldShape.setOrigin(sf::Vector2f(WIDTH / 2, HEIGHT / 2));
-	fieldShape.setSize(sf::Vector2f(WIDTH, HEIGHT));
+	fieldShape.setOrigin(sf::Vector2f(FIELD_WIDTH / 2, FIELD_HEIGHT / 2));
+	fieldShape.setSize(sf::Vector2f(FIELD_WIDTH, FIELD_HEIGHT));
 	fieldShape.setPosition(initPos);
 	fieldShape.setTexture(&fieldShapeTex);
 	//fieldShape.setFillColor(sf::Color::Yellow);
@@ -19,22 +19,17 @@ RField::RField(const BoardPos& posOnBoard, sf::Vector2f& initPos, sf::Texture& f
 	sf::IntRect textRec(0, 0, fieldShapeTex.getSize().x, fieldShapeTex.getSize().y);
 	fieldShape.setTextureRect(textRec);
 
-	occupiedShape.setOrigin(sf::Vector2f(WIDTH / 2, HEIGHT / 2));
-	occupiedShape.setSize(sf::Vector2f(WIDTH, HEIGHT));
+	occupiedShape.setOrigin(sf::Vector2f(FIELD_WIDTH / 2, FIELD_HEIGHT / 2));
+	occupiedShape.setSize(sf::Vector2f(FIELD_WIDTH, FIELD_HEIGHT));
 	occupiedShape.setPosition(initPos);
 	occupiedShape.setTexture(&occupiedShapeTex);
 	occupiedShape.setTextureRect(textRec);
 	occupiedShape.setFillColor(sf::Color::Magenta);
 
 	shapePtr = &fieldShape;
-
-
 }
 
 
-RField::~RField()
-{
-}
 
 
 void RField::draw(sf::RenderWindow& window) const{
@@ -47,9 +42,9 @@ bool RField::containsPosition(sf::Vector2f& position) const{
 }
 
 
-void RField::setShape(Shape shape){
+void RField::setShape(FieldShape::Enum shape){
 	this->shape = shape;
-	shapePtr = (shape == OCCUPIED) ? &occupiedShape : &fieldShape;
+    shapePtr = (shape == FieldShape::OCCUPIED) ? &occupiedShape : &fieldShape;
 }
 
 sf::FloatRect RField::getGlobalBounds() const{

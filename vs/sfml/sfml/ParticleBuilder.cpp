@@ -4,16 +4,9 @@
 #include <iostream>
 
 
-#include "ColorAnimator.h"
+#include "ColorAnimation.h"
 #define M_PI       3.14159265358979323846f
 
-
-
-float Interval::get() const{
-    assert(max >= min);
-    float random = ((float)rand()) / (float)RAND_MAX;
-    return  min + random * (max - min);
-}
 
 
 
@@ -39,8 +32,9 @@ ParticleBuilder::ParticleBuilder(sf::Vector2f position, Interval diameter){
     setPath();
     setGravity();
     setRotation();
-    setColorSpeed();
+    setStaticColor();
     setFadeoutSpeed();
+    setSprites();
 }
 
 ParticleBuilder* ParticleBuilder::setDiameter(Interval diameter){
@@ -73,7 +67,14 @@ ParticleBuilder* ParticleBuilder::setRotation(Interval rotationSpeed, Interval r
     return this;
 }
 
-ParticleBuilder* ParticleBuilder::setColorSpeed(Interval colorSpeed){
+ParticleBuilder* ParticleBuilder::setStaticColor(sf::Color color){
+    staticColor = true;
+    this->color = color;
+    return this;
+}
+
+ParticleBuilder* ParticleBuilder::setDynamicColor(Interval colorSpeed){
+    staticColor = false;
     this->colorSpeed = colorSpeed;
     return this;
 }
@@ -83,13 +84,23 @@ ParticleBuilder* ParticleBuilder::setFadeoutSpeed(Interval fadeoutSpeed){
     return this;
 }
 
+ParticleBuilder* ParticleBuilder::setSprites(sf::Vector2u spritesX, sf::Vector2u spritesY){
+    this->spritesX = spritesX;
+    this->spritesY = spritesY;
+    return this;
+}
 
 void ParticleBuilder::initialiseParticle(Particle* memory, sf::Texture& particleSprites, sf::Vector2u spriteCount, sf::IntRect textureCoords) const{
     //Basics: 
         memory->shape.setTexture(&particleSprites);
         sf::IntRect coords = textureCoords;
-        coords.left = coords.width * (rand() % spriteCount.x);
-        coords.top = coords.height * (rand() % spriteCount.y);
+        sf::Vector2u sprite;
+        sprite.x = (spritesX.x == spritesX.y) ? spritesX.x : rand() % (spritesX.y - spritesX.x) + spritesX.x;
+        sprite.y = (spritesY.x == spritesY.y) ? spritesY.x : rand() % (spritesY.y - spritesY.x) + spritesY.x;
+        (void)spriteCount;  //avoid unused parameter warning
+        assert(sprite.x < spriteCount.x && sprite.y < spriteCount.y);
+        coords.left = coords.width * sprite.x;
+        coords.top = coords.height * sprite.y;
         memory->shape.setTextureRect(coords);
     //Path:
         float _speed = speed.get();
@@ -118,16 +129,17 @@ void ParticleBuilder::initialiseParticle(Particle* memory, sf::Texture& particle
         _rotationSpeed.max += _rotationPreference;
 
         memory->rotationSpeed = _rotationSpeed.get();
-    //Color:
-        memory->nextColor = rand() % 6;
-        Interval colorProgress = { 0, 255 };
-        memory->colorProgress = colorProgress.get();
-
-        memory->shape.setFillColor(ColorAnimator::getInterpolatedColor(memory->nextColor, memory->colorProgress));
-        memory->colorSpeed = colorSpeed.get();
     //Transparency:
         memory->alpha = 255.f;
         memory->fadeoutSpeed = fadeoutSpeed.get();
+    //Color:
+        memory->staticColor = staticColor;
+        if (memory->staticColor){
+            memory->shape.setFillColor(color);
+        }else{
+            memory->colorAnimation.setSpeed(colorSpeed.get() );
+            memory->shape.setFillColor(memory->colorAnimation.getColor(static_cast<sf::Uint8>(memory->alpha)));
+        }
     //Position:
         sf::Vector2f _position = position;
         _position.x += positionOffset.get();
