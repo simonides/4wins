@@ -91,6 +91,8 @@
     <ClCompile Include="GameSimulator.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="helper.cpp" />
+    <ClCompile Include="Menu\Checkbox.cpp" />
+    <ClCompile Include="Menu\ListboxEntry.cpp" />
     <ClCompile Include="ParticleBuilder.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="RBag.cpp" />
@@ -118,6 +120,8 @@
     <ClInclude Include="ColorAnimator.h" />
     <ClInclude Include="GameSimulator.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Menu\Checkbox.h" />
+    <ClInclude Include="Menu\ListboxEntry.h" />
     <ClInclude Include="ParticleBuilder.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="RBag.h" />

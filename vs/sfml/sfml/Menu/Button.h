@@ -4,15 +4,14 @@ namespace sf
 {
 	class RenderWindow;
 	class RectangleShape;
-	class Text;
-	class Font;
-	class String;
-	class Color;
+	class Texture;
 	class Event;
 
 	template<typename T> class Vector2;
 	typedef Vector2<float> Vector2f;
-	typedef unsigned char Uint8;
+
+	template<typename T> class Rect;
+	typedef Rect<int> IntRect;
 }
 
 namespace FourWins
@@ -24,7 +23,8 @@ namespace FourWins
 		private:
 			sf::RenderWindow *window;
 			sf::RectangleShape *background;
-			sf::Text *text;
+			sf::IntRect *textureRect;
+			sf::IntRect *textureHighlightRect;
 			bool isReleased;
 
 		public:
@@ -32,12 +32,11 @@ namespace FourWins
 			~Button();
 			void init();
 
-			void setFont(const sf::Font &font);
 			void setPosition(const sf::Vector2f &position);
 			void setSize(const sf::Vector2f &size);
-			void setText(const sf::String &text);
-			void setCharacterSize(unsigned int size);
-			void setAlpha(sf::Uint8 alpha);
+			void setTexture(const sf::Texture *texture);
+			void setTextureRect(const sf::IntRect &rect);
+			void setTextureHighlightRect(const sf::IntRect &rect);
 			bool getIsReleased() const;
 			void update(const sf::Event &e, const sf::Vector2f &mousePosition);
 			void draw();

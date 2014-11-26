@@ -132,6 +132,12 @@
     <ClCompile Include="ColorAnimator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Menu\ListboxEntry.cpp">
+      <Filter>Source Files\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu\Checkbox.cpp">
+      <Filter>Source Files\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -214,6 +220,12 @@
     </ClInclude>
     <ClInclude Include="ColorAnimator.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu\ListboxEntry.h">
+      <Filter>Header Files\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu\Checkbox.h">
+      <Filter>Header Files\Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

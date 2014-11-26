@@ -6,6 +6,7 @@ namespace sf
 	class RenderWindow;
 	class Text;
 	class RectangleShape;
+	class Texture;
 }
 class I_Player;
 
@@ -21,17 +22,22 @@ namespace FourWins
 	{
 		class Button;
 		class Listbox;
+		class Checkbox;
 
 		class MainMenu
 		{
 		private:
 			sf::RenderWindow *window;
 			sf::Font *font;
-			sf::Text *labelHeader;
+			sf::Texture *textureAtlas;
+			sf::Texture *backgroundTexture;
+			sf::RectangleShape *backgroundShape;
+			sf::RectangleShape *headlineShape;
 			sf::Text *labelPlayer1;
 			sf::Text *labelPlayer2;
 			Listbox *lbPlayer1;
 			Listbox *lbPlayer2;
+			Checkbox *cb;
 			Button *btnStart;
 			bool startGame;
 
@@ -44,6 +50,7 @@ namespace FourWins
 
 		private:
 			void pollEvents();
+			bool loadRessources();
 			GameSettings createSettings();
 		};
 	}

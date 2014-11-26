@@ -1,94 +1,108 @@
 #include <SFML/Graphics.hpp>
 #include "MenuConstants.h"
+#include "ListboxEntry.h"
 
 #include "Listbox.h"
 
 using namespace FourWins;
 
-const float FourWins::Menu::Listbox::ENTRY_HEIGHT = 40.0f;
-const float FourWins::Menu::Listbox::LINE_TICKNESS = 1.0f;
+const float FourWins::Menu::Listbox::ENTRY_HEIGHT = 34.0f;
 
-FourWins::Menu::Listbox::Listbox(sf::RenderWindow &window) :
+FourWins::Menu::Listbox::Listbox(sf::RenderWindow &window, unsigned int entryCount) :
 	window(&window),
 	container(new sf::RectangleShape()),
-	textsBB(new sf::RectangleShape[5]),
-	texts(new sf::Text[5]),
-	linesBetween(new sf::Vertex[8]),
-	isEntryActive(new bool[5])
+	topBox(new sf::RectangleShape()),
+	bottomBox(new sf::RectangleShape()),
+	entries(new ListboxEntry[entryCount]),
+	ENTRY_COUNT(entryCount)
 {}
 
 FourWins::Menu::Listbox::~Listbox()
 {
 	delete this->container;
-	delete[] this->textsBB;
-	delete[] this->texts;
-	delete[] this->linesBetween;
-	delete[] this->isEntryActive;
+	delete this->topBox;
+	delete this->bottomBox;
+	delete[] this->entries;
 }
 
 void FourWins::Menu::Listbox::init()
 {
-	this->container->setSize(sf::Vector2f(200.0f, 204.0f));
+	const float containerWidth = 168.0f;
+	const float containerHeight = Listbox::ENTRY_HEIGHT * static_cast<float>(Listbox::ENTRY_COUNT);
+
+	this->container->setSize(sf::Vector2f(containerWidth, containerHeight));
 	this->container->setFillColor(Menu::BACKGROUND_COLOR);
-	this->container->setOutlineColor(Menu::OUTLINE_COLOR);
-	this->container->setOutlineThickness(2.0f);
 
-	for (unsigned int i = 0; i < 5; ++i)
+	this->topBox->setSize(sf::Vector2f(208.0f, 30.0f));
+	this->topBox->setTextureRect(sf::IntRect(851, 0, 208, 30));
+	this->bottomBox->setSize(sf::Vector2f(208.0f, 30.0f));
+	this->bottomBox->setTextureRect(sf::IntRect(851, 32, 208, 30));
+
+	for (unsigned int i = 0; i < Listbox::ENTRY_COUNT; ++i)
 	{
-		this->texts[i].setColor(Menu::TEXT_COLOR);
-		this->texts[i].setStyle(sf::Text::Bold);
-
-		this->textsBB[i].setSize(sf::Vector2f(this->container->getSize().x, Listbox::ENTRY_HEIGHT));
-		this->textsBB[i].setFillColor(sf::Color::Transparent);
-
-		this->isEntryActive[i] = false;
-	}
-	this->texts[0].setString("Human Player");
-	this->texts[1].setString("Intelligent AI");
-	this->texts[2].setString("Random AI");
-	this->texts[3].setString("Stupid AI");
-	this->texts[4].setString("Thinking AI");
-
-	for (unsigned int i = 0; i < 8; ++i)
-	{
-		this->linesBetween[i].color = Menu::OUTLINE_COLOR;
+		this->entries[i].setBackgroundColor(sf::Color::Transparent);
+		this->entries[i].setTextColor(Menu::TEXT_COLOR);
+		this->entries[i].setSize(sf::Vector2f(containerWidth, Listbox::ENTRY_HEIGHT));
+		this->entries[i].setCharacterSize(24u);
 	}
 }
 
 void FourWins::Menu::Listbox::setFont(const sf::Font &font)
 {
-	this->texts[0].setFont(font);
-	this->texts[1].setFont(font);
-	this->texts[2].setFont(font);
-	this->texts[3].setFont(font);
-	this->texts[4].setFont(font);
+	for (unsigned int i = 0; i < Listbox::ENTRY_COUNT; ++i)
+	{
+		this->entries[i].setFont(font);
+	}
 }
 
 void FourWins::Menu::Listbox::setPosition(const sf::Vector2f &position)
 {
-	const float indent = 5.0f;
-	const float containerRightX = position.x + this->container->getSize().x;
-
 	this->container->setPosition(position);
 
-	for (unsigned int i = 0; i < 5; ++i)
+	for (unsigned int i = 0; i < Listbox::ENTRY_COUNT; ++i)
 	{
-		float currentY = position.y + static_cast<float>(i) * (Listbox::ENTRY_HEIGHT + Listbox::LINE_TICKNESS);
+		this->entries[i].setPosition(sf::Vector2f(position.x, position.y + static_cast<float>(i)* Listbox::ENTRY_HEIGHT));
+	}
 
-		this->textsBB[i].setPosition(sf::Vector2f(position.x, currentY));
-		this->texts[i].setPosition(sf::Vector2f(position.x + indent, currentY));
+	const sf::Vector2f &boxSize = this->topBox->getSize();
+	const sf::Vector2f &containerSize = this->container->getSize();
 
-		if (i < 4u)
-		{
-			this->linesBetween[i * 2u].position = sf::Vector2f(position.x, currentY + Listbox::ENTRY_HEIGHT + 0.5f);
-			this->linesBetween[i * 2u + 1u].position = sf::Vector2f(containerRightX, currentY + Listbox::ENTRY_HEIGHT + 0.5f);
-		}
+	this->topBox->setPosition(sf::Vector2f(position.x + (containerSize.x / 2) - (boxSize.x / 2), position.y - 22.0f));
+	this->bottomBox->setPosition(sf::Vector2f(position.x + (containerSize.x / 2) - (boxSize.x / 2), position.y + containerSize.y - 7.0f));
+}
+
+void FourWins::Menu::Listbox::setTexture(const sf::Texture *texture)
+{
+	this->topBox->setTexture(texture);
+	this->bottomBox->setTexture(texture);
+}
+
+void FourWins::Menu::Listbox::setValueForEntry(unsigned int index, unsigned char value)
+{
+	if (index < Listbox::ENTRY_COUNT)
+	{
+		this->entries[index].setValue(value);
 	}
 }
 
-const bool *FourWins::Menu::Listbox::getIsEntryActive() const
+void FourWins::Menu::Listbox::setStringForEntry(unsigned int index, const sf::String &text)
 {
-	return this->isEntryActive;
+	if (index < Listbox::ENTRY_COUNT)
+	{
+		this->entries[index].setString(text);
+	}
+}
+
+unsigned char FourWins::Menu::Listbox::getValueOfActive() const
+{
+	for (unsigned int i = 0; i < Listbox::ENTRY_COUNT; ++i)
+	{
+		if (this->entries[i].getIsActive())
+		{
+			return this->entries[i].getValue();
+		}
+	}
+	return 0;
 }
 
 void FourWins::Menu::Listbox::update(const sf::Event &e, const sf::Vector2f &mousePosition)
@@ -99,11 +113,13 @@ void FourWins::Menu::Listbox::update(const sf::Event &e, const sf::Vector2f &mou
 	{
 		switch (e.type)
 		{
+		case sf::Event::MouseButtonPressed:
 		case sf::Event::MouseMoved:
 			checkForHover(mousePosition);
 			break;
 		case sf::Event::MouseButtonReleased:
 			checkForActive(mousePosition);
+			resetHover();
 			break;
 		}
 	}
@@ -112,60 +128,46 @@ void FourWins::Menu::Listbox::update(const sf::Event &e, const sf::Vector2f &mou
 void FourWins::Menu::Listbox::draw()
 {
 	this->window->draw(*this->container);
-	this->window->draw(this->textsBB[0]);
-	this->window->draw(this->textsBB[1]);
-	this->window->draw(this->textsBB[2]);
-	this->window->draw(this->textsBB[3]);
-	this->window->draw(this->textsBB[4]);
-	this->window->draw(this->texts[0]);
-	this->window->draw(this->texts[1]);
-	this->window->draw(this->texts[2]);
-	this->window->draw(this->texts[3]);
-	this->window->draw(this->texts[4]);
-	this->window->draw(this->linesBetween, 8, sf::Lines);
+
+	for (unsigned int i = 0; i < Listbox::ENTRY_COUNT; ++i)
+	{
+		this->window->draw(this->entries[i].getShape());
+		this->window->draw(this->entries[i].getText());
+	}
+	this->window->draw(*this->topBox);
+	this->window->draw(*this->bottomBox);
 }
 
 void FourWins::Menu::Listbox::resetHover()
 {
-	for (unsigned int i = 0; i < 5; ++i)
+	for (unsigned int i = 0; i < Listbox::ENTRY_COUNT; ++i)
 	{
-		if (this->isEntryActive[i])
+		if (this->entries[i].getIsActive())
 		{
-			this->textsBB[i].setFillColor(Menu::HIGHLIGHT_COLOR);
+			this->entries[i].setBackgroundColor(Menu::HIGHLIGHT_COLOR);
 		}
 		else
 		{
-			this->textsBB[i].setFillColor(sf::Color::Transparent);
+			this->entries[i].setBackgroundColor(sf::Color::Transparent);
 		}
 	}
 }
 
 void FourWins::Menu::Listbox::checkForHover(const sf::Vector2f &mousePosition)
 {
-	for (unsigned int i = 0; i < 5; ++i)
+	for (unsigned int i = 0; i < Listbox::ENTRY_COUNT; ++i)
 	{
-		if (this->textsBB[i].getGlobalBounds().contains(mousePosition))
+		if (this->entries[i].getShape().getGlobalBounds().contains(mousePosition))
 		{
-			this->textsBB[i].setFillColor(Menu::HIGHLIGHT_COLOR);
-		}
-		else
-		{
-			this->textsBB[i].setFillColor(sf::Color::Transparent);
+			this->entries[i].setBackgroundColor(Menu::HIGHLIGHT_COLOR);
 		}
 	}
 }
 
 void FourWins::Menu::Listbox::checkForActive(const sf::Vector2f &mousePosition)
 {
-	for (unsigned int i = 0; i < 5; ++i)
+	for (unsigned int i = 0; i < Listbox::ENTRY_COUNT; ++i)
 	{
-		if (this->textsBB[i].getGlobalBounds().contains(mousePosition))
-		{
-			this->isEntryActive[i] = true;
-		}
-		else
-		{
-			this->isEntryActive[i] = false;
-		}
+		this->entries[i].setIsActive(this->entries[i].getShape().getGlobalBounds().contains(mousePosition));
 	}
 }

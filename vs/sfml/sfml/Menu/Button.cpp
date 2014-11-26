@@ -8,78 +8,65 @@ using namespace FourWins;
 FourWins::Menu::Button::Button(sf::RenderWindow &window) :
 	window(&window),
 	background(new sf::RectangleShape()),
-	text(new sf::Text()),
+	textureRect(new sf::IntRect()),
+	textureHighlightRect(new sf::IntRect()),
 	isReleased(false)
 {}
 
 FourWins::Menu::Button::~Button()
 {
 	delete this->background;
-	delete this->text;
+	delete this->textureRect;
+	delete this->textureHighlightRect;
 }
 
 void FourWins::Menu::Button::init()
 {
-	this->background->setSize(sf::Vector2f(278.0f, 50.0f));
-	this->background->setFillColor(Menu::BACKGROUND_COLOR);
-	this->background->setOutlineColor(Menu::OUTLINE_COLOR);
-	this->background->setOutlineThickness(2.0f);
-	this->background->setPosition(sf::Vector2f(512.0f, 470.0f));
+	this->textureRect->left = 500;
+	this->textureRect->top = 0;
+	this->textureRect->width = 350;
+	this->textureRect->height = 60;
 
-	this->text->setColor(Menu::TEXT_COLOR);
-	this->text->setCharacterSize(36u);
-	this->text->setStyle(sf::Text::Bold);
-	this->text->setString("Start new game");
-	this->text->setPosition(sf::Vector2f(520.0f, 471.0f));
+	this->textureHighlightRect->left = 500;
+	this->textureHighlightRect->top = 64;
+	this->textureHighlightRect->width = 350;
+	this->textureHighlightRect->height = 60;
+
+	this->background->setSize(sf::Vector2f(350.0f, 60.0f));
+	this->background->setPosition(sf::Vector2f(500.0f, 550.0f));
+	this->background->setTextureRect(*this->textureRect);
 }
 
-
-void FourWins::Menu::Button::setFont(const sf::Font &font)
-{
-	this->text->setFont(font);
-}
 
 void FourWins::Menu::Button::setPosition(const sf::Vector2f &position)
 {
 	this->background->setPosition(position);
-
-	sf::FloatRect textBB = this->text->getGlobalBounds();
-	const sf::Vector2f &backgroundSize = this->background->getSize();
-	
-	this->text->setPosition(sf::Vector2f(
-		position.x + backgroundSize.x - textBB.width / 2,
-		position.y + backgroundSize.y - textBB.height / 2));
 }
 
 void FourWins::Menu::Button::setSize(const sf::Vector2f &size)
 {
 	this->background->setSize(size);
-
-	sf::FloatRect textBB = this->text->getGlobalBounds();
-	const sf::Vector2f &backgroundPosition = this->background->getPosition();
-
-	this->text->setPosition(sf::Vector2f(
-		backgroundPosition.x + size.x - textBB.width / 2,
-		backgroundPosition.y + size.y - textBB.height / 2));
 }
 
-void FourWins::Menu::Button::setText(const sf::String &text)
+void FourWins::Menu::Button::setTexture(const sf::Texture *texture)
 {
-	this->text->setString(text);
+	this->background->setTexture(texture);
 }
 
-void FourWins::Menu::Button::setCharacterSize(unsigned int size)
+void FourWins::Menu::Button::setTextureRect(const sf::IntRect &rect)
 {
-	this->text->setCharacterSize(size);
+	this->textureRect->left = rect.left;
+	this->textureRect->top = rect.top;
+	this->textureRect->width = rect.width;
+	this->textureRect->height = rect.height;
 }
 
-void FourWins::Menu::Button::setAlpha(sf::Uint8 alpha)
+void FourWins::Menu::Button::setTextureHighlightRect(const sf::IntRect &rect)
 {
-	const sf::Color &backgroundColor = this->background->getFillColor();
-	const sf::Color &textColor = this->text->getColor();
-
-	this->background->setFillColor(sf::Color(backgroundColor.r, backgroundColor.g, backgroundColor.b, alpha));
-	this->text->setColor(sf::Color(textColor.r, textColor.g, textColor.b, alpha));
+	this->textureHighlightRect->left = rect.left;
+	this->textureHighlightRect->top = rect.top;
+	this->textureHighlightRect->width = rect.width;
+	this->textureHighlightRect->height = rect.height;
 }
 
 bool FourWins::Menu::Button::getIsReleased() const
@@ -90,14 +77,15 @@ bool FourWins::Menu::Button::getIsReleased() const
 void FourWins::Menu::Button::update(const sf::Event &e, const sf::Vector2f &mousePosition)
 {
 	this->isReleased = false;
-	this->background->setFillColor(Menu::BACKGROUND_COLOR);
-	
+	this->background->setTextureRect(*this->textureRect);
+
 	if (this->background->getGlobalBounds().contains(mousePosition))
 	{
 		switch (e.type)
 		{
+		case sf::Event::MouseButtonPressed:
 		case sf::Event::MouseMoved:
-			this->background->setFillColor(Menu::HIGHLIGHT_COLOR);
+			this->background->setTextureRect(*this->textureHighlightRect);
 			break;
 		case sf::Event::MouseButtonReleased:
 			this->isReleased = true;
@@ -109,5 +97,4 @@ void FourWins::Menu::Button::update(const sf::Event &e, const sf::Vector2f &mous
 void FourWins::Menu::Button::draw()
 {
 	this->window->draw(*this->background);
-	this->window->draw(*this->text);
 }
