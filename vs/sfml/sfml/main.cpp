@@ -4,7 +4,9 @@
 #include <iostream>
 #include <string>
 #include <assert.h>
+#include <math.h>
 
+#include "Player.h"
 #include "Game.h"
 #include "GameSimulator.h"
 #include "ThreadedGameSimulator.h"
@@ -17,12 +19,13 @@
 
 #include "Menu/Menu.h"
 #include "SoundManager.h"
+#include "GameSettings.h"
+#include "getopt.h"
+
 
 const std::string GAME_TITLE = "4 Wins by ...";
 
 
-
-#include <math.h>
 
 #define PI 3.14159265
 
@@ -52,9 +55,29 @@ void AI_testFunction(){
     exit(0);
 }
 
+
 using namespace FourWins;
 
-int main(){
+int main(int argc, char *argv[]){
+    
+    GameSettings* settings;
+    print_usage(argv[0]);
+    if (argc > 1){
+        /*settings =*/ parseConsoleParameters(argc, argv);
+    }
+
+    /*char* argv2[20];
+    int argc2=0;
+
+
+    argv2[argc2++] = "path";
+    //argv2[argc2++] = "-f";
+    //argv2[argc2++] = "-i";
+    argv2[argc2++] = "-sim=10000";
+    argv2[argc2++] = "-p1=test";
+    argv2[argc2++] = "-p2=test2";
+    parseConsoleParameters(argc2, argv2);*/
+    
 	//AI_testFunction();
 
 	ResourceManager resourceManager;
@@ -94,7 +117,9 @@ int main(){
         if (gameMenuDecision == GameMenuDecision::BACK_TO_MENU){
             menu->loop();
         }
-        		
+        if (!window->isOpen()){
+            break;
+        }        		
 		gameMenuDecision = game->runGame();
         if (gameMenuDecision == GameMenuDecision::EXIT_GAME){
             break;

@@ -1,0 +1,1 @@
+start ../Debug/sfml.exe -aI1=d

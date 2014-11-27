@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "Player.h"
 #include "RMeeple.h"
 #include "GameState.h"
 #include "ResourceManager.h"
@@ -12,7 +13,7 @@
 #include "Board.h"
 #include "ColorAnimation.h"
 #include "helper.h"
-
+#include "RTextManager.h"
 
 class SoundManager;
 class RBackground;
@@ -35,26 +36,6 @@ struct GameMenuDecision{
     };
 };
 
-struct Player{
-	enum{
-		HUMAN,
-		I_PLAYER, //TODO: still not fully supported
-		TC
-	} type;
-	
-	ResourceManager::ResourceRect playerAvatar;  
-
-	union{
-		ThreadController* controller;
-		I_Player* player;
-	};
-	RBag* rbag;
-	MeepleBag* logicalMeepleBag;
-
-    Interval meeplePositionThinkTime;   //For TC/I_Player only: how long the AI thinks about the meeple position
-    Interval meepleChoosingThinkTime;   //For TC/I_Player only: how long the AI thinks about the meeple to choose
-};
-
 struct InputEvents{
     bool pressedLeftMouse;
     bool releasedLeftMouse;
@@ -69,6 +50,7 @@ private:
 	sf::RenderWindow* window;
 	ResourceManager* resourceManager;
     SoundManager* soundManager;
+	RTextManager* textManager;
 
 	RBackground* background;
     sf::Music* backgroundMusic;
@@ -106,6 +88,7 @@ private:
 	    sf::RectangleShape exitButton;
 	    sf::RectangleShape restartButton;
 	    sf::RectangleShape menuButton;
+		GameWinner::Enum winner;						//for the textmanager to know who is the winner
         
 	//Particles:
         ParticleSystem* particleSystem;                 //Particle controller: renders and simulates all particles
@@ -117,8 +100,9 @@ private:
         RMeeple* selectedMeeple;                        //The meeple that has been selected by the Player (has to be positioned by the opponent). It's glow has the color SELECTED_MEEPLE_GLOW_COLOR
         BoardPos selectedBoardPos;                      //the BoardPos, where the selected meeple should be placed
         bool firstFrameOfState;                         //Is set to true for exacly one frame, everytime the state changes
-   
-    //humanSelectMeeplePosition
+		RTextManager::GameAction todoText;				//for the textmanager to know what text to display
+    
+		//humanSelectMeeplePosition
         RMeeple* hoveredMeeple;                         //Hovered meeple, while the Player chooses a meeple for the opponent
     
     //humanSelectMeeplePosition

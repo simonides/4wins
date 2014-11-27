@@ -110,7 +110,7 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->btnStart->setTextureHighlightRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN_H));
 }
 
-GameSettings FourWins::Menu::MainMenu::loop()
+GameSettings_obsolete FourWins::Menu::MainMenu::loop()
 {
 	startGame = false;
 	while (this->window->isOpen() && !this->startGame)
@@ -167,11 +167,11 @@ void FourWins::Menu::MainMenu::pollEvents()
 	}
 }
 
-GameSettings FourWins::Menu::MainMenu::createSettings()
+GameSettings_obsolete FourWins::Menu::MainMenu::createSettings()
 {
 	I_Player* thinking = new ThinkingAI(true, true);
 
-	GameSettings settings;
+	GameSettings_obsolete settings;
 	settings.playerOne = thinking;
 	settings.playerTwo = thinking;
 

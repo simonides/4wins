@@ -156,11 +156,17 @@
     <ClCompile Include="RTextManager.cpp">
       <Filter>Source Files\REntities</Filter>
     </ClCompile>
- <ClCompile Include="Menu\Checkbox.cpp">
+    <ClCompile Include="Menu\Checkbox.cpp">
       <Filter>Source Files\Menu</Filter>
     </ClCompile>
     <ClCompile Include="Menu\ListboxEntry.cpp">
       <Filter>Source Files\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="getopt.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +268,15 @@
     </ClInclude>
     <ClInclude Include="Menu\ListboxEntry.h">
       <Filter>Header Files\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="getopt.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
