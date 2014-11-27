@@ -93,7 +93,9 @@
     <ClCompile Include="GameSimulator.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="helper.cpp" />
+    <ClCompile Include="Menu\AvatarChooser.cpp" />
     <ClCompile Include="Menu\Checkbox.cpp" />
+    <ClCompile Include="Menu\ImageCheckbox.cpp" />
     <ClCompile Include="Menu\ListboxEntry.cpp" />
     <ClCompile Include="ParticleBuilder.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
@@ -126,7 +128,9 @@
     <ClInclude Include="ColorAnimation.h" />
     <ClInclude Include="GameSimulator.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Menu\AvatarChooser.h" />
     <ClInclude Include="Menu\Checkbox.h" />
+    <ClInclude Include="Menu\ImageCheckbox.h" />
     <ClInclude Include="Menu\ListboxEntry.h" />
     <ClInclude Include="ParticleBuilder.h" />
     <ClInclude Include="ParticleSystem.h" />

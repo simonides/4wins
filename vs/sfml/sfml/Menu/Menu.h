@@ -2,8 +2,8 @@
 
 namespace sf
 {
-	class Font;
 	class RenderWindow;
+	class Font;
 	class Text;
 	class RectangleShape;
 	class Texture;
@@ -35,7 +35,8 @@ namespace FourWins
 			sf::Text *labelPlayer2;
 			Listbox *lbPlayer1;
 			Listbox *lbPlayer2;
-			Checkbox *cb;
+			Checkbox *cbMeepleChoose;
+			Checkbox *cbMeeplePos;
 			Button *btnStart;
 			bool startGame;
 
@@ -48,6 +49,7 @@ namespace FourWins
 
 		private:
 			void pollEvents();
+			void checkListboxes();
 			GameSettings createSettings();
 		};
 	}

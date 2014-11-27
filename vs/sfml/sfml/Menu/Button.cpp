@@ -23,7 +23,7 @@ FourWins::Menu::Button::~Button()
 void FourWins::Menu::Button::init()
 {
 	this->background->setSize(sf::Vector2f(350.0f, 60.0f));
-	this->background->setPosition(sf::Vector2f(500.0f, 550.0f));
+	this->background->setPosition(sf::Vector2f(500.0f, 615.0f));
 	this->background->setTextureRect(*this->textureRect);
 }
 
@@ -62,6 +62,11 @@ void FourWins::Menu::Button::setTextureHighlightRect(const sf::IntRect &rect)
 bool FourWins::Menu::Button::getIsReleased() const
 {
 	return this->isReleased;
+}
+
+void FourWins::Menu::Button::resetReleased()
+{
+	this->isReleased = false;
 }
 
 void FourWins::Menu::Button::update(const sf::Event &e, const sf::Vector2f &mousePosition)
