@@ -10,12 +10,7 @@ namespace sf
 }
 class I_Player;
 class ResourceManager;
-
-struct GameSettings_obsolete
-{
-	I_Player *playerOne;
-	I_Player *playerTwo;
-};
+struct GameSettings;
 
 namespace FourWins
 {
@@ -45,12 +40,12 @@ namespace FourWins
 			~MainMenu();
 			void init(ResourceManager &resourceManager);
 
-			GameSettings loop();
+			GameSettings *loop();
 
 		private:
 			void pollEvents();
 			void checkListboxes();
-			GameSettings createSettings();
+			GameSettings *createSettings();
 		};
 	}
 }

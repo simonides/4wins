@@ -101,8 +101,7 @@ int main(int argc, char *argv[]){
             delete settings;        //Delete the previous settings
             delete game;
             game = nullptr;
-            /*settings=*/menu->loop();
-            /*REMOVE THIS CODE, AS SOON AS THE MENU RETURNS THE SETTINGS*/ settings = new GameSettings();
+			settings = menu->loop();
         }
         if (game == nullptr){            
             delete players[0];

@@ -4,6 +4,7 @@
 #include "../helper.h"
 #include "../ThinkingAI.h"
 #include "../ResourceManager.h"
+#include "../GameSettings.h"
 #include "MenuConstants.h"
 #include "Listbox.h"
 #include "Checkbox.h"
@@ -141,9 +142,8 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->btnStart->setTextureHighlightRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN_H));
 }
 
-GameSettings_obsolete FourWins::Menu::MainMenu::loop()
+GameSettings *FourWins::Menu::MainMenu::loop()
 {
-	startGame = false;
 	while (this->window->isOpen() && !this->startGame)
 	{
 		pollEvents();
@@ -218,15 +218,18 @@ void FourWins::Menu::MainMenu::checkListboxes()
 	this->cbMeeplePos->setRightVisible(showRightCb);
 }
 
-GameSettings FourWins::Menu::MainMenu::createSettings()
+GameSettings *FourWins::Menu::MainMenu::createSettings()
 {
-	I_Player* thinking = new ThinkingAI(true, true);
+	//I_Player* thinking = new ThinkingAI(true, true);
 
-	GameSettings settings;
-	settings.playerOne = thinking;
-	settings.playerTwo = thinking;
+	//GameSettings settings;
+	//settings
+	//settings.playerOne = thinking;
+	//settings.playerTwo = thinking;
 
-	return settings;
+
+
+	return new GameSettings();
 }
 
 //if (event.type == sf::Event::KeyPressed){
