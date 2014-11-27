@@ -3,7 +3,10 @@
 
 #include "Player.h"
 
-class GameSettings{
+
+
+
+struct GameSettings{
     enum PlayerType
     {
         HUMAN,
@@ -12,6 +15,10 @@ class GameSettings{
         THINKING_AI,
         SMART_AI
     };
+
+    unsigned int simulator;                 //>0: use the simulator instead of the graphical output. Numer = number of games to simulate
+    bool threadedSimulator;
+
 
     PlayerType playerType[2];
     ResourceManager::ResourceRect avatar[2];
@@ -22,16 +29,9 @@ class GameSettings{
 
     bool option1;
     bool option2;
-public:
+
     GameSettings();
-    void setPlayerType(uint8_t playerNum, PlayerType player);
-    PlayerType getPlayerType(uint8_t playerNum) const;
-
-    void setOptions(bool fast, bool noAIsim, bool muted);
-    void setAvatar(uint8_t playerNum, ResourceManager::ResourceRect avatar);
-    void setPlayerOptions(bool option1, bool option2);
-
-
-    Player* createPlayer(uint8_t playerNum) const;  //Creates a new player with the set options; needs to be deleted()
 };
 
+Player* createPlayer(const GameSettings& settings, uint8_t playerNum);  //Creates a new player with the set options; needs to be deleted()
+I_Player* createI_Player(const GameSettings& settings, uint8_t playerNum); //Creates a new I_Player with the set options; needs to be deleted()

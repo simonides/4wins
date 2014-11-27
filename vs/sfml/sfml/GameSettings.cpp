@@ -11,52 +11,50 @@
 #include "SmartAI.h"
 
 
-GameSettings::GameSettings() : fast(false), noAIsim(false), muted(false), option1(true), option2(true){
+GameSettings::GameSettings() : simulator(0), threadedSimulator(false), fast(false), noAIsim(false), muted(false), option1(true), option2(true){
+    playerType[0] = HUMAN;
+    playerType[1] = HUMAN;
+    avatar[0] = ResourceManager::PROFESSOR_JENKINS;
+    avatar[1] = ResourceManager::HIPPIE_HILDY;
 }
 
-void GameSettings::setPlayerType(uint8_t playerNum, PlayerType player){
-    assert(playerNum < 2);
-    playerType[playerNum] = player;
+
+I_Player* createI_Player(const GameSettings& settings, uint8_t playerNum){
+    assert(settings.playerType[playerNum] != GameSettings::HUMAN);      //There is no I_Player for a human
+
+    switch (settings.playerType[playerNum]){
+    case GameSettings::STUPID_AI:     return new StupidAI();
+    case GameSettings::RANDOM_AI:     return new RandomAI();
+    case GameSettings::THINKING_AI:   return new ThinkingAI(settings.option1, settings.option2);
+    case GameSettings::SMART_AI:      return new SmartAI(settings.option1, settings.option2);
+    default: assert(false);           return new StupidAI();
+    }
 }
 
-GameSettings::PlayerType GameSettings::getPlayerType(uint8_t playerNum) const{
-    assert(playerNum < 2);
-    return playerType[playerNum];
-}
 
-void GameSettings::setPlayerOptions(bool option1, bool option2){
-    this->option1 = option1;
-    this->option2 = option2;
-}
-
-void GameSettings::setAvatar(uint8_t playerNum, ResourceManager::ResourceRect avatar){
-    this->avatar[playerNum] = avatar;
-}
-
-void GameSettings::setOptions(bool fast, bool noAIsim, bool muted){
-    this->fast = fast;
-    this->noAIsim = noAIsim;
-    this->muted = muted;
-}
-
-Player* GameSettings::createPlayer(uint8_t playerNum) const{
+Player* createPlayer(const GameSettings& settings, uint8_t playerNum){
     Player* p = new Player();
 
-    p->playerAvatar = avatar[playerNum];
+    p->playerAvatar = settings.avatar[playerNum];
 
-    if (playerType[playerNum] == HUMAN){
+    if (settings.playerType[playerNum] == GameSettings::HUMAN){
         p->type = Player::HUMAN;
     }else{
         p->type = Player::TC;
-        I_Player* i_player;
-        switch (playerType[playerNum]){
-            case STUPID_AI:     i_player = new StupidAI();  break;
-            case RANDOM_AI:     i_player = new RandomAI();  break;
-            case THINKING_AI:   i_player = new ThinkingAI(option1, option2);    break;
-            case SMART_AI:      i_player = new SmartAI(option1, option2);       break;
-            default: assert(false); i_player = new StupidAI();  break;
-        }
+        I_Player* i_player = createI_Player(settings, playerNum);
         p->controller = new ThreadController(*i_player);
+
+        if (settings.fast){
+            p->meeplePositionThinkTime = { 0, 0 }; p->meepleChoosingThinkTime = { 0, 0 };
+        }else{
+            switch (settings.playerType[playerNum]){
+                case GameSettings::STUPID_AI:     p->meeplePositionThinkTime = { 0, 0.4 };      p->meepleChoosingThinkTime = { 0, 0.4 };    break;
+                case GameSettings::RANDOM_AI:     p->meeplePositionThinkTime = { 0.5, 1.5 };    p->meepleChoosingThinkTime = { 0, 1 };      break;
+                case GameSettings::THINKING_AI:   p->meeplePositionThinkTime = { 0.8, 2.2 };    p->meepleChoosingThinkTime = { 0.5, 1.8 };  break;
+                case GameSettings::SMART_AI:      p->meeplePositionThinkTime = { 1, 3 };        p->meepleChoosingThinkTime = { 1, 2 };      break;
+                default: assert(false);           p->meeplePositionThinkTime = { 0, 0 };        p->meepleChoosingThinkTime = { 0, 0 };      break;
+            }
+        }
     }
     return p;
 }
