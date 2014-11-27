@@ -11,7 +11,7 @@ namespace sf
 class I_Player;
 class ResourceManager;
 
-struct GameSettings
+struct GameSettings_obsolete
 {
 	I_Player *playerOne;
 	I_Player *playerTwo;

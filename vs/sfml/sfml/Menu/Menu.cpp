@@ -141,7 +141,7 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->btnStart->setTextureHighlightRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN_H));
 }
 
-GameSettings FourWins::Menu::MainMenu::loop()
+GameSettings_obsolete FourWins::Menu::MainMenu::loop()
 {
 	startGame = false;
 	while (this->window->isOpen() && !this->startGame)
