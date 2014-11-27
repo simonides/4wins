@@ -156,6 +156,12 @@
     <ClCompile Include="RTextManager.cpp">
       <Filter>Source Files\REntities</Filter>
     </ClCompile>
+ <ClCompile Include="Menu\Checkbox.cpp">
+      <Filter>Source Files\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu\ListboxEntry.cpp">
+      <Filter>Source Files\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -250,6 +256,12 @@
     </ClInclude>
     <ClInclude Include="RTextManager.h">
       <Filter>Header Files\REntities</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu\Checkbox.h">
+      <Filter>Header Files\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu\ListboxEntry.h">
+      <Filter>Header Files\Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

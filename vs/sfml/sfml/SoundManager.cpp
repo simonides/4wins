@@ -6,8 +6,8 @@
 #include "assert.h"
 
 
-const float VOLUME_BACKGROUND = 0.f;
-const float VOLUME_EFFECTS = 0.f;
+const float VOLUME_BACKGROUND = 50.f;
+const float VOLUME_EFFECTS = 80.f;
 
 SoundManager::SoundManager(){
 	loadResourcesFromFileSys();

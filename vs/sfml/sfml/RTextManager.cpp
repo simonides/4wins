@@ -90,7 +90,7 @@ void RTextManager::update(float elapsedTime)
 		{
 			wobbleNR[i] = 0;
 		}
-		wobbleSin[i] = (i % 2 == 0) ? 1.1f + 0.04 * sin(wobbleNR[i]) : 1 + 0.05 * sin(wobbleNR[i]); // width : height
+		wobbleSin[i] = (i % 2 == 0) ? 1.1f + 0.04f * static_cast<float>(sin(wobbleNR[i])) : 1 + 0.05f * static_cast<float>(sin(wobbleNR[i])); // width : height
 	}
 
 	choose.setScale(	wobbleSin[0], wobbleSin[1]);
