@@ -101,6 +101,7 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RField.cpp" />
     <ClCompile Include="RMeeple.cpp" />
+    <ClCompile Include="RTextManager.cpp" />
     <ClCompile Include="SmartAI.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="RBoard.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RField.h" />
+    <ClInclude Include="RTextManager.h" />
     <ClInclude Include="SmartAI.h" />
     <ClInclude Include="I_AI.h" />
     <ClInclude Include="Board.h" />

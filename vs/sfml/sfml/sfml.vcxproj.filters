@@ -153,6 +153,9 @@
     <ClCompile Include="ParticleBuilder.cpp">
       <Filter>Source Files\ParticleSystem</Filter>
     </ClCompile>
+    <ClCompile Include="RTextManager.cpp">
+      <Filter>Source Files\REntities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
       <Filter>Header Files\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="RTextManager.h">
+      <Filter>Header Files\REntities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,13 @@
 
 const std::string GAME_TITLE = "4 Wins by ...";
 
+
+
+#include <math.h>
+
+#define PI 3.14159265
+
+
 sf::RenderWindow* setupWindow(){
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE), GAME_TITLE);
 	window->setPosition(sf::Vector2i(0, 0));
@@ -49,6 +56,7 @@ using namespace FourWins;
 
 int main(){
 	//AI_testFunction();
+
 	ResourceManager resourceManager;
     SoundManager soundManager;
 	sf::RenderWindow* window = setupWindow();
@@ -66,7 +74,7 @@ int main(){
     players[0]->type = Player::HUMAN;
     players[0]->player = nullptr;
     players[0]->controller = tc1;
-	players[0]->playerAvatar = ResourceManager::ELLE;
+	players[0]->playerAvatar = ResourceManager::BOOKWORM_BETTY;
     players[0]->meeplePositionThinkTime = { 0, 0.4 };
     players[0]->meepleChoosingThinkTime = { 0, 0.4 };
 
@@ -74,7 +82,7 @@ int main(){
     players[1]->type = Player::HUMAN;
     players[1]->player = nullptr;
     players[1]->controller = tc2;
-    players[1]->playerAvatar = ResourceManager::RONALD;
+    players[1]->playerAvatar = ResourceManager::HIPSTER_HENRY;
     players[1]->meeplePositionThinkTime = { 1, 3 };
     players[1]->meepleChoosingThinkTime = { 1, 2 };
 

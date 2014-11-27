@@ -20,6 +20,7 @@ private:
 
 	sf::Texture particleSprite;
 	sf::Texture avatarSprite;
+	sf::Texture textSprite;
 
 	void loadResourcesFromFileSys(bool setSmooth); // invoked by the constructor
 
@@ -36,13 +37,21 @@ public:
 		BACKGROUND_TEX,
 		EXIT_BTN_TEX, RELOAD_BTN_TEX, MENU_BTN_TEX,
 		PARTICLE_SPRITE,
-		AVATAR_SPRITE
+		AVATAR_SPRITE,
+		//text
+		TEXT_SPRITE,
+
 	};
 
 	enum ResourceRect
 	{
 		BACKGROUND, BACKGROUND_WINDOW, 
-		MR_PROPER, UNCLE_BENS, RONALD, SMILEY, ELLE
+		PROFESSOR_JENKINS, SMOOTH_STEVE, HIPSTER_HENRY, BOYBAND_BILLY, 
+		BOOKWORM_BETTY, FASHION_FABIENNE, HIPPIE_HILDY,	SMOKIN_STACY,
+
+		TEXT_PLAYER, TEXT_AI, TEXT_BLACK, TEXT_WHITE,
+		TEXT_CHOOSE, TEXT_SELECT, TEXT_A, TEXT_MEEPLE, TEXT_POSITION,
+		TEXT_WINS, TEXT_TIE
 	};
 	ResourceManager();
 

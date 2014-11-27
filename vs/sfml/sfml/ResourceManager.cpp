@@ -77,6 +77,12 @@ void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 		assert(false);
 	}
 	menuButtonTexture.setSmooth(setSmooth);
+
+	if (!textSprite.loadFromFile(WORKING_DIR + "textSheet.png")){
+		std::cerr << "Couldn't load the texture: textSheet" << std::endl;
+		assert(false);
+	}
+	textSprite.setSmooth(setSmooth);
 }
 
 
@@ -95,6 +101,7 @@ sf::Texture* ResourceManager::getTexture(ResourceTexture textureType)
 	case MENU_BTN_TEX:			return &menuButtonTexture;
 	case PARTICLE_SPRITE:		return &particleSprite;
 	case AVATAR_SPRITE:			return &avatarSprite;
+	case TEXT_SPRITE:			return &textSprite;
 	default:					return &exitButtonTexture;
 	
 
@@ -106,22 +113,38 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 {
 	switch (rectType)
 	{
-	case UNCLE_BENS:		return sf::IntRect(0,   0, 128, 194);
-	case MR_PROPER:			return sf::IntRect(128, 0, 128, 194);
-	case RONALD:			return sf::IntRect(256, 0, 128, 194);
-	case SMILEY:			return sf::IntRect(384, 0, 128, 194);
-	case ELLE:				return sf::IntRect(0, 194, 128, 194);
-	case BACKGROUND:		return sf::IntRect(0, 0, 135, 68);
-	case BACKGROUND_WINDOW: return sf::IntRect(4, 70, 31, 49);
-	default:				return sf::IntRect(0, 0, 16, 16);//default something
+	case SMOOTH_STEVE:			return sf::IntRect(0,     0, 128, 194);
+	case PROFESSOR_JENKINS:		return sf::IntRect(128,   0, 128, 194);
+	case HIPSTER_HENRY:			return sf::IntRect(256,   0, 128, 194);
+	case BOYBAND_BILLY:			return sf::IntRect(384,   0, 128, 194);
+	case BOOKWORM_BETTY:		return sf::IntRect(0,   194, 128, 194);
+	case FASHION_FABIENNE:		return sf::IntRect(128, 194, 128, 194);
+	case HIPPIE_HILDY:			return sf::IntRect(256, 194, 128, 194);
+	case SMOKIN_STACY:			return sf::IntRect(384, 194, 128, 194);
+	
+	case BACKGROUND:			return sf::IntRect(0,	  0, 135,  68);
+	case BACKGROUND_WINDOW:		return sf::IntRect(4,	 70,  31,  49);
+	
+	case TEXT_BLACK:			return sf::IntRect(0,	120, 496, 127);//
+	case TEXT_WHITE:			return sf::IntRect(0,	  0, 500, 122);//
+
+	case TEXT_CHOOSE:			return sf::IntRect(0,	371, 607, 123);//
+	case TEXT_SELECT:			return sf::IntRect(0,	494, 598, 123);//
+	case TEXT_A:				return sf::IntRect(641, 370, 159, 117);//
+	case TEXT_MEEPLE:			return sf::IntRect(0,	619, 529, 123);//
+	case TEXT_POSITION:			return sf::IntRect(0,	249, 767, 122);//
+	case TEXT_WINS:				return sf::IntRect(532,   0, 421, 117);//
+	case TEXT_TIE:				return sf::IntRect(531, 123, 329, 117);//
+
+	default:					return sf::IntRect(0, 0, 16, 16);	//default something
 	}
 }
 sf::Font* ResourceManager::getFont(ResourceFont fontType)
 {
 	switch (fontType)
 	{
-	case ROBOTO:			return &roboto;
-	default:				return &roboto;
-		//assert(false);
+	case ROBOTO:				return &roboto;
+	default: assert(false);		return &roboto;
+		//
 	}
 }
