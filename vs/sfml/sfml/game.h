@@ -12,7 +12,7 @@
 #include "Board.h"
 #include "ColorAnimation.h"
 #include "helper.h"
-#include "RTextManager.h"
+
 
 class SoundManager;
 class RBackground;
@@ -69,7 +69,6 @@ private:
 	sf::RenderWindow* window;
 	ResourceManager* resourceManager;
     SoundManager* soundManager;
-	RTextManager* textManager;
 
 	RBackground* background;
     sf::Music* backgroundMusic;
@@ -107,7 +106,6 @@ private:
 	    sf::RectangleShape exitButton;
 	    sf::RectangleShape restartButton;
 	    sf::RectangleShape menuButton;
-		GameWinner::Enum winner;						//for the textmanager to know who is the winner
         
 	//Particles:
         ParticleSystem* particleSystem;                 //Particle controller: renders and simulates all particles
@@ -119,9 +117,8 @@ private:
         RMeeple* selectedMeeple;                        //The meeple that has been selected by the Player (has to be positioned by the opponent). It's glow has the color SELECTED_MEEPLE_GLOW_COLOR
         BoardPos selectedBoardPos;                      //the BoardPos, where the selected meeple should be placed
         bool firstFrameOfState;                         //Is set to true for exacly one frame, everytime the state changes
-		RTextManager::GameAction todoText;				//for the textmanager to know what text to display
-    
-		//humanSelectMeeplePosition
+   
+    //humanSelectMeeplePosition
         RMeeple* hoveredMeeple;                         //Hovered meeple, while the Player chooses a meeple for the opponent
     
     //humanSelectMeeplePosition
