@@ -28,16 +28,22 @@ public:
 
 private:
 
-	float wobbleNR[18];
-	float wobbleSin[18];
+	float wobbleNR;
+	float wobbleSin[2];
+
+	float chooseX;
+	float arrowX;
+	float selectX;
+	float positionX;
+	float meepleX;
 
 	float ANIMATIONSPEED;
-	sf::RectangleShape white;
-	sf::RectangleShape black;
+	sf::RectangleShape player1;
+	sf::RectangleShape player2;
 
 	sf::RectangleShape choose;
 	sf::RectangleShape select;
-	sf::RectangleShape a;
+	sf::RectangleShape arrowUp;
 	sf::RectangleShape meeple;
 	sf::RectangleShape position;
 

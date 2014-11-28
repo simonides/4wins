@@ -132,22 +132,24 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case BACKGROUND:			return sf::IntRect(0,	  0, 135,  68);
 	case BACKGROUND_WINDOW:		return sf::IntRect(4,	 70,  31,  49);
 	
-	case TEXT_BLACK:			return sf::IntRect(0,	120, 496, 127);//
-	case TEXT_WHITE:			return sf::IntRect(0,	  0, 500, 122);//
+	case TEXT_PLAYER_1:			return sf::IntRect(0,	  0, 762, 212);//
+	case TEXT_PLAYER_2:			return sf::IntRect(0,	212, 762, 212);//
 
-	case TEXT_CHOOSE:			return sf::IntRect(0,	371, 607, 123);//
-	case TEXT_SELECT:			return sf::IntRect(0,	494, 598, 123);//
-	case TEXT_A:				return sf::IntRect(641, 370, 159, 117);//
-	case TEXT_MEEPLE:			return sf::IntRect(0,	619, 529, 123);//
-	case TEXT_POSITION:			return sf::IntRect(0,	249, 767, 122);//
-	case TEXT_WINS:				return sf::IntRect(532,   0, 421, 117);//
-	case TEXT_TIE:				return sf::IntRect(531, 123, 329, 117);//
+	case TEXT_WINS:				return sf::IntRect(0,   424, 581, 210);//
+	case TEXT_TIE:				return sf::IntRect(582, 424, 441, 210);//
 
-	case MENU_HEADLINE:		return sf::IntRect(0, 0, 500, 140);
-	case MENU_STARTBTN:		return sf::IntRect(500, 0, 350, 60);
-	case MENU_STARTBTN_H:	return sf::IntRect(500, 64, 350, 60);
-	case MENU_FRAME_UP:		return sf::IntRect(851, 0, 208, 30);
-	case MENU_FRAME_DOWN:	return sf::IntRect(851, 32, 208, 30);
+	case TEXT_CHOOSE:			return sf::IntRect(0,	635, 241, 73);//
+	case TEXT_SELECT:			return sf::IntRect(0,	708, 203, 73);//
+	case TEXT_A_MEEPLE:			return sf::IntRect(241, 635, 291, 73);//
+	case TEXT_A_POSITION:		return sf::IntRect(203,	708, 324, 73);//
+
+	case ARROW_UP:				return sf::IntRect(762,   0, 131, 243);//
+
+	case MENU_HEADLINE:			return sf::IntRect(0,   0, 499, 140);
+	case MENU_STARTBTN:			return sf::IntRect(500, 0, 350, 60);
+	case MENU_STARTBTN_H:		return sf::IntRect(500, 64, 350, 60);
+	case MENU_FRAME_UP:			return sf::IntRect(851, 0, 208, 30);
+	case MENU_FRAME_DOWN:		return sf::IntRect(851, 32, 208, 30);
 
 	default:					return sf::IntRect(0, 0, 16, 16);	//default something
 	}
