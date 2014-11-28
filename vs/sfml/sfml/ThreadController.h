@@ -53,7 +53,7 @@ private:
 // ~ ~ ~ ~
     ThreadController(ThreadController&);    //no copy-constructor allowed
 public:
-    ThreadController(I_Player& player);  
+    ThreadController(I_Player& player);     //the TC now owns the I_Player and will delete it at the end
 
     bool isResultAvailable();               //Checks, if the thread finished its task
 

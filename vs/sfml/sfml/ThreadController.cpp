@@ -53,6 +53,7 @@ ThreadController::~ThreadController(){
         #endif
         delete playerThread;
     }
+    delete player;
 }
 
 //THIS FUNCTION RUNS IN A SEPERATE THREAD

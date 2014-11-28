@@ -12,81 +12,81 @@ void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 {
 	if (!roboto.loadFromFile(WORKING_DIR + "Fonts/roboto/roboto-black.ttf")){
 		std::cerr << "Couldn't load the Font: roboto-black.ttf" << std::endl;
-		assert(false);
+		exit(1);
 	}
 
 	if (!meepleSprite.loadFromFile(WORKING_DIR + "pencilStyle.png")){
 		std::cerr << "Couldn't load the texture: meepleSprites" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	meepleSprite.setSmooth(setSmooth);
 
 	if (!avatarSprite.loadFromFile(WORKING_DIR + "players.png")){
 		std::cerr << "Couldn't load the texture: avatarSprite" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	avatarSprite.setSmooth(setSmooth);
 
 	if (!glowSprite.loadFromFile(WORKING_DIR + "glow.png")){
 		std::cerr << "Couldn't load the texture: glow" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	glowSprite.setSmooth(setSmooth);
 
 
 	if (!boardTexture.loadFromFile(WORKING_DIR + "board.png")){
 		std::cerr << "Couldn't load the texture: board" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	boardTexture.setSmooth(setSmooth);
 
 
 	if (!fieldTexture.loadFromFile(WORKING_DIR + "field.png")){
 		std::cerr << "Couldn't load the texture: field" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	fieldTexture.setSmooth(setSmooth);
 
 
 	if (!backgroundSprite.loadFromFile(WORKING_DIR + "background.png")){
 		std::cerr << "Couldn't load the texture: background" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	backgroundSprite.setSmooth(setSmooth);
 
 	if (!exitButtonTexture.loadFromFile(WORKING_DIR + "quit.png")){
 		std::cerr << "Couldn't load the texture: quit" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	exitButtonTexture.setSmooth(setSmooth);
 
 	if (!reloadButtonTexture.loadFromFile(WORKING_DIR + "replay.png")){
 		std::cerr << "Couldn't load the texture: replay" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	reloadButtonTexture.setSmooth(setSmooth);
 
 	if (!particleSprite.loadFromFile(WORKING_DIR + "particles.png")){
 		std::cerr << "Couldn't load the texture: particles" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	//particleSprite.setSmooth(true); //check performance first
 
 	if (!menuButtonTexture.loadFromFile(WORKING_DIR + "menue.png")){
 		std::cerr << "Couldn't load the texture: menue" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	menuButtonTexture.setSmooth(setSmooth);
 
 	if (!menuAtlas.loadFromFile(WORKING_DIR + "menu_atlas.png")){
 		std::cerr << "Couldn't load the texture: menu_atlas" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	menuAtlas.setSmooth(setSmooth);
 
 	if (!textSprite.loadFromFile(WORKING_DIR + "textSheet.png")){
 		std::cerr << "Couldn't load the texture: textSheet" << std::endl;
-		assert(false);
+		exit(1);
 	}
 	textSprite.setSmooth(setSmooth);
 }

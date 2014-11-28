@@ -2,20 +2,15 @@
 
 namespace sf
 {
-	class Font;
 	class RenderWindow;
+	class Font;
 	class Text;
 	class RectangleShape;
 	class Texture;
 }
 class I_Player;
 class ResourceManager;
-
-struct GameSettings
-{
-	I_Player *playerOne;
-	I_Player *playerTwo;
-};
+struct GameSettings;
 
 namespace FourWins
 {
@@ -35,7 +30,8 @@ namespace FourWins
 			sf::Text *labelPlayer2;
 			Listbox *lbPlayer1;
 			Listbox *lbPlayer2;
-			Checkbox *cb;
+			Checkbox *cbMeepleChoose;
+			Checkbox *cbMeeplePos;
 			Button *btnStart;
 			bool startGame;
 
@@ -44,11 +40,12 @@ namespace FourWins
 			~MainMenu();
 			void init(ResourceManager &resourceManager);
 
-			GameSettings loop();
+			GameSettings *loop();
 
 		private:
 			void pollEvents();
-			GameSettings createSettings();
+			void checkListboxes();
+			GameSettings *createSettings();
 		};
 	}
 }

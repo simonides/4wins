@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "Player.h"
 #include "RMeeple.h"
 #include "GameState.h"
 #include "ResourceManager.h"
@@ -33,26 +34,6 @@ struct GameMenuDecision{
         EXIT_GAME,
         KEEP_PLAYING         //Game-internal, until the game ended and the player pressed a button
     };
-};
-
-struct Player{
-	enum{
-		HUMAN,
-		I_PLAYER, //TODO: still not fully supported
-		TC
-	} type;
-	
-	ResourceManager::ResourceRect playerAvatar;  
-
-	union{
-		ThreadController* controller;
-		I_Player* player;
-	};
-	RBag* rbag;
-	MeepleBag* logicalMeepleBag;
-
-    Interval meeplePositionThinkTime;   //For TC/I_Player only: how long the AI thinks about the meeple position
-    Interval meepleChoosingThinkTime;   //For TC/I_Player only: how long the AI thinks about the meeple to choose
 };
 
 struct InputEvents{

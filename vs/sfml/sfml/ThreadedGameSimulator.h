@@ -19,7 +19,7 @@ private:
 
     void runGameCycle(I_Player* player, I_Player* opponent, const GameState& gameStateForPlayer, const GameState& gameStateForOpponent, int playerNr);
 public:
-    ThreadedGameSimulator(I_Player& player1, I_Player& player2); //Initialises the game with 2 players
+    ThreadedGameSimulator(I_Player& player1, I_Player& player2); //Initialises the game with 2 players; takes ownership of both players (delete not needed outside)
     void reset();                               //Reinitialises the object    
 };
 
