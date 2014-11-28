@@ -257,7 +257,13 @@ GameMenuDecision::Enum Game::runGame(){
 		        case TC_START_SELECT_MEEPLE_POSITION:			loopState = tcStartSelectMeeplePosition();						break;
 		        case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:		loopState = tcWaitForSelectedMeeplePosition(); 					break;
 		        case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);			break;
-		        case CHECK_END_CONDITION:						loopState = checkEndCondition();								break;
+		        case CHECK_END_CONDITION:						
+					loopState = checkEndCondition();	
+					if (loopState == DISPLAY_END_SCREEN)
+					{
+						gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);
+					}
+					break;
 		        case DISPLAY_END_SCREEN:			            gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);	break;
 		    }
         }

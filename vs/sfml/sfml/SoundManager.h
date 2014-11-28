@@ -23,6 +23,8 @@ public:
     SoundManager();
 	void loadResourcesFromFileSys();
 	sf::Music* getMusic(Music type);
+	void setEffectsVolume(float volume);
+	void setMusicVolume(float volume);
 };
 
 

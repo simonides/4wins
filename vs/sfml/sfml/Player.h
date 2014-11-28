@@ -22,7 +22,7 @@ struct Player{
 
     union{
         ThreadController* controller;
-        I_Player* player;
+        I_Player* player; //run direct in gui thread
     };
     RBag* rbag;
     MeepleBag* logicalMeepleBag;
