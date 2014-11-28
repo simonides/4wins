@@ -38,7 +38,7 @@ void print_usage(char *programName){            //Prints Information on how to u
     std::cout << "      [-sim=number]      Starts the game simulator without graphical output. Also defines the number of games that should be simulated." << std::endl;
     std::cout << "      [-t]               The simulator uses a thread for each AI." << std::endl;
     std::cout << "      [-f]               Fast. The AI doesn't perform a sleep before it's tasks." << std::endl;
-    std::cout << "      [-i]               Immediate. The AI's meeples are not slowly moved to the board. They will be positioned immediately ." << std::endl;
+    std::cout << "      [-i]               Immediate. The AI's meeples are not slowly moved to the board. They will be positioned immediately." << std::endl;
     std::cout << "      [-m]               Muted. The game will run silent and will not produce any sound." << std::endl;
     std::cout << "      -p1=palyerName" << std::endl;
     std::cout << "      -p2=playerName     Defines the players which are playing against each other." << std::endl;
