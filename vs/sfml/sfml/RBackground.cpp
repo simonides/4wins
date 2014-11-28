@@ -1,6 +1,7 @@
 #include "RBackground.h"
 #include "config.h"
 #include "Game.h"
+#include "Player.h"
 
 const float BACKGRND_WINDOW_WIDTH = 320.f;
 const float BACKGRND_WINDOW_HEIGHT = 490.f;

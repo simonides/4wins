@@ -30,6 +30,8 @@
 #include "RTextManager.h"
 
 #include "RBackground.h"
+
+
 #include "Player.h"
 
 #define M_PI       3.14159265358979323846f
@@ -245,18 +247,18 @@ GameMenuDecision::Enum Game::runGame(){
 		        case INIT_STATE:                                //todo das stimmt no ned ganz human iplayer und tc !!!!
 			                                                    loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
 																break;
-		        case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();			                break;
-		        case HUMAN_SELECT_MEEPLE:						loopState =  humanSelectMeeple(inputEvents);				break;
-                case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();							break;
-		        case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();		                break;
-		        case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple(elapsedTime);			break;
-		        case I_PLAYER_SELECT_MEEPLE_POSITION:			loopState = i_playerSelectMeeplePosition();                 break;
-		        case HUMAN_SELECT_MEEPLE_POSITION:				loopState = humanSelectMeeplePosition(inputEvents);		    break;
-		        case TC_START_SELECT_MEEPLE_POSITION:			loopState = tcStartSelectMeeplePosition();					break;
-		        case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:		loopState = tcWaitForSelectedMeeplePosition(); 	            break;
-		        case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);		break;
-		        case CHECK_END_CONDITION:						loopState = checkEndCondition();							break;
-		        case DISPLAY_END_SCREEN:			            gameMenuDecision = displayEndscreen(inputEvents, elapsedTime); break;
+		        case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();								break;
+		        case HUMAN_SELECT_MEEPLE:						loopState =  humanSelectMeeple(inputEvents);					break;
+                case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();								break;
+		        case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();							break;
+		        case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple(elapsedTime);				break;
+		        case I_PLAYER_SELECT_MEEPLE_POSITION:			loopState = i_playerSelectMeeplePosition();						break;
+		        case HUMAN_SELECT_MEEPLE_POSITION:				loopState = humanSelectMeeplePosition(inputEvents);				break;
+		        case TC_START_SELECT_MEEPLE_POSITION:			loopState = tcStartSelectMeeplePosition();						break;
+		        case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:		loopState = tcWaitForSelectedMeeplePosition(); 					break;
+		        case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);			break;
+		        case CHECK_END_CONDITION:						loopState = checkEndCondition();								break;
+		        case DISPLAY_END_SCREEN:			            gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);	break;
 		    }
         }
 
@@ -276,8 +278,6 @@ GameMenuDecision::Enum Game::runGame(){
 
 		board->draw(*window);
 
-		//window->draw(text);
-             
 		sort(meeplesToDrawAndSort.begin(), meeplesToDrawAndSort.end(), [](RMeeple* a, RMeeple* b){return a->getYPos() < b->getYPos(); });
 		for (std::vector<RMeeple*>::iterator it = meeplesToDrawAndSort.begin(); it != meeplesToDrawAndSort.end(); ++it){
 			(*it)->draw(*window);
@@ -296,7 +296,6 @@ GameMenuDecision::Enum Game::runGame(){
 		{
 			textManager->drawTodo(*window, todoText, activePlayerIndex);
 		}
-		
 		window->display();
 
 
@@ -658,7 +657,7 @@ GameMenuDecision::Enum Game::displayEndscreen(InputEvents inputEvents, float ela
 		backgroundMusic->stop();
 		backgroundMusic = soundManager->getMusic(SoundManager::WIN_MUSIC);
 		backgroundMusic->play();
-		backgroundMusic->setPlayingOffset(sf::seconds(36.f));
+		//backgroundMusic->setPlayingOffset(sf::seconds(36.f));
 	}
 
 	//Animate rainbow-colors on the meeples, which were responsible for the winning-combination:  

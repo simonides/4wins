@@ -161,14 +161,16 @@
     </ClCompile>
     <ClCompile Include="Menu\ListboxEntry.cpp">
       <Filter>Source Files\Menu</Filter>
+    </ClCompile>    <ClCompile Include="Menu\ImageCheckbox.cpp">
+      <Filter>Source Files\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="GameSettings.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Menu\AvatarChooser.cpp">
+      <Filter>Source Files\Menu</Filter>
+    </ClCompile>    <ClCompile Include="GameSettings.cpp">      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="getopt.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
+    </ClCompile>  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
       <Filter>Header Files</Filter>
@@ -269,7 +271,11 @@
     <ClInclude Include="Menu\ListboxEntry.h">
       <Filter>Header Files\Menu</Filter>
     </ClInclude>
-    <ClInclude Include="GameSettings.h">
+    <ClInclude Include="Menu\ImageCheckbox.h">
+      <Filter>Header Files\Menu</Filter>
+    </ClInclude>    <ClInclude Include="Menu\AvatarChooser.h">
+      <Filter>Header Files\Menu</Filter>
+    </ClInclude>    <ClInclude Include="GameSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
@@ -277,8 +283,7 @@
     </ClInclude>
     <ClInclude Include="getopt.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
+    </ClInclude>  </ItemGroup>
   <ItemGroup>
     <Image Include="..\add.png">
       <Filter>Resource Files</Filter>

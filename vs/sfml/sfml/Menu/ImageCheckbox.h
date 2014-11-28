@@ -18,29 +18,45 @@ namespace FourWins
 {
 	namespace Menu
 	{
-		class Button
+		class ImageCheckbox
 		{
 		private:
 			sf::RenderWindow *window;
-			sf::RectangleShape *background;
+			sf::RectangleShape *shape;
 			sf::IntRect *textureRect;
 			sf::IntRect *textureHighlightRect;
-			bool isReleased;
+			bool isChecked;
 
 		public:
-			explicit Button(sf::RenderWindow &window);
-			~Button();
-			void init();
+			explicit ImageCheckbox(sf::RenderWindow &window);
+			~ImageCheckbox();
 
-			void setPosition(const sf::Vector2f &position);
-			void setSize(const sf::Vector2f &size);
-			void setTexture(const sf::Texture *texture);
+			inline void setTexture(const sf::Texture *texture)
+			{
+				this->shape->setTexture(texture);
+			}
+			inline void setPosition(const sf::Vector2f &position)
+			{
+				this->shape->setPosition(position);
+			}
+			inline void setSize(const sf::Vector2f &size)
+			{
+				this->shape->setSize(size);
+			}
+
 			void setTextureRect(const sf::IntRect &rect);
 			void setTextureHighlightRect(const sf::IntRect &rect);
-			bool getIsReleased() const;
-			void resetReleased();
+
+			inline bool getIsChecked() const
+			{
+				return this->isChecked;
+			}
+
 			void update(const sf::Event &e, const sf::Vector2f &mousePosition);
 			void draw();
+
+		private:
+			void switchTextureRect();
 		};
 	}
 }

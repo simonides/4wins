@@ -32,7 +32,7 @@ sf::RenderWindow* setupWindow(){
 	window->setPosition(sf::Vector2i(0, 0));
 	//window->setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
 	window->setFramerateLimit(60);
-	window->setSize(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));// 16:9
+	window->setSize(sf::Vector2u(WINDOW_WIDTH-200, WINDOW_HEIGHT-200));// 16:9
 	return window;
 }
 
@@ -101,8 +101,7 @@ int main(int argc, char *argv[]){
             delete settings;        //Delete the previous settings
             delete game;
             game = nullptr;
-            /*settings=*/menu->loop();
-            /*REMOVE THIS CODE, AS SOON AS THE MENU RETURNS THE SETTINGS*/ settings = new GameSettings();
+			settings = menu->loop();
         }
         if (game == nullptr){            
             delete players[0];

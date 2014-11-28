@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <vector>
 
-#include "Player.h"
 #include "RMeeple.h"
 #include "GameState.h"
 #include "ResourceManager.h"
@@ -14,6 +13,7 @@
 #include "ColorAnimation.h"
 #include "helper.h"
 #include "RTextManager.h"
+
 
 class SoundManager;
 class RBackground;
@@ -25,6 +25,7 @@ class I_Player;
 class RBoard;
 class Board;
 class RBag;
+struct Player;
 
 
 struct GameMenuDecision{

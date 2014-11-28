@@ -22,10 +22,10 @@ namespace FourWins
 		{
 		private:
 			sf::RenderWindow *window;
-			sf::RectangleShape *box;
-			sf::Text *boxCross;
+			sf::RectangleShape *boxes;
+			sf::Text *boxCrosses;
 			sf::Text *label;
-			bool isVisible;
+			bool *isVisible;
 
 		public:
 			explicit Checkbox(sf::RenderWindow &window);
@@ -34,9 +34,32 @@ namespace FourWins
 
 			void setFont(const sf::Font &font);
 			void setCharacterSize(unsigned int size);
-			void setPosition(const sf::Vector2f &position);
-			void setLabelText(const sf::String &text);
-			bool isChecked() const;
+			void setYPos(float y);
+			void setLeftBoxXPos(float x);
+			void setRightBoxXPos(float x);
+			void setLabelXPos(float x);
+
+			inline void setLabelText(const sf::String &text)
+			{
+				this->label->setString(text);
+			}
+			inline void setLeftVisible(bool value)
+			{
+				this->isVisible[0] = value;
+			}
+			inline void setRightVisible(bool value)
+			{
+				this->isVisible[1] = value;
+			}
+			inline bool isLeftChecked() const
+			{
+				return !this->boxCrosses[0].getString().isEmpty();
+			}
+			inline bool isRightChecked() const
+			{
+				return !this->boxCrosses[1].getString().isEmpty();
+			}
+
 			void update(const sf::Event &e, const sf::Vector2f &mousePosition);
 			void draw();
 		};

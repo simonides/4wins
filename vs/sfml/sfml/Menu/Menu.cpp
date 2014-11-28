@@ -1,14 +1,15 @@
-#include <iostream>
 #include <SFML/Graphics.hpp>
 
 #include "../config.h"
 #include "../helper.h"
 #include "../ThinkingAI.h"
 #include "../ResourceManager.h"
+#include "../GameSettings.h"
 #include "MenuConstants.h"
 #include "Listbox.h"
 #include "Checkbox.h"
 #include "Button.h"
+#include "ImageCheckbox.h"
 
 #include "Menu.h"
 
@@ -20,9 +21,10 @@ FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window) :
 	headlineShape(new sf::RectangleShape()),
 	labelPlayer1(new sf::Text()),
 	labelPlayer2(new sf::Text()),
-	lbPlayer1(new Menu::Listbox(window, 5u)),
-	lbPlayer2(new Menu::Listbox(window, 5u)),
-	cb(new Menu::Checkbox(window)),
+	lbPlayer1(new Menu::Listbox(window, 8u)),
+	lbPlayer2(new Menu::Listbox(window, 8u)),
+	cbMeepleChoose(new Menu::Checkbox(window)),
+	cbMeeplePos(new Menu::Checkbox(window)),
 	btnStart(new Menu::Button(window)),
 	startGame(false)
 {}
@@ -35,6 +37,8 @@ FourWins::Menu::MainMenu::~MainMenu()
 	delete this->labelPlayer2;
 	delete this->lbPlayer1;
 	delete this->lbPlayer2;
+	delete this->cbMeepleChoose;
+	delete this->cbMeeplePos;
 	delete this->btnStart;
 }
 
@@ -48,28 +52,28 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->backgroundShape->setSize(sf::Vector2f(static_cast<float>(WINDOW_WIDTH_TO_CALCULATE), static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE)));
 
 	this->headlineShape->setTexture(menuAtlas);
-	this->headlineShape->setTextureRect(sf::IntRect(0, 0, 500, 140));
-	this->headlineShape->setSize(sf::Vector2f(500.0f, 140.0f));
-	this->headlineShape->setPosition(sf::Vector2f(425.0f, 40.0f));
+	this->headlineShape->setTextureRect(resourceManager.getTextureRect(resourceManager.MENU_HEADLINE));
+	this->headlineShape->setSize(sf::Vector2f(500.0f, 140.0f)); 
+	this->headlineShape->setPosition(sf::Vector2f(425.0f, 10.0f));
 
 	this->labelPlayer1->setFont(*font);
 	this->labelPlayer1->setString("Select player 1:");
 	this->labelPlayer1->setCharacterSize(30u);
 	this->labelPlayer1->setColor(Menu::LABEL_COLOR);
-	this->labelPlayer1->setPosition(sf::Vector2f(417.0f, 200.0f));
+	this->labelPlayer1->setPosition(sf::Vector2f(417.0f, 150.0f));
 
 	this->labelPlayer2->setFont(*font);
 	this->labelPlayer2->setString("Select player 2:");
 	this->labelPlayer2->setCharacterSize(30u);
 	this->labelPlayer2->setColor(Menu::LABEL_COLOR);
-	this->labelPlayer2->setPosition(sf::Vector2f(725.0f, 200.0f));
+	this->labelPlayer2->setPosition(sf::Vector2f(725.0f, 150.0f));
 
 	this->lbPlayer1->init();
 	this->lbPlayer1->setFont(*font);
 	this->lbPlayer1->setTexture(menuAtlas);
 	this->lbPlayer1->setTopTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_UP));
 	this->lbPlayer1->setBottomTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_DOWN));
-	this->lbPlayer1->setPosition(sf::Vector2f(437.0f, 275.0f));
+	this->lbPlayer1->setPosition(sf::Vector2f(437.0f, 215.0f));
 	this->lbPlayer1->setStringForEntry(0, "Human Player");
 	this->lbPlayer1->setValueForEntry(0, 'h');
 	this->lbPlayer1->setStringForEntry(1u, "Intelligent AI");
@@ -80,13 +84,19 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->lbPlayer1->setValueForEntry(3u, 's');
 	this->lbPlayer1->setStringForEntry(4u, "Thinking AI");
 	this->lbPlayer1->setValueForEntry(4u, 't');
+	this->lbPlayer1->setStringForEntry(5u, "??? AI");
+	this->lbPlayer1->setValueForEntry(5u, 'x');
+	this->lbPlayer1->setStringForEntry(6u, "??? AI");
+	this->lbPlayer1->setValueForEntry(6u, 'x');
+	this->lbPlayer1->setStringForEntry(7u, "??? AI");
+	this->lbPlayer1->setValueForEntry(7u, 'x');
 
 	this->lbPlayer2->init();
 	this->lbPlayer2->setFont(*font);
 	this->lbPlayer2->setTexture(menuAtlas);
 	this->lbPlayer2->setTopTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_UP));
 	this->lbPlayer2->setBottomTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_DOWN));
-	this->lbPlayer2->setPosition(sf::Vector2f(745.0f, 275.0f));
+	this->lbPlayer2->setPosition(sf::Vector2f(745.0f, 215.0f));
 	this->lbPlayer2->setStringForEntry(0, "Human Player");
 	this->lbPlayer2->setValueForEntry(0, 'h');
 	this->lbPlayer2->setStringForEntry(1u, "Intelligent AI");
@@ -97,12 +107,34 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->lbPlayer2->setValueForEntry(3u, 's');
 	this->lbPlayer2->setStringForEntry(4u, "Thinking AI");
 	this->lbPlayer2->setValueForEntry(4u, 't');
+	this->lbPlayer2->setStringForEntry(5u, "??? AI");
+	this->lbPlayer2->setValueForEntry(5u, 'x');
+	this->lbPlayer2->setStringForEntry(6u, "??? AI");
+	this->lbPlayer2->setValueForEntry(6u, 'x');
+	this->lbPlayer2->setStringForEntry(7u, "??? AI");
+	this->lbPlayer2->setValueForEntry(7u, 'x');
 
-	this->cb->init();
-	this->cb->setFont(*font);
-	this->cb->setLabelText("Think");
-	this->cb->setCharacterSize(24u);
-	this->cb->setPosition(sf::Vector2f(100.0f, 100.0f));
+	this->cbMeepleChoose->init();
+	this->cbMeepleChoose->setFont(*font);
+	this->cbMeepleChoose->setLabelText("intelligent meeple choosing");
+	this->cbMeepleChoose->setCharacterSize(24u);
+	this->cbMeepleChoose->setYPos(515.0f);
+	this->cbMeepleChoose->setLeftBoxXPos(445.0f);
+	this->cbMeepleChoose->setLabelXPos(525.0f);
+	this->cbMeepleChoose->setRightBoxXPos(875.0f);
+	this->cbMeepleChoose->setLeftVisible(true);
+	this->cbMeepleChoose->setRightVisible(true);
+
+	this->cbMeeplePos->init();
+	this->cbMeeplePos->setFont(*font);
+	this->cbMeeplePos->setLabelText("intelligent meeple positioning");
+	this->cbMeeplePos->setCharacterSize(24u);
+	this->cbMeeplePos->setYPos(560.0f);
+	this->cbMeeplePos->setLeftBoxXPos(445.0f);
+	this->cbMeeplePos->setLabelXPos(515.0f);
+	this->cbMeeplePos->setRightBoxXPos(875.0f);
+	this->cbMeeplePos->setLeftVisible(true);
+	this->cbMeeplePos->setRightVisible(true);
 
 	this->btnStart->init();
 	this->btnStart->setTexture(menuAtlas);
@@ -110,12 +142,13 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->btnStart->setTextureHighlightRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN_H));
 }
 
-GameSettings_obsolete FourWins::Menu::MainMenu::loop()
+GameSettings *FourWins::Menu::MainMenu::loop()
 {
-	startGame = false;
 	while (this->window->isOpen() && !this->startGame)
 	{
 		pollEvents();
+
+		checkListboxes();
 
 		if (this->btnStart->getIsReleased())
 		{
@@ -129,13 +162,15 @@ GameSettings_obsolete FourWins::Menu::MainMenu::loop()
 		this->window->draw(*this->labelPlayer2);
 		this->lbPlayer1->draw();
 		this->lbPlayer2->draw();
-		this->cb->draw();
+		this->cbMeepleChoose->draw();
+		this->cbMeeplePos->draw();
 		this->btnStart->draw();
 		this->window->draw(*this->headlineShape);
 
 		this->window->display();
 	}
 	this->startGame = false;
+	this->btnStart->resetReleased();
 
 	return createSettings();
 }
@@ -151,7 +186,8 @@ void FourWins::Menu::MainMenu::pollEvents()
 
 		this->lbPlayer1->update(event, converted);
 		this->lbPlayer2->update(event, converted);
-		this->cb->update(event, converted);
+		this->cbMeepleChoose->update(event, converted);
+		this->cbMeeplePos->update(event, converted);
 		this->btnStart->update(event, converted);
 
 		switch (event.type)
@@ -167,15 +203,33 @@ void FourWins::Menu::MainMenu::pollEvents()
 	}
 }
 
-GameSettings_obsolete FourWins::Menu::MainMenu::createSettings()
+void FourWins::Menu::MainMenu::checkListboxes()
 {
-	I_Player* thinking = new ThinkingAI(true, true);
+	unsigned char player1Val = this->lbPlayer1->getValueOfActive();
+	unsigned char player2Val = this->lbPlayer2->getValueOfActive();
 
-	GameSettings_obsolete settings;
-	settings.playerOne = thinking;
-	settings.playerTwo = thinking;
+	bool showLeftCb = (player1Val == 't' || player1Val == 'i');
+	bool showRightCb = (player2Val == 't' || player2Val == 'i');
 
-	return settings;
+	this->cbMeepleChoose->setLeftVisible(showLeftCb);
+	this->cbMeepleChoose->setRightVisible(showRightCb);
+
+	this->cbMeeplePos->setLeftVisible(showLeftCb);
+	this->cbMeeplePos->setRightVisible(showRightCb);
+}
+
+GameSettings *FourWins::Menu::MainMenu::createSettings()
+{
+	//I_Player* thinking = new ThinkingAI(true, true);
+
+	//GameSettings settings;
+	//settings
+	//settings.playerOne = thinking;
+	//settings.playerTwo = thinking;
+
+
+
+	return new GameSettings();
 }
 
 //if (event.type == sf::Event::KeyPressed){
