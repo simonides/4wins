@@ -17,16 +17,16 @@ struct GameSettings{
     };
 
     unsigned int simulator;                 //>0: use the simulator instead of the graphical output. Numer = number of games to simulate
-    bool threadedSimulator;
-
-
+    bool threadedSimulator;                 //true: the threadedSimulator should be used
+    
     PlayerType playerType[2];
     ResourceManager::ResourceRect avatar[2];
 
-    bool fast;
-    bool noAIsim;
-    bool muted;
+    bool fast;                              //The AI doesn't perform a sleep before it's tasks.
+    bool noAIsim;                           //Immediate.The AI's meeples are not slowly moved to the board. They will be positioned immediately.
+    bool muted; 
 
+    //These options are passed to the AI's (if neccessary):
     bool option1;
     bool option2;
 
