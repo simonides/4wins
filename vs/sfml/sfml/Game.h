@@ -13,8 +13,9 @@
 #include "ColorAnimation.h"
 #include "helper.h"
 #include "RTextManager.h"
+//#include "RGameMenu.h"
 
-
+class RGameMenu;
 class SoundManager;
 class RBackground;
 class ParticleBuilder;
@@ -33,7 +34,7 @@ struct GameMenuDecision{
         REPLAY,
         BACK_TO_MENU,
         EXIT_GAME,
-        KEEP_PLAYING         //Game-internal, until the game ended and the player pressed a button
+        KEEP_PLAYING       //Game-internal, until the game ended and the player pressed a button
     };
 };
 
@@ -41,17 +42,21 @@ struct InputEvents{
     bool pressedLeftMouse;
     bool releasedLeftMouse;
     bool rightMouseButtonPressed;
-    bool hasFocus;
+    bool windowHasFocus;
+	bool releasedEscape; //needs reset???
 
-    sf::Vector2f mousePosition;
+    sf::Vector2f mousePosition; //contains converted mousposition
 };
 
 class Game{
 private:
+	Game& operator=(const Game& rhs);
+
 	sf::RenderWindow* window;
 	ResourceManager* resourceManager;
     SoundManager* soundManager;
 	RTextManager* textManager;
+	RGameMenu* gameMenu;
 
 	RBackground* background;
     sf::Music* backgroundMusic;
@@ -67,7 +72,8 @@ private:
 		HUMAN_SELECT_MEEPLE_POSITION,
 		TC_START_SELECT_MEEPLE_POSITION, TC_WAIT_FOR_SELECTED_MEEPLE_POSITION, MOVE_MEEPLE_TO_SELECTED_POSITION,
 		//check win /tie 
-		CHECK_END_CONDITION, DISPLAY_END_SCREEN
+		CHECK_END_CONDITION, DISPLAY_END_SCREEN,
+		DISPLAY_PAUSE_MENU
 	};
 
     uint8_t activePlayerIndex;
@@ -81,16 +87,7 @@ private:
 	    const sf::Color HOVERED_MEEPLE_GLOW_COLOR;
 	    const sf::Color SELECTED_MEEPLE_GLOW_COLOR;
     
-	//endscreen
-        const sf::Vector2f GAME_MENU_BUTTON_SIZE;
-        const sf::Color GAME_MENU_BUTTON_COLOR;
-        const sf::Color GAME_MENU_BUTTON_HOVER_COLOR;
-	    sf::RectangleShape* hoveredButtonPtr;
-	    sf::RectangleShape exitButton;
-	    sf::RectangleShape restartButton;
-	    sf::RectangleShape menuButton;
-		GameWinner::Enum winner;						//for the textmanager to know who is the winner
-        
+      
 	//Particles:
         ParticleSystem* particleSystem;                 //Particle controller: renders and simulates all particles
         ParticleBuilder* dustBuilder;                   //produces dust-particles
@@ -150,7 +147,7 @@ private:
         void reset();                               //Reinitialises the object for another round
         void switchActivePlayer();
 	    void createMeepleDust(sf::FloatRect fieldBounds);        
-    Game& operator = (const Game&);
+    /*Game& operator = (const Game&);*/
 public:
     Game(sf::RenderWindow& window, Player* players[2], ResourceManager& resourceLoader, SoundManager& soundManager); //Initialises the game with 2 players
 	virtual ~Game();

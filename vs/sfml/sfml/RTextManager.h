@@ -47,6 +47,7 @@ private:
 	sf::RectangleShape meeple;
 	sf::RectangleShape position;
 
+	sf::RectangleShape pause;
 	sf::RectangleShape tie;
 	sf::RectangleShape wins;
 

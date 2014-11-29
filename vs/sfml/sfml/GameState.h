@@ -7,7 +7,8 @@ struct GameWinner{
 	enum Enum{
 		PLAYER_1,
 		PLAYER_2,
-		TIE
+		TIE,
+		PAUSE //does not belong here but otherwise i'd have to create a new enum or field
 	};
 };
 

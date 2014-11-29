@@ -42,6 +42,12 @@ RTextManager::RTextManager(ResourceManager& resourceManager)
 	tie.setOrigin(tie.getSize().x / 2.f, 0.f);
 	tie.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f, 200.f);
 
+	pause.setTexture(resourceManager.getTexture(ResourceManager::TEXT_SPRITE));
+	pause.setTextureRect(resourceManager.getTextureRect(ResourceManager::TEXT_PAUSE));
+	pause.setSize(sf::Vector2f(612.f *SIZE_FAKTOR_END, 210.f *SIZE_FAKTOR_END));
+	pause.setOrigin(pause.getSize().x / 2.f, pause.getSize().y / 2.f);
+	pause.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f, 200.f);
+
 	arrowUp.setTexture(resourceManager.getTexture(ResourceManager::TEXT_SPRITE));
 	arrowUp.setTextureRect(resourceManager.getTextureRect(ResourceManager::ARROW_UP));
 	arrowUp.setSize(sf::Vector2f(131.f *SIZE_FAKTOR, 243.f *SIZE_FAKTOR));
@@ -70,6 +76,8 @@ RTextManager::RTextManager(ResourceManager& resourceManager)
 	position.setTextureRect(resourceManager.getTextureRect(ResourceManager::TEXT_A_POSITION));
 	position.setSize(sf::Vector2f(324.f *SIZE_FAKTOR, 73.f *SIZE_FAKTOR));
 	position.setOrigin(position.getSize().x / 2.f, position.getSize().y / 2.f);
+
+
 
 	ANIMATIONSPEED = 3.f;// 3.f;
 
@@ -106,6 +114,7 @@ void RTextManager::update(float elapsedTime)
 	player2.setScale(	wobbleSin[0], wobbleSin[1]);
 	wins.setScale(		wobbleSin[0], wobbleSin[1]);
 	tie.setScale(		wobbleSin[0], wobbleSin[1]);
+	pause.setScale(		wobbleSin[0], wobbleSin[1]);
 }
 
 void RTextManager::drawWinner(sf::RenderWindow& window, GameWinner::Enum winner) const
@@ -122,6 +131,9 @@ void RTextManager::drawWinner(sf::RenderWindow& window, GameWinner::Enum winner)
 		break;
 	case GameWinner::TIE: 
 		window.draw(tie); 
+		break;
+	case GameWinner::PAUSE:
+		window.draw(pause);
 		break;
 	default: assert(false); break;
 	}

@@ -30,6 +30,7 @@
 #include "RTextManager.h"
 
 #include "RBackground.h"
+#include "RGameMenu.h"
 
 
 #include "Player.h"
@@ -43,58 +44,45 @@
 
 
 Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resourceManager, SoundManager& soundManager) 
-	:
-            window(&window), 
-            resourceManager(&resourceManager),
-            soundManager(&soundManager),
-			textManager(new RTextManager(resourceManager)),
-            background(new RBackground(resourceManager, *_players[0], *_players[1])),
-            backgroundMusic(nullptr),
+	: window(&window)
+	, resourceManager(&resourceManager)
+	, soundManager(&soundManager)
+	, textManager(new RTextManager(resourceManager))
+	, gameMenu(new RGameMenu(resourceManager,soundManager,*textManager))
+		
+	, background(new RBackground(resourceManager, *_players[0], *_players[1]))
+	, backgroundMusic(nullptr)
 
-            activePlayerIndex(1),
-            logicalBoard(new Board()),
-            board( new RBoard(*resourceManager.getTexture(ResourceManager::BOARD_TEX),
-                              *resourceManager.getTexture(ResourceManager::FIELD_TEX),
-                              *resourceManager.getTexture(ResourceManager::FIELD_TEX))),
+	, activePlayerIndex(1)
+	, logicalBoard(new Board())
+	, board(new RBoard(*resourceManager.getTexture(ResourceManager::BOARD_TEX),
+                       *resourceManager.getTexture(ResourceManager::FIELD_TEX),
+                       *resourceManager.getTexture(ResourceManager::FIELD_TEX)))
+	, meeplesToDrawAndSort()
+	, HOVERED_MEEPLE_GLOW_COLOR(sf::Color::Yellow)
+	, SELECTED_MEEPLE_GLOW_COLOR(sf::Color::Red)
+	, particleSystem( new ParticleSystem(*resourceManager.getTexture(ResourceManager::PARTICLE_SPRITE), sf::Vector2u(4, 2)) )
+	, dustBuilder( new ParticleBuilder( { 300, 300 }, { 5, 30 }) )
+	, mouseCursorParticleBuilder( new ParticleBuilder({ 300, 300 }, { 5, 30 }) )
+	, endScreenParticleBuilder( new ParticleBuilder({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 10, 30 }) )
+	
+	, selectedMeeple(nullptr)
+	, selectedBoardPos()
+	, firstFrameOfState(false)
+	, hoveredMeeple(nullptr)
+	, draggingMeeple(false)
+	, draggedMeepleMouseOffset()
+	, originalMeeplePosition()
 
-            meeplesToDrawAndSort(),
-    
-	        HOVERED_MEEPLE_GLOW_COLOR(sf::Color::Yellow),
-            SELECTED_MEEPLE_GLOW_COLOR(sf::Color::Red), 
-    
-            GAME_MENU_BUTTON_SIZE(150.f, 150.f),
-            GAME_MENU_BUTTON_COLOR(sf::Color::White), 
-            GAME_MENU_BUTTON_HOVER_COLOR(sf::Color::Magenta), 
-            hoveredButtonPtr(nullptr),
-            exitButton(GAME_MENU_BUTTON_SIZE),
-            restartButton(GAME_MENU_BUTTON_SIZE),
-            menuButton(GAME_MENU_BUTTON_SIZE),
-
-			winner(GameWinner::TIE),
-    
-            particleSystem( new ParticleSystem(*resourceManager.getTexture(ResourceManager::PARTICLE_SPRITE), sf::Vector2u(4, 2)) ),
-            dustBuilder( new ParticleBuilder( { 300, 300 }, { 5, 30 }) ),
-            mouseCursorParticleBuilder( new ParticleBuilder({ 300, 300 }, { 5, 30 }) ),
-            endScreenParticleBuilder( new ParticleBuilder({ 0, static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE) }, { 10, 30 }) ), 
-    
-            selectedMeeple(nullptr),  
-            selectedBoardPos(),
-            firstFrameOfState(false),
-
-            hoveredMeeple(nullptr),
-            draggingMeeple(false),  
-            draggedMeepleMouseOffset(),
-            originalMeeplePosition(),
-
-            MOVE_MEEPLE_ANIMATION_SPEED(800.f),
-            MOVE_MEEPLE_ANIMATION_MAX_LIFT_DISTANCE({ 5.f, 12.f }),
-            initialPosition(),
-            targetPosition(),
-            moveMeepleAnimationDistance(0),
-            moveMeepleAnimationProgress(0),
-            moveMeepleAnimationMaxLiftDistance(0),
-
-            remainingThinkTime(0)
+	, MOVE_MEEPLE_ANIMATION_SPEED(800.f)
+	, MOVE_MEEPLE_ANIMATION_MAX_LIFT_DISTANCE({ 5.f, 12.f })
+	, initialPosition()
+	, targetPosition()
+	, moveMeepleAnimationDistance(0)
+	, moveMeepleAnimationProgress(0)
+	, moveMeepleAnimationMaxLiftDistance(0)
+	
+	, remainingThinkTime(0)
 {    
     assert(_players[0] != _players[1]);   //hehehe, that won't crash this game
 
@@ -111,23 +99,6 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resou
     	
     initMeeples();
     	    
-    //Game Menu Buttons:
-        sf::Vector2f buttonOrigin(GAME_MENU_BUTTON_SIZE.x / 2.f, GAME_MENU_BUTTON_SIZE.y / 2.f);
-	    restartButton.setTexture(resourceManager.getTexture(ResourceManager::RELOAD_BTN_TEX));
-        restartButton.setFillColor(GAME_MENU_BUTTON_COLOR);
-        restartButton.setOrigin(buttonOrigin);
-	    restartButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f -150.f , WINDOW_HEIGHT_TO_CALCULATE / 2.f + 100.f);
-
-        exitButton.setTexture(resourceManager.getTexture(ResourceManager::EXIT_BTN_TEX));
-        exitButton.setFillColor(GAME_MENU_BUTTON_COLOR);
-	    exitButton.setOrigin(buttonOrigin);
-		exitButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f + 150.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f + 100.f);
-	
-        menuButton.setTexture(resourceManager.getTexture(ResourceManager::MENU_BTN_TEX));
-        menuButton.setFillColor(GAME_MENU_BUTTON_COLOR);
-	    menuButton.setOrigin(buttonOrigin);
-		menuButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f + 100.f);
-    
     //Init Particle systems:   
         dustBuilder->setSprites({ 2, 3 }, { 0, 1 })
             ->setPath({ 50, 150 }, { 290, 320 })
@@ -187,11 +158,7 @@ void Game::reset(){
 	players[1]->logicalMeepleBag->reset();
 	players[1]->rbag->reset();
 
-    exitButton.setFillColor(GAME_MENU_BUTTON_COLOR);
-    restartButton.setFillColor(GAME_MENU_BUTTON_COLOR);
-    menuButton.setFillColor(GAME_MENU_BUTTON_COLOR);
-
-    hoveredButtonPtr = nullptr;    
+	gameMenu->reset();
 
     selectedMeeple = nullptr;
     firstFrameOfState = true;
@@ -217,8 +184,10 @@ GameMenuDecision::Enum Game::runGame(){
 
     LoopState lastLoopState = DISPLAY_END_SCREEN;   
 	LoopState loopState = INIT_STATE;
+	LoopState oldLoopState = INIT_STATE; // for pause menu
     GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::KEEP_PLAYING;
     InputEvents inputEvents;
+	//bool gameMenuActive = false; // used to show / hide the game menu
 
     soundManager->getMusic(SoundManager::GAME_START)->play();
 
@@ -227,7 +196,8 @@ GameMenuDecision::Enum Game::runGame(){
     }
     backgroundMusic = soundManager->getMusic(SoundManager::BACKGROUND);
     backgroundMusic->play();
-
+	
+	
     while (window->isOpen() && gameMenuDecision == GameMenuDecision::KEEP_PLAYING){
         elapsedTime = clock.getElapsedTime().asSeconds();
 	    float fps = 1.f / elapsedTime;
@@ -239,35 +209,50 @@ GameMenuDecision::Enum Game::runGame(){
                 mouseCursorParticleBuilder->setPosition(inputEvents.mousePosition);
                 particleSystem->newParticleCloud(1, *mouseCursorParticleBuilder);
             }
-
-          
-        if (inputEvents.hasFocus){
-		    switch (loopState)
-		    {
-		        case INIT_STATE:                                //todo das stimmt no ned ganz human iplayer und tc !!!!
-			                                                    loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
-																break;
-		        case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();								break;
-		        case HUMAN_SELECT_MEEPLE:						loopState =  humanSelectMeeple(inputEvents);					break;
-                case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();								break;
-		        case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();							break;
-		        case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple(elapsedTime);				break;
-		        case I_PLAYER_SELECT_MEEPLE_POSITION:			loopState = i_playerSelectMeeplePosition();						break;
-		        case HUMAN_SELECT_MEEPLE_POSITION:				loopState = humanSelectMeeplePosition(inputEvents);				break;
-		        case TC_START_SELECT_MEEPLE_POSITION:			loopState = tcStartSelectMeeplePosition();						break;
-		        case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:		loopState = tcWaitForSelectedMeeplePosition(); 					break;
-		        case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);			break;
-		        case CHECK_END_CONDITION:						
-					loopState = checkEndCondition();	
+			// TODO maybe change to whitelist!
+			if (inputEvents.releasedEscape == true && loopState != DISPLAY_PAUSE_MENU && loopState != DISPLAY_END_SCREEN)
+			{
+				oldLoopState = loopState;
+				loopState = DISPLAY_PAUSE_MENU;
+				gameMenu->setMenuState(GameWinner::PAUSE);
+				inputEvents.releasedEscape = false;
+			}
+			if (inputEvents.windowHasFocus){
+				switch (loopState)
+				{
+				case INIT_STATE:                                //todo das stimmt no ned ganz human iplayer und tc !!!!
+					loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
+					break;
+				case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();								break;
+				case HUMAN_SELECT_MEEPLE:						loopState = humanSelectMeeple(inputEvents);					break;
+				case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();								break;
+				case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();							break;
+				case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple(elapsedTime);				break;
+				case I_PLAYER_SELECT_MEEPLE_POSITION:			loopState = i_playerSelectMeeplePosition();						break;
+				case HUMAN_SELECT_MEEPLE_POSITION:				loopState = humanSelectMeeplePosition(inputEvents);				break;
+				case TC_START_SELECT_MEEPLE_POSITION:			loopState = tcStartSelectMeeplePosition();						break;
+				case TC_WAIT_FOR_SELECTED_MEEPLE_POSITION:		loopState = tcWaitForSelectedMeeplePosition(); 					break;
+				case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);			break;
+				case CHECK_END_CONDITION:
+					loopState = checkEndCondition();
 					if (loopState == DISPLAY_END_SCREEN)
 					{
 						gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);
 					}
 					break;
-		        case DISPLAY_END_SCREEN:			            gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);	break;
-		    }
-        }
+				case DISPLAY_PAUSE_MENU:
+					if (inputEvents.releasedEscape == true)
+					{
+						loopState = oldLoopState;
+						inputEvents.releasedEscape = false;
+					}
+					gameMenu->resetHover();
+					gameMenuDecision =  gameMenu->handleClickAndHover(&inputEvents);
+					break;
 
+				case DISPLAY_END_SCREEN:			            gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);	break;
+				}
+			}
 		std::string title("4Wins by Jakob M., Sebastian S. and Simon D.   @");
 		title.append(std::to_string(fps));
 		title.append(" fps");
@@ -294,13 +279,14 @@ GameMenuDecision::Enum Game::runGame(){
 
 		textManager->update(elapsedTime);
         if (loopState == DISPLAY_END_SCREEN){
-			window->draw(exitButton);
-			window->draw(menuButton);
-			window->draw(restartButton);
-			textManager->drawWinner(*window, winner);
+			gameMenu->draw(*window);
 		} else
 		{
 			textManager->drawTodo(*window, todoText, activePlayerIndex);
+		}
+
+		if (loopState == DISPLAY_PAUSE_MENU){
+			gameMenu->draw(*window);
 		}
 		window->display();
 
@@ -326,7 +312,8 @@ void Game::createMeepleDust(sf::FloatRect fieldBounds){
 }
 
 InputEvents Game::pollEvents(){
-    static InputEvents events = { false, false, false, true, { 0, 0 } };
+    static InputEvents events = { false, false, false, true, false, { 0, 0 } };
+	events.releasedEscape = false;
 
     events.pressedLeftMouse = false;
     events.releasedLeftMouse = false;
@@ -357,6 +344,12 @@ InputEvents Game::pollEvents(){
 				    default: break;
 				}
 				break;
+			case sf::Event::KeyReleased:
+				if (event.key.code == sf::Keyboard::Escape )
+				{
+					events.releasedEscape = true;
+				}
+				break;
 			case sf::Event::Resized:
 				handleResizeWindowEvent(window);
 				break;
@@ -365,12 +358,12 @@ InputEvents Game::pollEvents(){
 				window->close();
 				break;
             case sf::Event::LostFocus:
-                events.hasFocus = false;
+                events.windowHasFocus = false;
                 backgroundMusic->pause();
                 soundManager->getMusic(SoundManager::SHEEP)->play();
                 break;
             case sf::Event::GainedFocus:
-                events.hasFocus = true;
+                events.windowHasFocus = true;
                 backgroundMusic->play();
                 break;
 		}
@@ -624,8 +617,7 @@ Game::LoopState Game::checkEndCondition(){
 			assert(winningCombiRMeeples[i] != nullptr);
 		}
         soundManager->getMusic(SoundManager::MEEPLE_WIN_DROP)->play();
-		
-		winner = (activePlayerIndex == 0) ? GameWinner::PLAYER_1 : GameWinner::PLAYER_2;
+		gameMenu->setMenuState((activePlayerIndex == 0) ? GameWinner::PLAYER_1 : GameWinner::PLAYER_2);
 		return DISPLAY_END_SCREEN;
 	}
     
@@ -633,7 +625,7 @@ Game::LoopState Game::checkEndCondition(){
 	    #if PRINT_WINNER_PER_ROUND
 			    std::cout << "Tie! There is no winner." << std::endl;
 	    #endif
-		winner = GameWinner::TIE;
+		gameMenu->setMenuState(GameWinner::TIE);
 		return DISPLAY_END_SCREEN;
 	}
 	return INIT_STATE;
@@ -663,7 +655,7 @@ GameMenuDecision::Enum Game::displayEndscreen(InputEvents inputEvents, float ela
 		backgroundMusic->stop();
 		backgroundMusic = soundManager->getMusic(SoundManager::WIN_MUSIC);
 		backgroundMusic->play();
-		//backgroundMusic->setPlayingOffset(sf::seconds(36.f));
+		//backgroundMusic->setPlayingOffset(sf::seconds(36.f)); //TODO change file so it fits.. 
 	}
 
 	//Animate rainbow-colors on the meeples, which were responsible for the winning-combination:  
@@ -674,33 +666,8 @@ GameMenuDecision::Enum Game::displayEndscreen(InputEvents inputEvents, float ela
 			color = colorAnimations[i].getColor();
 			winningCombiRMeeples[i]->setGlow(&color);
 		}
-	} 
-    //Handle GameMenu Buttons
-	    if (hoveredButtonPtr != nullptr){
-		    hoveredButtonPtr->setFillColor(GAME_MENU_BUTTON_COLOR);
-		    hoveredButtonPtr = nullptr;
-	    }
-        if (restartButton.getGlobalBounds().contains(inputEvents.mousePosition)){
-            restartButton.setFillColor(GAME_MENU_BUTTON_HOVER_COLOR);
-		    hoveredButtonPtr = &restartButton;
-            if (inputEvents.releasedLeftMouse){
-                return GameMenuDecision::REPLAY;
-            }
-	    }else
-        if (exitButton.getGlobalBounds().contains(inputEvents.mousePosition)){
-            exitButton.setFillColor(GAME_MENU_BUTTON_HOVER_COLOR);
-            hoveredButtonPtr = &exitButton;
-            if (inputEvents.releasedLeftMouse){
-                return GameMenuDecision::EXIT_GAME;
-            }
-	    }else
-        if (menuButton.getGlobalBounds().contains(inputEvents.mousePosition)){
-            menuButton.setFillColor(GAME_MENU_BUTTON_HOVER_COLOR);
-            hoveredButtonPtr = &menuButton;
-            if (inputEvents.releasedLeftMouse){
-                soundManager->getMusic(SoundManager::SHEEP)->play();
-                return GameMenuDecision::BACK_TO_MENU;
-            }
-	    }
-    return GameMenuDecision::KEEP_PLAYING;      //stay in the game loop until the user presses a button
+	}
+	//Handle GameMenu Buttons
+	gameMenu->resetHover();
+	return gameMenu->handleClickAndHover(&inputEvents);
 }

@@ -142,6 +142,7 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case TEXT_SELECT:			return sf::IntRect(0,	708, 203, 73);//
 	case TEXT_A_MEEPLE:			return sf::IntRect(241, 635, 291, 73);//
 	case TEXT_A_POSITION:		return sf::IntRect(203,	708, 324, 73);//
+	case TEXT_PAUSE:			return sf::IntRect(0,   781, 612, 210);//
 
 	case ARROW_UP:				return sf::IntRect(762,   0, 131, 243);//
 
