@@ -134,6 +134,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="getopt.h" />
     <ClInclude Include="Menu\AvatarChooser.h" />
+    <ClInclude Include="Menu\AvatarEnum.h" />
     <ClInclude Include="Menu\Checkbox.h" />
     <ClInclude Include="Menu\ImageCheckbox.h" />
     <ClInclude Include="Menu\ListboxEntry.h" />

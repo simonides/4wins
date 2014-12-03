@@ -296,5 +296,8 @@
     <ClInclude Include="RGameMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Menu\AvatarEnum.h">
+      <Filter>Header Files\Menu</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

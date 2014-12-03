@@ -5,11 +5,14 @@
 #include "../ThinkingAI.h"
 #include "../ResourceManager.h"
 #include "../GameSettings.h"
+#include "../ParticleSystem.h"
+#include "../ParticleBuilder.h"
 #include "MenuConstants.h"
 #include "Listbox.h"
 #include "Checkbox.h"
 #include "Button.h"
-#include "ImageCheckbox.h"
+#include "AvatarChooser.h"
+#include "AvatarEnum.h"
 
 #include "Menu.h"
 
@@ -17,6 +20,8 @@ using namespace FourWins;
 
 FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window) :
 	window(&window),
+	particleSystem(nullptr),
+	selectionParticleRain(nullptr),
 	backgroundShape(new sf::RectangleShape()),
 	headlineShape(new sf::RectangleShape()),
 	labelPlayer1(new sf::Text()),
@@ -25,6 +30,8 @@ FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window) :
 	lbPlayer2(new Menu::Listbox(window, 8u)),
 	cbMeepleChoose(new Menu::Checkbox(window)),
 	cbMeeplePos(new Menu::Checkbox(window)),
+	acPlayer1(new Menu::AvatarChooser(window, 8u)),
+	acPlayer2(new Menu::AvatarChooser(window, 8u)),
 	btnStart(new Menu::Button(window)),
 	startGame(false)
 {}
@@ -32,6 +39,8 @@ FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window) :
 FourWins::Menu::MainMenu::~MainMenu()
 {
 	delete this->backgroundShape;
+	delete this->particleSystem;
+	delete this->selectionParticleRain;
 	delete this->headlineShape;
 	delete this->labelPlayer1;
 	delete this->labelPlayer2;
@@ -39,6 +48,8 @@ FourWins::Menu::MainMenu::~MainMenu()
 	delete this->lbPlayer2;
 	delete this->cbMeepleChoose;
 	delete this->cbMeeplePos;
+	delete this->acPlayer1;
+	delete this->acPlayer2;
 	delete this->btnStart;
 }
 
@@ -46,6 +57,14 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 {
 	const sf::Texture *menuAtlas = resourceManager.getTexture(resourceManager.MENU_ATLAS);
 	const sf::Font *font = resourceManager.getFont(resourceManager.ROBOTO);
+
+	this->particleSystem = new ParticleSystem(*resourceManager.getTexture(resourceManager.PARTICLE_SPRITE), sf::Vector2u(4, 2));
+	this->selectionParticleRain = new ParticleBuilder(sf::Vector2f(), { 5.0f, 18.0f });
+	this->selectionParticleRain->setSprites(sf::Vector2u(0, 2), sf::Vector2u(0, 2))
+		->setPath({ 450.0f, 800.0f }, { 240.0f, 300.0f })
+		->setGravity(70.0f, 90.0f)
+		->setFadeoutSpeed({ 350.0f, 400.0f })
+		->setDynamicColor({ 2.0f, 8.0f });
 
 	this->backgroundShape->setTexture(resourceManager.getTexture(resourceManager.BACKGROUND_TEX));
 	this->backgroundShape->setTextureRect(resourceManager.getTextureRect(resourceManager.BACKGROUND));
@@ -69,50 +88,52 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->labelPlayer2->setPosition(sf::Vector2f(725.0f, 150.0f));
 
 	this->lbPlayer1->init();
-	this->lbPlayer1->setFont(*font);
-	this->lbPlayer1->setTexture(menuAtlas);
-	this->lbPlayer1->setTopTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_UP));
-	this->lbPlayer1->setBottomTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_DOWN));
-	this->lbPlayer1->setPosition(sf::Vector2f(437.0f, 215.0f));
-	this->lbPlayer1->setStringForEntry(0, "Human Player");
-	this->lbPlayer1->setValueForEntry(0, 'h');
-	this->lbPlayer1->setStringForEntry(1u, "Intelligent AI");
-	this->lbPlayer1->setValueForEntry(1u, 'i');
-	this->lbPlayer1->setStringForEntry(2u, "Random AI");
-	this->lbPlayer1->setValueForEntry(2u, 'r');
-	this->lbPlayer1->setStringForEntry(3u, "Stupid AI");
-	this->lbPlayer1->setValueForEntry(3u, 's');
-	this->lbPlayer1->setStringForEntry(4u, "Thinking AI");
-	this->lbPlayer1->setValueForEntry(4u, 't');
-	this->lbPlayer1->setStringForEntry(5u, "??? AI");
-	this->lbPlayer1->setValueForEntry(5u, 'x');
-	this->lbPlayer1->setStringForEntry(6u, "??? AI");
-	this->lbPlayer1->setValueForEntry(6u, 'x');
-	this->lbPlayer1->setStringForEntry(7u, "??? AI");
-	this->lbPlayer1->setValueForEntry(7u, 'x');
+	this->lbPlayer1->setFont(*font).
+		setTexture(menuAtlas).
+		setTopTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_UP)).
+		setBottomTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_DOWN)).
+		setPosition(sf::Vector2f(437.0f, 215.0f)).
+		setStringForEntry(0, "Human Player").
+		setValueForEntry(0, 'h').
+		setStringForEntry(1u, "Stupid AI").
+		setValueForEntry(1u, 's').
+		setStringForEntry(2u, "Random AI").
+		setValueForEntry(2u, 'r').
+		setStringForEntry(3u, "Thinking AI").
+		setValueForEntry(3u, 't').
+		setStringForEntry(4u, "Smart AI").
+		setValueForEntry(4u, 'm').
+		setStringForEntry(5u, "??? AI").
+		setValueForEntry(5u, 'x').
+		setStringForEntry(6u, "??? AI").
+		setValueForEntry(6u, 'x').
+		setStringForEntry(7u, "??? AI").
+		setValueForEntry(7u, 'x').
+		setDefaultEntry(0);
 
 	this->lbPlayer2->init();
-	this->lbPlayer2->setFont(*font);
-	this->lbPlayer2->setTexture(menuAtlas);
-	this->lbPlayer2->setTopTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_UP));
-	this->lbPlayer2->setBottomTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_DOWN));
-	this->lbPlayer2->setPosition(sf::Vector2f(745.0f, 215.0f));
-	this->lbPlayer2->setStringForEntry(0, "Human Player");
-	this->lbPlayer2->setValueForEntry(0, 'h');
-	this->lbPlayer2->setStringForEntry(1u, "Intelligent AI");
-	this->lbPlayer2->setValueForEntry(1u, 'i');
-	this->lbPlayer2->setStringForEntry(2u, "Random AI");
-	this->lbPlayer2->setValueForEntry(2u, 'r');
-	this->lbPlayer2->setStringForEntry(3u, "Stupid AI");
-	this->lbPlayer2->setValueForEntry(3u, 's');
-	this->lbPlayer2->setStringForEntry(4u, "Thinking AI");
-	this->lbPlayer2->setValueForEntry(4u, 't');
-	this->lbPlayer2->setStringForEntry(5u, "??? AI");
-	this->lbPlayer2->setValueForEntry(5u, 'x');
-	this->lbPlayer2->setStringForEntry(6u, "??? AI");
-	this->lbPlayer2->setValueForEntry(6u, 'x');
-	this->lbPlayer2->setStringForEntry(7u, "??? AI");
-	this->lbPlayer2->setValueForEntry(7u, 'x');
+	this->lbPlayer2->setFont(*font).
+		setTexture(menuAtlas).
+		setTopTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_UP)).
+		setBottomTextureRect(resourceManager.getTextureRect(resourceManager.MENU_FRAME_DOWN)).
+		setPosition(sf::Vector2f(745.0f, 215.0f)).
+		setStringForEntry(0, "Human Player").
+		setValueForEntry(0, 'h').
+		setStringForEntry(1u, "Stupid AI").
+		setValueForEntry(1u, 's').
+		setStringForEntry(2u, "Random AI").
+		setValueForEntry(2u, 'r').
+		setStringForEntry(3u, "Thinking AI").
+		setValueForEntry(3u, 't').
+		setStringForEntry(4u, "Smart AI").
+		setValueForEntry(4u, 'm').
+		setStringForEntry(5u, "??? AI").
+		setValueForEntry(5u, 'x').
+		setStringForEntry(6u, "??? AI").
+		setValueForEntry(6u, 'x').
+		setStringForEntry(7u, "??? AI").
+		setValueForEntry(7u, 'x').
+		setDefaultEntry(0);
 
 	this->cbMeepleChoose->init();
 	this->cbMeepleChoose->setFont(*font);
@@ -136,6 +157,72 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->cbMeeplePos->setLeftVisible(true);
 	this->cbMeeplePos->setRightVisible(true);
 
+	const sf::IntRect smoothSteveRect = resourceManager.getTextureRect(resourceManager.SMOOTH_STEVE);
+	const sf::IntRect profJenkinsRect = resourceManager.getTextureRect(resourceManager.PROFESSOR_JENKINS);
+	const sf::IntRect hipsterHenryRect = resourceManager.getTextureRect(resourceManager.HIPSTER_HENRY);
+
+	this->acPlayer1->init();
+	this->acPlayer1->setFont(*font).
+		setTexture(resourceManager.getTexture(resourceManager.AVATAR_SPRITE)).
+		setPreviewPosition(sf::Vector2f(39.0f, 28.0f)).
+		setThumbnailBoxPosition(sf::Vector2f(76.0f, 510.0f)).
+		setEnumForEntry(0, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(0, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(0, "Uncle Fucking Ben").
+		setEnumForEntry(1u, Menu::Avatars::PROFESSOR_JENKINS).
+		setTextureRectsForEntry(1u, profJenkinsRect, profJenkinsRect).
+		setStringForEntry(1u, "Meister Propper").
+		setEnumForEntry(2u, Menu::Avatars::HIPSTER_HENRY).
+		setTextureRectsForEntry(2u, hipsterHenryRect, hipsterHenryRect).
+		setStringForEntry(2u, "Ronald McDonald").
+		setEnumForEntry(3u, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(3u, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(3u, "Uncle Ben").
+		setEnumForEntry(4u, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(4u, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(4u, "Uncle Ben").
+		setEnumForEntry(5u, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(5u, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(5u, "Uncle Ben").
+		setEnumForEntry(6u, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(6u, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(6u, "Uncle Ben").
+		setEnumForEntry(7u, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(7u, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(7u, "Uncle Ben").
+		setDefaultEntry(0);
+
+	this->acPlayer2->init();
+	this->acPlayer2->setFont(*font).
+		setTexture(resourceManager.getTexture(resourceManager.AVATAR_SPRITE)).
+		setPreviewPosition(sf::Vector2f(990.0f, 28.0f)).
+		setThumbnailBoxPosition(sf::Vector2f(1027.0f, 510.0f)).
+		setEnumForEntry(0, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(0, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(0, "Uncle Fucking Ben").
+		setEnumForEntry(1u, Menu::Avatars::PROFESSOR_JENKINS).
+		setTextureRectsForEntry(1u, profJenkinsRect, profJenkinsRect).
+		setStringForEntry(1u, "Meister Propper").
+		setEnumForEntry(2u, Menu::Avatars::HIPSTER_HENRY).
+		setTextureRectsForEntry(2u, hipsterHenryRect, hipsterHenryRect).
+		setStringForEntry(2u, "Ronald McDonald").
+		setEnumForEntry(3u, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(3u, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(3u, "Uncle Ben").
+		setEnumForEntry(4u, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(4u, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(4u, "Uncle Ben").
+		setEnumForEntry(5u, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(5u, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(5u, "Uncle Ben").
+		setEnumForEntry(6u, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(6u, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(6u, "Uncle Ben").
+		setEnumForEntry(7u, Menu::Avatars::SMOOTH_STEVE).
+		setTextureRectsForEntry(7u, smoothSteveRect, smoothSteveRect).
+		setStringForEntry(7u, "Uncle Ben").
+		setDefaultEntry(0);
+
 	this->btnStart->init();
 	this->btnStart->setTexture(menuAtlas);
 	this->btnStart->setTextureRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN));
@@ -144,6 +231,8 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 
 GameSettings *FourWins::Menu::MainMenu::loop()
 {
+	sf::Clock gameClock;
+
 	while (this->window->isOpen() && !this->startGame)
 	{
 		pollEvents();
@@ -154,9 +243,26 @@ GameSettings *FourWins::Menu::MainMenu::loop()
 		{
 			this->startGame = true;
 		}
+		if (this->acPlayer1->getSelectionChanged())
+		{
+			this->selectionParticleRain->setPosition(sf::Vector2f(190.0f, 120.0f), { -5.0f, 5.0f });
+			this->particleSystem->newParticleCloud(100, *this->selectionParticleRain);
+			this->acPlayer1->resetSelectionChanged();
+		}
+		if (this->acPlayer2->getSelectionChanged())
+		{
+			this->selectionParticleRain->setPosition(sf::Vector2f(1140.0f, 120.0f), { -5.0f, 5.0f });
+			this->particleSystem->newParticleCloud(100, *this->selectionParticleRain);
+			this->acPlayer2->resetSelectionChanged();
+		}
+		this->particleSystem->update(gameClock.getElapsedTime().asSeconds());
+		gameClock.restart();
 
-		this->window->clear(sf::Color::Black);
+		this->window->clear(sf::Color::White);
 
+		this->window->draw(this->acPlayer1->getPreviewShape());
+		this->window->draw(this->acPlayer2->getPreviewShape());
+		this->particleSystem->draw(*this->window);
 		this->window->draw(*this->backgroundShape);
 		this->window->draw(*this->labelPlayer1);
 		this->window->draw(*this->labelPlayer2);
@@ -164,6 +270,8 @@ GameSettings *FourWins::Menu::MainMenu::loop()
 		this->lbPlayer2->draw();
 		this->cbMeepleChoose->draw();
 		this->cbMeeplePos->draw();
+		this->acPlayer1->draw();
+		this->acPlayer2->draw();
 		this->btnStart->draw();
 		this->window->draw(*this->headlineShape);
 
@@ -188,6 +296,8 @@ void FourWins::Menu::MainMenu::pollEvents()
 		this->lbPlayer2->update(event, converted);
 		this->cbMeepleChoose->update(event, converted);
 		this->cbMeeplePos->update(event, converted);
+		this->acPlayer1->update(event, converted);
+		this->acPlayer2->update(event, converted);
 		this->btnStart->update(event, converted);
 
 		switch (event.type)
@@ -208,8 +318,8 @@ void FourWins::Menu::MainMenu::checkListboxes()
 	unsigned char player1Val = this->lbPlayer1->getValueOfActive();
 	unsigned char player2Val = this->lbPlayer2->getValueOfActive();
 
-	bool showLeftCb = (player1Val == 't' || player1Val == 'i');
-	bool showRightCb = (player2Val == 't' || player2Val == 'i');
+	bool showLeftCb = (player1Val == 't' || player1Val == 'm');
+	bool showRightCb = (player2Val == 't' || player2Val == 'm');
 
 	this->cbMeepleChoose->setLeftVisible(showLeftCb);
 	this->cbMeepleChoose->setRightVisible(showRightCb);
@@ -220,16 +330,124 @@ void FourWins::Menu::MainMenu::checkListboxes()
 
 GameSettings *FourWins::Menu::MainMenu::createSettings()
 {
-	//I_Player* thinking = new ThinkingAI(true, true);
+	GameSettings *settings = new GameSettings();
 
-	//GameSettings settings;
-	//settings
-	//settings.playerOne = thinking;
-	//settings.playerTwo = thinking;
+	ResourceManager::ResourceRect player1Rect;
+	ResourceManager::ResourceRect player2Rect;
+	GameSettings::PlayerType player1Type;
+	GameSettings::PlayerType player2Type;
 
+	switch (this->acPlayer1->getSelectedAvatar())
+	{
+	case Menu::SMOOTH_STEVE:
+		player1Rect = ResourceManager::SMOOTH_STEVE;
+		break;
+	case Menu::PROFESSOR_JENKINS:
+		player1Rect = ResourceManager::PROFESSOR_JENKINS;
+		break;
+	case Menu::HIPSTER_HENRY:
+		player1Rect = ResourceManager::HIPSTER_HENRY;
+		break;
+	case Menu::BOYBAND_BILLY:
+		player1Rect = ResourceManager::BOYBAND_BILLY;
+		break;
+	case Menu::BOOKWORM_BETTY:
+		player1Rect = ResourceManager::BOOKWORM_BETTY;
+		break;
+	case Menu::FASHION_FABIENNE:
+		player1Rect = ResourceManager::FASHION_FABIENNE;
+		break;
+	case Menu::HIPPIE_HILDY:
+		player1Rect = ResourceManager::HIPPIE_HILDY;
+		break;
+	case Menu::SMOKIN_STACY:
+		player1Rect = ResourceManager::SMOKIN_STACY;
+		break;
+	default:
+		player1Rect = ResourceManager::SMOOTH_STEVE;
+		break;
+	}
+	switch (this->acPlayer2->getSelectedAvatar())
+	{
+	case Menu::SMOOTH_STEVE:
+		player2Rect = ResourceManager::SMOOTH_STEVE;
+		break;
+	case Menu::PROFESSOR_JENKINS:
+		player2Rect = ResourceManager::PROFESSOR_JENKINS;
+		break;
+	case Menu::HIPSTER_HENRY:
+		player2Rect = ResourceManager::HIPSTER_HENRY;
+		break;
+	case Menu::BOYBAND_BILLY:
+		player2Rect = ResourceManager::BOYBAND_BILLY;
+		break;
+	case Menu::BOOKWORM_BETTY:
+		player2Rect = ResourceManager::BOOKWORM_BETTY;
+		break;
+	case Menu::FASHION_FABIENNE:
+		player2Rect = ResourceManager::FASHION_FABIENNE;
+		break;
+	case Menu::HIPPIE_HILDY:
+		player2Rect = ResourceManager::HIPPIE_HILDY;
+		break;
+	case Menu::SMOKIN_STACY:
+		player2Rect = ResourceManager::SMOKIN_STACY;
+		break;
+	default:
+		player2Rect = ResourceManager::SMOOTH_STEVE;
+		break;
+	}
+	switch (this->lbPlayer1->getValueOfActive())
+	{
+	case 'h':
+		player1Type = GameSettings::HUMAN;
+		break;
+	case 's':
+		player1Type = GameSettings::STUPID_AI;
+		break;
+	case 'r':
+		player1Type = GameSettings::RANDOM_AI;
+		break;
+	case 't':
+		player1Type = GameSettings::THINKING_AI;
+		break;
+	case 'm':
+		player1Type = GameSettings::SMART_AI;
+		break;
+	default:
+		player1Type = GameSettings::HUMAN;
+		break;
+	}
+	switch (this->lbPlayer2->getValueOfActive())
+	{
+	case 'h':
+		player2Type = GameSettings::HUMAN;
+		break;
+	case 's':
+		player2Type = GameSettings::STUPID_AI;
+		break;
+	case 'r':
+		player2Type = GameSettings::RANDOM_AI;
+		break;
+	case 't':
+		player2Type = GameSettings::THINKING_AI;
+		break;
+	case 'm':
+		player2Type = GameSettings::SMART_AI;
+		break;
+	default:
+		player2Type = GameSettings::HUMAN;
+		break;
+	}
 
+	settings->avatar[0] = player1Rect;
+	settings->avatar[1] = player2Rect;
+	settings->playerType[0] = player1Type;
+	settings->playerType[1] = player2Type;
+	settings->option1 = true;
+	settings->option2 = true;
 
-	return new GameSettings();
+	return settings;
 }
 
 //if (event.type == sf::Event::KeyPressed){

@@ -33,7 +33,9 @@ void FourWins::Menu::Checkbox::init()
 	this->boxes[1].setFillColor(Menu::BACKGROUND_COLOR);
 
 	this->boxCrosses[0].setColor(Menu::TEXT_COLOR);
+	this->boxCrosses[0].setString("X");
 	this->boxCrosses[1].setColor(Menu::TEXT_COLOR);
+	this->boxCrosses[1].setString("X");
 
 	this->label->setColor(Menu::LABEL_COLOR);
 }
@@ -104,7 +106,7 @@ void FourWins::Menu::Checkbox::update(const sf::Event &e, const sf::Vector2f &mo
 			{
 			case sf::Event::MouseButtonPressed:
 			case sf::Event::MouseMoved:
-				this->boxes[i].setFillColor(Menu::HIGHLIGHT_COLOR);
+				this->boxes[i].setFillColor(Menu::HOVER_COLOR);
 				break;
 			case sf::Event::MouseButtonReleased:
 				if (!this->boxCrosses[i].getString().isEmpty())
@@ -115,7 +117,7 @@ void FourWins::Menu::Checkbox::update(const sf::Event &e, const sf::Vector2f &mo
 				{
 					this->boxCrosses[i].setString("X");
 				}
-				this->boxes[i].setFillColor(Menu::HIGHLIGHT_COLOR);
+				this->boxes[i].setFillColor(Menu::HOVER_COLOR);
 				break;
 			}
 		}

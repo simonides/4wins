@@ -37,13 +37,14 @@ namespace FourWins
 			~Listbox();
 			void init();
 
-			void setFont(const sf::Font &font);
-			void setPosition(const sf::Vector2f &position);
-			void setTexture(const sf::Texture *texture);
-			void setValueForEntry(unsigned int index, unsigned char value);
-			void setStringForEntry(unsigned int index, const sf::String &text);
-			void setTopTextureRect(const sf::IntRect &rect);
-			void setBottomTextureRect(const sf::IntRect &rect);
+			Listbox &setFont(const sf::Font &font);
+			Listbox &setPosition(const sf::Vector2f &position);
+			Listbox &setTexture(const sf::Texture *texture);
+			Listbox &setValueForEntry(unsigned int index, unsigned char value);
+			Listbox &setStringForEntry(unsigned int index, const sf::String &text);
+			Listbox &setTopTextureRect(const sf::IntRect &rect);
+			Listbox &setBottomTextureRect(const sf::IntRect &rect);
+			Listbox &setDefaultEntry(unsigned int index);
 			unsigned char getValueOfActive() const;
 			void update(const sf::Event &e, const sf::Vector2f &mousePosition);
 			void draw();
@@ -52,6 +53,7 @@ namespace FourWins
 			void resetHover();
 			void checkForHover(const sf::Vector2f &mousePosition);
 			void checkForActive(const sf::Vector2f &mousePosition);
+			Listbox &operator=(const Listbox&);
 		};
 	}
 }
