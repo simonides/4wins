@@ -48,12 +48,9 @@ void ParticleSystem::update(float elapsedTime){
 
     for (unsigned int i = 0; i < particleCount; ++i){
         //Path:
-             sf::Vector2f moveVector = particles[i].direction;
-             moveVector.x += particles[i].gravity.x;
-             moveVector.y += particles[i].gravity.y;
-             particles[i].shape.move(moveVector.x * elapsedTime, moveVector.y * elapsedTime);
-             particles[i].direction = moveVector;
-        //particles[i].direction = moveVector
+            particles[i].shape.move((particles[i].direction.x + particles[i].gravity.x) * elapsedTime, (particles[i].direction.y  + particles[i].gravity.y)* elapsedTime);
+            particles[i].direction.x += particles[i].gravity.x * elapsedTime;
+            particles[i].direction.y += particles[i].gravity.y * elapsedTime;
         //Rotation:
              particles[i].shape.rotate( particles[i].rotationSpeed * elapsedTime);
         //Transparency:

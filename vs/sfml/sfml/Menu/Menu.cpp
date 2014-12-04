@@ -62,7 +62,7 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->selectionParticleRain = new ParticleBuilder(sf::Vector2f(), { 5.0f, 18.0f });
 	this->selectionParticleRain->setSprites(sf::Vector2u(0, 2), sf::Vector2u(0, 2))
 		->setPath({ 400.0f, 700.0f }, { 240.0f, 300.0f })
-		->setGravity(70.0f, 90.0f)
+		->setGravity(380.0f, 90.0f)
 		->setFadeoutSpeed({ 300.0f, 350.0f })
 		->setDynamicColor({ 2.0f, 8.0f });
 
