@@ -40,6 +40,7 @@ public:
 		return *this;
 	}
 	void setState(bool value);
+	void fitStateToVolume();
 	void setOrigin(const sf::Vector2f &origin);
 
 	inline bool getIsChecked() const

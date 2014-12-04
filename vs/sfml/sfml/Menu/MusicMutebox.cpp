@@ -48,6 +48,11 @@ void MusicMutebox::setState(bool value)
 	updateTextureRect();
 }
 
+void MusicMutebox::fitStateToVolume()
+{
+
+}
+
 void MusicMutebox::setOrigin(const sf::Vector2f &origin)
 {
 	this->shape->setOrigin(origin);
