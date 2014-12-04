@@ -93,7 +93,7 @@ int main(int argc, char *argv[]){
     sf::RenderWindow* window = setupWindow();
 
     Menu::MainMenu* menu = new Menu::MainMenu(*window);
-    menu->init(resourceManager);
+    menu->init(resourceManager, soundManager);
 
         
     while (window->isOpen()){

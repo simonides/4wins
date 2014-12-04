@@ -13,6 +13,8 @@
 #include "Button.h"
 #include "AvatarChooser.h"
 #include "AvatarEnum.h"
+#include "MusicMutebox.h"
+#include "SfxMutebox.h"
 
 #include "Menu.h"
 
@@ -32,6 +34,8 @@ FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window) :
 	cbMeeplePos(new Menu::Checkbox(window)),
 	acPlayer1(new Menu::AvatarChooser(window, 8u)),
 	acPlayer2(new Menu::AvatarChooser(window, 8u)),
+	musicMutebox(new MusicMutebox()),
+	sfxMutebox(new SfxMutebox()),
 	btnStart(new Menu::Button(window)),
 	startGame(false)
 {}
@@ -53,7 +57,7 @@ FourWins::Menu::MainMenu::~MainMenu()
 	delete this->btnStart;
 }
 
-void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
+void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManager &soundManager)
 {
 	const sf::Texture *menuAtlas = resourceManager.getTexture(resourceManager.MENU_ATLAS);
 	const sf::Font *font = resourceManager.getFont(resourceManager.ROBOTO);
@@ -224,6 +228,14 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 		setStringForEntry(7u, "Uncle Ben").
 		setDefaultEntry(0);
 
+	this->musicMutebox->init(resourceManager, soundManager);
+	this->musicMutebox->setPosition(sf::Vector2f(1270.0f, 10.0f)).
+		setSize(sf::Vector2f(75.0f, 75.0f));
+	
+	this->sfxMutebox->init(resourceManager, soundManager);
+	this->sfxMutebox->setPosition(sf::Vector2f(1270.0f, 90.0f)).
+		setSize(sf::Vector2f(75.0f, 75.0f));
+
 	this->btnStart->init();
 	this->btnStart->setTexture(menuAtlas);
 	this->btnStart->setTextureRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN));
@@ -273,6 +285,8 @@ GameSettings *FourWins::Menu::MainMenu::loop()
 		this->cbMeeplePos->draw();
 		this->acPlayer1->draw();
 		this->acPlayer2->draw();
+		this->musicMutebox->draw(*this->window);
+		this->sfxMutebox->draw(*this->window);
 		this->btnStart->draw();
 		this->window->draw(*this->headlineShape);
 
@@ -303,6 +317,14 @@ void FourWins::Menu::MainMenu::pollEvents()
 
 		switch (event.type)
 		{
+		case sf::Event::MouseMoved:
+			this->musicMutebox->update(false, converted);
+			this->sfxMutebox->update(false, converted);
+			break;
+		case sf::Event::MouseButtonPressed:
+			this->musicMutebox->update(true, converted);
+			this->sfxMutebox->update(true, converted);
+			break;
 		case sf::Event::Resized:
 			handleResizeWindowEvent(window);
 			break;

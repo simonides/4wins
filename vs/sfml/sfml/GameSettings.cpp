@@ -11,7 +11,7 @@
 #include "SmartAI.h"
 
 
-GameSettings::GameSettings() : simulator(0), threadedSimulator(false), fast(false), noAIsim(false), muted(false), option1(true), option2(true){
+GameSettings::GameSettings() : simulator(0), threadedSimulator(false), fast(false), noAIsim(false), musicMuted(false), effectsMuted(false), option1(true), option2(true){
     playerType[0] = HUMAN;
 	playerType[1] = SMART_AI;
     avatar[0] = ResourceManager::PROFESSOR_JENKINS;

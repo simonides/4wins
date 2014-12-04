@@ -24,7 +24,9 @@ struct GameSettings{
 
     bool fast;                              //The AI doesn't perform a sleep before it's tasks.
     bool noAIsim;                           //Immediate.The AI's meeples are not slowly moved to the board. They will be positioned immediately.
-    bool muted; 
+    bool musicMuted; 
+	bool effectsMuted;
+
 
     //These options are passed to the AI's (if neccessary):
     bool option1;

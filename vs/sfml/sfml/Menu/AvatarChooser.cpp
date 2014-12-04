@@ -38,6 +38,7 @@ FourWins::Menu::AvatarChooser::~AvatarChooser()
 	{
 		delete this->choices[i].thumbnailShape;
 		delete this->choices[i].previewString;
+		delete this->choices[i].previewTextureRect;
 	}
 	delete[] this->choices;
 	delete this->bb;

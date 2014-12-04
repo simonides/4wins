@@ -97,8 +97,9 @@
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="Menu\AvatarChooser.cpp" />
     <ClCompile Include="Menu\Checkbox.cpp" />
-    <ClCompile Include="Menu\ImageCheckbox.cpp" />
+    <ClCompile Include="Menu\MusicMutebox.cpp" />
     <ClCompile Include="Menu\ListboxEntry.cpp" />
+    <ClCompile Include="Menu\SfxMutebox.cpp" />
     <ClCompile Include="ParticleBuilder.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="RBackground.cpp" />
@@ -136,8 +137,9 @@
     <ClInclude Include="Menu\AvatarChooser.h" />
     <ClInclude Include="Menu\AvatarEnum.h" />
     <ClInclude Include="Menu\Checkbox.h" />
-    <ClInclude Include="Menu\ImageCheckbox.h" />
+    <ClInclude Include="Menu\MusicMutebox.h" />
     <ClInclude Include="Menu\ListboxEntry.h" />
+    <ClInclude Include="Menu\SfxMutebox.h" />
     <ClInclude Include="ParticleBuilder.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Player.h" />

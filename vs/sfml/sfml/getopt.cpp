@@ -71,7 +71,8 @@ GameSettings* parseConsoleParameters(int argc, char *argv[]){   //creates a sett
             continue;
         }
         if (strcmpci(argv[i], "-m")){       //no sound
-            settings->muted = true;
+            settings->musicMuted = true;
+			settings->effectsMuted = true;
             continue;
         }
         if (strcmpci(argv[i], "-sim=", 5)){

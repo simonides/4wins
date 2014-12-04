@@ -19,6 +19,8 @@ public:
         BACKGROUND, WIN_MUSIC,
         SHEEP, MEEPLE_DROP, MEEPLE_WIN_DROP, GAME_START, SELECT, OH_YEAH
     };
+	const float VOLUME_BACKGROUND;
+	const float VOLUME_EFFECTS;
 
     SoundManager();
 	void loadResourcesFromFileSys();

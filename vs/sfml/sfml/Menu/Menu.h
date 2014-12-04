@@ -9,8 +9,11 @@ namespace sf
 	class Texture;
 }
 class ResourceManager;
+class SoundManager;
 class ParticleSystem;
 class ParticleBuilder;
+class MusicMutebox;
+class SfxMutebox;
 struct GameSettings;
 
 namespace FourWins
@@ -38,13 +41,15 @@ namespace FourWins
 			Checkbox *cbMeeplePos;
 			AvatarChooser *acPlayer1;
 			AvatarChooser *acPlayer2;
+			MusicMutebox *musicMutebox;
+			SfxMutebox *sfxMutebox;
 			Button *btnStart;
 			bool startGame;
 
 		public:
 			explicit MainMenu(sf::RenderWindow &window);
 			~MainMenu();
-			void init(ResourceManager &resourceManager);
+			void init(ResourceManager &resourceManager, SoundManager &soundManager);
 
 			GameSettings *loop();
 
