@@ -18,23 +18,22 @@ namespace FourWins
 {
 	namespace Menu
 	{
+		class ResourceManager;
+
 		class ImageCheckbox
 		{
 		private:
 			sf::RenderWindow *window;
 			sf::RectangleShape *shape;
 			sf::IntRect *textureRect;
-			sf::IntRect *textureHighlightRect;
+			sf::IntRect *textureCheckedRect;
 			bool isChecked;
 
 		public:
 			explicit ImageCheckbox(sf::RenderWindow &window);
 			~ImageCheckbox();
+			void init(ResourceManager &resourceManager);
 
-			inline void setTexture(const sf::Texture *texture)
-			{
-				this->shape->setTexture(texture);
-			}
 			inline void setPosition(const sf::Vector2f &position)
 			{
 				this->shape->setPosition(position);

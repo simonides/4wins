@@ -31,7 +31,7 @@ struct GameSettings{
     bool muted; 
 
     //These options are passed to the AI's (if neccessary):
-    AiOptions AiOptions[2];
+    AiOptions aiOptions[2];
 
     GameSettings();
 };
