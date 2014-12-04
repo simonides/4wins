@@ -49,7 +49,7 @@ private:
         sf::Vector2u spritesY;
 public:
     ParticleBuilder(sf::Vector2f position, Interval diameter);
-    //ParticleBuilder(sf::Vector2f position, Interval diameter, Interval speed = { 40, 400 }, Interval angle = { 0, 360 }, Interval colorSpeed = { 500, 2000 }, Interval fadeoutSpeed = { 50, 100 });
+   
     ParticleBuilder* setPosition(sf::Vector2f position, Interval positionOffset={0,0});
     ParticleBuilder* setDiameter(Interval diameter);
 
