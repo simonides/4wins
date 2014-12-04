@@ -11,11 +11,13 @@
 #include "SmartAI.h"
 
 
-GameSettings::GameSettings() : simulator(0), threadedSimulator(false), fast(false), noAIsim(false), musicMuted(false), effectsMuted(false), option1(true), option2(true){
+GameSettings::GameSettings() : simulator(0), threadedSimulator(false), fast(false), noAIsim(false){
     playerType[0] = HUMAN;
 	playerType[1] = SMART_AI;
     avatar[0] = ResourceManager::PROFESSOR_JENKINS;
     avatar[1] = ResourceManager::SMOOTH_STEVE;
+    aiOptions[0] = { true, true };
+    aiOptions[1] = { true, true };
 }
 
 
@@ -25,8 +27,8 @@ I_Player* createI_Player(const GameSettings& settings, uint8_t playerNum){
     switch (settings.playerType[playerNum]){
     case GameSettings::STUPID_AI:     return new StupidAI();
     case GameSettings::RANDOM_AI:     return new RandomAI();
-    case GameSettings::THINKING_AI:   return new ThinkingAI(settings.option1, settings.option2);
-    case GameSettings::SMART_AI:      return new SmartAI(settings.option1, settings.option2);
+    case GameSettings::THINKING_AI:   return new ThinkingAI(settings.aiOptions[playerNum].useIntelligentMeepleChoosing, settings.aiOptions[playerNum].useIntelligentMeeplePositioning);
+    case GameSettings::SMART_AI:      return new SmartAI(settings.aiOptions[playerNum].useIntelligentMeepleChoosing, settings.aiOptions[playerNum].useIntelligentMeeplePositioning);
     default: assert(false);           return new StupidAI();
     }
 }

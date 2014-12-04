@@ -102,12 +102,12 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resou
     //Init Particle systems:   
         dustBuilder->setSprites({ 2, 3 }, { 0, 1 })
             ->setPath({ 30, 110 }, { 270, 340 })
-            ->setGravity(4.f, 90)
+            ->setGravity(25.f, 90)
             ->setRotation()
             ->setFadeoutSpeed({ 300, 500 });   
         mouseCursorParticleBuilder->setSprites({ 0, 3 }, { 0, 1 })
-            ->setPath({ 50, 150 }, { 230, 380 })
-            ->setGravity(5, 90)
+            ->setPath({ 100, 300 }, { 180, 360 })
+            ->setGravity(200, 800)
             ->setRotation({ 0, 600 }, { 0.1, 3.5 });   
         endScreenParticleBuilder->setSprites({ 0, 2 }, { 0, 2 })
             ->setDynamicColor()
@@ -132,6 +132,7 @@ Game::~Game(){
     delete board;				//	deletes all fields
 	delete logicalBoard;
 	delete background;
+    delete gameMenu;
 	delete textManager;
 }
 

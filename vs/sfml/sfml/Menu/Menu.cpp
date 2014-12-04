@@ -66,7 +66,7 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 	this->selectionParticleRain = new ParticleBuilder(sf::Vector2f(), { 5.0f, 18.0f });
 	this->selectionParticleRain->setSprites(sf::Vector2u(0, 2), sf::Vector2u(0, 2))
 		->setPath({ 400.0f, 700.0f }, { 240.0f, 300.0f })
-		->setGravity(70.0f, 90.0f)
+		->setGravity(380.0f, 90.0f)
 		->setFadeoutSpeed({ 300.0f, 350.0f })
 		->setDynamicColor({ 2.0f, 8.0f });
 
@@ -353,122 +353,126 @@ void FourWins::Menu::MainMenu::checkListboxes()
 
 GameSettings *FourWins::Menu::MainMenu::createSettings()
 {
-	GameSettings *settings = new GameSettings();
+    GameSettings *settings = new GameSettings();
 
-	ResourceManager::ResourceRect player1Rect;
-	ResourceManager::ResourceRect player2Rect;
-	GameSettings::PlayerType player1Type;
-	GameSettings::PlayerType player2Type;
+    ResourceManager::ResourceRect player1Rect;
+    ResourceManager::ResourceRect player2Rect;
+    GameSettings::PlayerType player1Type;
+    GameSettings::PlayerType player2Type;
 
-	switch (this->acPlayer1->getSelectedAvatar())
-	{
-	case Menu::SMOOTH_STEVE:
-		player1Rect = ResourceManager::SMOOTH_STEVE;
-		break;
-	case Menu::PROFESSOR_JENKINS:
-		player1Rect = ResourceManager::PROFESSOR_JENKINS;
-		break;
-	case Menu::HIPSTER_HENRY:
-		player1Rect = ResourceManager::HIPSTER_HENRY;
-		break;
-	case Menu::BOYBAND_BILLY:
-		player1Rect = ResourceManager::BOYBAND_BILLY;
-		break;
-	case Menu::BOOKWORM_BETTY:
-		player1Rect = ResourceManager::BOOKWORM_BETTY;
-		break;
-	case Menu::FASHION_FABIENNE:
-		player1Rect = ResourceManager::FASHION_FABIENNE;
-		break;
-	case Menu::HIPPIE_HILDY:
-		player1Rect = ResourceManager::HIPPIE_HILDY;
-		break;
-	case Menu::SMOKIN_STACY:
-		player1Rect = ResourceManager::SMOKIN_STACY;
-		break;
-	default:
-		player1Rect = ResourceManager::SMOOTH_STEVE;
-		break;
-	}
-	switch (this->acPlayer2->getSelectedAvatar())
-	{
-	case Menu::SMOOTH_STEVE:
-		player2Rect = ResourceManager::SMOOTH_STEVE;
-		break;
-	case Menu::PROFESSOR_JENKINS:
-		player2Rect = ResourceManager::PROFESSOR_JENKINS;
-		break;
-	case Menu::HIPSTER_HENRY:
-		player2Rect = ResourceManager::HIPSTER_HENRY;
-		break;
-	case Menu::BOYBAND_BILLY:
-		player2Rect = ResourceManager::BOYBAND_BILLY;
-		break;
-	case Menu::BOOKWORM_BETTY:
-		player2Rect = ResourceManager::BOOKWORM_BETTY;
-		break;
-	case Menu::FASHION_FABIENNE:
-		player2Rect = ResourceManager::FASHION_FABIENNE;
-		break;
-	case Menu::HIPPIE_HILDY:
-		player2Rect = ResourceManager::HIPPIE_HILDY;
-		break;
-	case Menu::SMOKIN_STACY:
-		player2Rect = ResourceManager::SMOKIN_STACY;
-		break;
-	default:
-		player2Rect = ResourceManager::SMOOTH_STEVE;
-		break;
-	}
-	switch (this->lbPlayer1->getValueOfActive())
-	{
-	case 'h':
-		player1Type = GameSettings::HUMAN;
-		break;
-	case 's':
-		player1Type = GameSettings::STUPID_AI;
-		break;
-	case 'r':
-		player1Type = GameSettings::RANDOM_AI;
-		break;
-	case 't':
-		player1Type = GameSettings::THINKING_AI;
-		break;
-	case 'm':
-		player1Type = GameSettings::SMART_AI;
-		break;
-	default:
-		player1Type = GameSettings::HUMAN;
-		break;
-	}
-	switch (this->lbPlayer2->getValueOfActive())
-	{
-	case 'h':
-		player2Type = GameSettings::HUMAN;
-		break;
-	case 's':
-		player2Type = GameSettings::STUPID_AI;
-		break;
-	case 'r':
-		player2Type = GameSettings::RANDOM_AI;
-		break;
-	case 't':
-		player2Type = GameSettings::THINKING_AI;
-		break;
-	case 'm':
-		player2Type = GameSettings::SMART_AI;
-		break;
-	default:
-		player2Type = GameSettings::HUMAN;
-		break;
-	}
+    switch (this->acPlayer1->getSelectedAvatar())
+    {
+    case Menu::SMOOTH_STEVE:
+        player1Rect = ResourceManager::SMOOTH_STEVE;
+        break;
+    case Menu::PROFESSOR_JENKINS:
+        player1Rect = ResourceManager::PROFESSOR_JENKINS;
+        break;
+    case Menu::HIPSTER_HENRY:
+        player1Rect = ResourceManager::HIPSTER_HENRY;
+        break;
+    case Menu::BOYBAND_BILLY:
+        player1Rect = ResourceManager::BOYBAND_BILLY;
+        break;
+    case Menu::BOOKWORM_BETTY:
+        player1Rect = ResourceManager::BOOKWORM_BETTY;
+        break;
+    case Menu::FASHION_FABIENNE:
+        player1Rect = ResourceManager::FASHION_FABIENNE;
+        break;
+    case Menu::HIPPIE_HILDY:
+        player1Rect = ResourceManager::HIPPIE_HILDY;
+        break;
+    case Menu::SMOKIN_STACY:
+        player1Rect = ResourceManager::SMOKIN_STACY;
+        break;
+    default:
+        player1Rect = ResourceManager::SMOOTH_STEVE;
+        break;
+    }
+    switch (this->acPlayer2->getSelectedAvatar())
+    {
+    case Menu::SMOOTH_STEVE:
+        player2Rect = ResourceManager::SMOOTH_STEVE;
+        break;
+    case Menu::PROFESSOR_JENKINS:
+        player2Rect = ResourceManager::PROFESSOR_JENKINS;
+        break;
+    case Menu::HIPSTER_HENRY:
+        player2Rect = ResourceManager::HIPSTER_HENRY;
+        break;
+    case Menu::BOYBAND_BILLY:
+        player2Rect = ResourceManager::BOYBAND_BILLY;
+        break;
+    case Menu::BOOKWORM_BETTY:
+        player2Rect = ResourceManager::BOOKWORM_BETTY;
+        break;
+    case Menu::FASHION_FABIENNE:
+        player2Rect = ResourceManager::FASHION_FABIENNE;
+        break;
+    case Menu::HIPPIE_HILDY:
+        player2Rect = ResourceManager::HIPPIE_HILDY;
+        break;
+    case Menu::SMOKIN_STACY:
+        player2Rect = ResourceManager::SMOKIN_STACY;
+        break;
+    default:
+        player2Rect = ResourceManager::SMOOTH_STEVE;
+        break;
+    }
+    switch (this->lbPlayer1->getValueOfActive())
+    {
+    case 'h':
+        player1Type = GameSettings::HUMAN;
+        break;
+    case 's':
+        player1Type = GameSettings::STUPID_AI;
+        break;
+    case 'r':
+        player1Type = GameSettings::RANDOM_AI;
+        break;
+    case 't':
+        player1Type = GameSettings::THINKING_AI;
+        break;
+    case 'm':
+        player1Type = GameSettings::SMART_AI;
+        break;
+    default:
+        player1Type = GameSettings::HUMAN;
+        break;
+    }
+    switch (this->lbPlayer2->getValueOfActive())
+    {
+    case 'h':
+        player2Type = GameSettings::HUMAN;
+        break;
+    case 's':
+        player2Type = GameSettings::STUPID_AI;
+        break;
+    case 'r':
+        player2Type = GameSettings::RANDOM_AI;
+        break;
+    case 't':
+        player2Type = GameSettings::THINKING_AI;
+        break;
+    case 'm':
+        player2Type = GameSettings::SMART_AI;
+        break;
+    default:
+        player2Type = GameSettings::HUMAN;
+        break;
+    }
 
-	settings->avatar[0] = player1Rect;
-	settings->avatar[1] = player2Rect;
-	settings->playerType[0] = player1Type;
-	settings->playerType[1] = player2Type;
-	settings->option1 = true;
-	settings->option2 = true;
+    settings->avatar[0] = player1Rect;
+    settings->avatar[1] = player2Rect;
+    settings->playerType[0] = player1Type;
+    settings->playerType[1] = player2Type;
+    settings->aiOptions[0].useIntelligentMeepleChoosing = this->cbMeepleChoose->isLeftChecked();
+    settings->aiOptions[0].useIntelligentMeeplePositioning = this->cbMeeplePos->isLeftChecked();
+    settings->aiOptions[1].useIntelligentMeepleChoosing = this->cbMeepleChoose->isRightChecked();
+    settings->aiOptions[1].useIntelligentMeeplePositioning = this->cbMeeplePos->isRightChecked();
+	settings->musicMuted = this->musicMutebox->getIsChecked();
+	settings->effectsMuted = this->sfxMutebox->getIsChecked();
 
 	return settings;
 }
