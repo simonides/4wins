@@ -101,18 +101,18 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resou
     	    
     //Init Particle systems:   
         dustBuilder->setSprites({ 2, 3 }, { 0, 1 })
-            ->setPath({ 50, 150 }, { 290, 320 })
-            ->setGravity(100, 90)
+            ->setPath({ 30, 110 }, { 270, 340 })
+            ->setGravity(4.f, 90)
             ->setRotation()
             ->setFadeoutSpeed({ 300, 500 });   
         mouseCursorParticleBuilder->setSprites({ 0, 3 }, { 0, 1 })
-            ->setPath({ 5, 150 })
-            ->setGravity(120, 90)
+            ->setPath({ 50, 150 }, { 230, 380 })
+            ->setGravity(5, 90)
             ->setRotation({ 0, 600 }, { 0.1, 3.5 });   
         endScreenParticleBuilder->setSprites({ 0, 2 }, { 0, 2 })
             ->setDynamicColor()
             ->setPath({ 10, 200 }, { 275, 350 })
-            ->setGravity(30)
+            ->setGravity(0)
             ->setRotation({ 100, 600 }, { -1, 3 })
             ->setFadeoutSpeed({ 35, 55 });
 }

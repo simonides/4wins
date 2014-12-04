@@ -8,24 +8,6 @@
 #define M_PI       3.14159265358979323846f
 
 
-
-
-
-/*ParticleBuilder::ParticleBuilder(sf::Vector2f position, Interval diameter, Interval speed, Interval angle, Interval colorSpeed, Interval fadeoutSpeed) :
-        position(position),
-        positionOffset({ 0, 0 }),
-        diameter(diameter),
-        speed(speed),
-        angle(angle),
-        gravitySpeed(0),
-        gravity(270),
-        rotationOffset({ 0, 0 }),
-        rotationSpeed({ 0, 0 }),
-        colorSpeed(colorSpeed),
-        fadeoutSpeed(fadeoutSpeed){
-}*/
-
-
 ParticleBuilder::ParticleBuilder(sf::Vector2f position, Interval diameter){ 
     setPosition(position);
     setDiameter(diameter);
