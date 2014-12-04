@@ -39,22 +39,6 @@ RGameMenu::RGameMenu(ResourceManager& resourceManager, SoundManager& soundManage
 
 	sfxMutebox.init(resourceManager, soundManager);
 	musicMutebox.init(resourceManager, soundManager);
-
-	if (soundManager.getEffectsVolume() < 0.1)
-	{
-		sfxMutebox.setState(true);
-	}
-	if (soundManager.getMusicVolume() < 0.1)
-	{
-		musicMutebox.setState(true);
-	}
-
-	sfxMutebox.setPosition(sf::Vector2f(WINDOW_WIDTH_TO_CALCULATE -   120.f, 200.f));
-	musicMutebox.setPosition(sf::Vector2f(WINDOW_WIDTH_TO_CALCULATE - 120.f,  80.f));
-
-	sfxMutebox.setSize(sf::Vector2f(75, 75));
-	musicMutebox.setSize(sf::Vector2f(75, 75));
-
 }
 
 
