@@ -39,6 +39,8 @@ public:
 		this->shape->setSize(size);
 		return *this;
 	}
+	void setState(bool value);
+	void setOrigin(const sf::Vector2f &origin);
 
 	inline bool getIsChecked() const
 	{
@@ -51,5 +53,5 @@ public:
 private:
 	void hover();
 	void resetHover();
-	void switchState();
+	void updateTextureRect();
 };

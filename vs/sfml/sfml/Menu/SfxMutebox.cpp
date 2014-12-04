@@ -38,6 +38,17 @@ void SfxMutebox::init(ResourceManager &resourceManager, SoundManager &soundManag
 	this->shape->setTextureRect(*this->textureRect);
 }
 
+void SfxMutebox::setState(bool value)
+{
+	this->isChecked = value;
+	updateTextureRect();
+}
+
+void SfxMutebox::setOrigin(const sf::Vector2f &origin)
+{
+	this->shape->setOrigin(origin);
+}
+
 void SfxMutebox::update(bool isButtonRelease, const sf::Vector2f &mousePosition)
 {
 	resetHover();
@@ -46,7 +57,8 @@ void SfxMutebox::update(bool isButtonRelease, const sf::Vector2f &mousePosition)
 		hover();
 		if (isButtonRelease)
 		{
-			switchState();
+			this->isChecked = !this->isChecked;
+			updateTextureRect();
 		}
 	}
 }
@@ -66,10 +78,8 @@ void SfxMutebox::resetHover()
 	this->shape->setFillColor(sf::Color::White);
 }
 
-void SfxMutebox::switchState()
+void SfxMutebox::updateTextureRect()
 {
-	this->isChecked = !this->isChecked;
-
 	if (this->isChecked)
 	{
 		//checked
