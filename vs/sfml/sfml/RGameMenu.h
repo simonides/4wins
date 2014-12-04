@@ -3,6 +3,8 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include "GameState.h"
+#include "Menu/SfxMutebox.h"
+#include "Menu/MusicMutebox.h"
 
 #include "Game.h"
 
@@ -38,8 +40,12 @@ private:
 	sf::RectangleShape menuButton;
 	GameWinner::Enum winner;
 
+	SfxMutebox sfxMutebox;
+	MusicMutebox musicMutebox;
+
 	RTextManager* textManager;
 	SoundManager* soundManager;
+	
 	
 };
 

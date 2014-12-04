@@ -4,6 +4,9 @@
 #include "SoundManager.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "RTextManager.h"
+
+
+
 RGameMenu::RGameMenu(ResourceManager& resourceManager, SoundManager& soundManager, RTextManager& textManager)
 	: GAME_MENU_BUTTON_SIZE(150.f, 150.f)
 	, GAME_MENU_BUTTON_COLOR(sf::Color::White)
@@ -35,8 +38,22 @@ RGameMenu::RGameMenu(ResourceManager& resourceManager, SoundManager& soundManage
 	menuButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f + 100.f);
 
 
-	//TODO include soundbuttons.. 
-	//constructor will take and resourcemanager soundmanager
+	if (soundManager.getEffectsVolume() < 0.1)
+	{
+		sfxMutebox.setState(true);
+	}
+	if (soundManager.getMusicVolume() < 0.1)
+	{
+		musicMutebox.setState(true);
+	}
+	sfxMutebox.init(resourceManager, soundManager);
+	musicMutebox.init(resourceManager, soundManager);
+
+	sfxMutebox.setPosition(sf::Vector2f(WINDOW_WIDTH_TO_CALCULATE -   120.f, 200.f));
+	musicMutebox.setPosition(sf::Vector2f(WINDOW_WIDTH_TO_CALCULATE - 120.f,  80.f));
+
+	sfxMutebox.setSize(sf::Vector2f(75, 75));
+	musicMutebox.setSize(sf::Vector2f(75, 75));
 
 }
 
@@ -60,6 +77,9 @@ void RGameMenu::draw(sf::RenderWindow& window)
 	window.draw(exitButton);
 	window.draw(restartButton);
 	window.draw(menuButton);
+	sfxMutebox.draw(window);
+	musicMutebox.draw(window);
+
 	textManager->drawWinner(window, winner);
 
 
@@ -104,5 +124,8 @@ GameMenuDecision::Enum RGameMenu::handleClickAndHover(InputEvents* inputEvents)
 			return GameMenuDecision::BACK_TO_MENU;
 		}
 	}
+	
+	sfxMutebox.update(inputEvents->releasedLeftMouse, inputEvents->mousePosition);
+	musicMutebox.update(inputEvents->releasedLeftMouse, inputEvents->mousePosition);
 	return GameMenuDecision::KEEP_PLAYING;      //stay in the game loop until the user presses a button
 }
