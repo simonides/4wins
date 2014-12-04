@@ -8,7 +8,7 @@ FourWins::Menu::ImageCheckbox::ImageCheckbox(sf::RenderWindow &window) :
 	window(&window),
 	shape(new sf::RectangleShape()),
 	textureRect(new sf::IntRect()),
-	textureHighlightRect(new sf::IntRect()),
+	textureCheckedRect(new sf::IntRect()),
 	isChecked(false)
 {}
 
@@ -16,7 +16,7 @@ FourWins::Menu::ImageCheckbox::~ImageCheckbox()
 {
 	delete this->shape;
 	delete this->textureRect;
-	delete this->textureHighlightRect;
+	delete this->textureCheckedRect;
 }
 
 void FourWins::Menu::ImageCheckbox::setTextureRect(const sf::IntRect &rect)
@@ -30,10 +30,10 @@ void FourWins::Menu::ImageCheckbox::setTextureRect(const sf::IntRect &rect)
 
 void FourWins::Menu::ImageCheckbox::setTextureHighlightRect(const sf::IntRect &rect)
 {
-	this->textureHighlightRect->left = rect.left;
-	this->textureHighlightRect->top = rect.top;
-	this->textureHighlightRect->width = rect.width;
-	this->textureHighlightRect->height = rect.height;
+	this->textureCheckedRect->left = rect.left;
+	this->textureCheckedRect->top = rect.top;
+	this->textureCheckedRect->width = rect.width;
+	this->textureCheckedRect->height = rect.height;
 }
 
 void FourWins::Menu::ImageCheckbox::update(const sf::Event &e, const sf::Vector2f &mousePosition)
@@ -55,7 +55,7 @@ void FourWins::Menu::ImageCheckbox::switchTextureRect()
 {
 	if (this->isChecked)
 	{
-		this->shape->setTextureRect(*this->textureHighlightRect);
+		this->shape->setTextureRect(*this->textureCheckedRect);
 	}
 	else
 	{

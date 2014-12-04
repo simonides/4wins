@@ -61,9 +61,9 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	this->particleSystem = new ParticleSystem(*resourceManager.getTexture(resourceManager.PARTICLE_SPRITE), sf::Vector2u(4, 2));
 	this->selectionParticleRain = new ParticleBuilder(sf::Vector2f(), { 5.0f, 18.0f });
 	this->selectionParticleRain->setSprites(sf::Vector2u(0, 2), sf::Vector2u(0, 2))
-		->setPath({ 450.0f, 800.0f }, { 240.0f, 300.0f })
+		->setPath({ 400.0f, 700.0f }, { 240.0f, 300.0f })
 		->setGravity(70.0f, 90.0f)
-		->setFadeoutSpeed({ 350.0f, 400.0f })
+		->setFadeoutSpeed({ 300.0f, 350.0f })
 		->setDynamicColor({ 2.0f, 8.0f });
 
 	this->backgroundShape->setTexture(resourceManager.getTexture(resourceManager.BACKGROUND_TEX));
@@ -160,6 +160,7 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 	const sf::IntRect smoothSteveRect = resourceManager.getTextureRect(resourceManager.SMOOTH_STEVE);
 	const sf::IntRect profJenkinsRect = resourceManager.getTextureRect(resourceManager.PROFESSOR_JENKINS);
 	const sf::IntRect hipsterHenryRect = resourceManager.getTextureRect(resourceManager.HIPSTER_HENRY);
+	const sf::IntRect bookWorkBettyRect = resourceManager.getTextureRect(resourceManager.BOOKWORM_BETTY);
 
 	this->acPlayer1->init();
 	this->acPlayer1->setFont(*font).
@@ -187,9 +188,9 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager)
 		setEnumForEntry(6u, Menu::Avatars::SMOOTH_STEVE).
 		setTextureRectsForEntry(6u, smoothSteveRect, smoothSteveRect).
 		setStringForEntry(6u, "Uncle Ben").
-		setEnumForEntry(7u, Menu::Avatars::SMOOTH_STEVE).
-		setTextureRectsForEntry(7u, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(7u, "Uncle Ben").
+		setEnumForEntry(7u, Menu::Avatars::BOOKWORM_BETTY).
+		setTextureRectsForEntry(7u, bookWorkBettyRect, bookWorkBettyRect).
+		setStringForEntry(7u, "Preview").
 		setDefaultEntry(0);
 
 	this->acPlayer2->init();
