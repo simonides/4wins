@@ -88,10 +88,22 @@ void SoundManager::setEffectsVolume(float volume)
 	meepleWinDrop.setVolume(volume);
 	meepleDrop.setVolume(volume);
 	sheep.setVolume(volume);
-	winMusic.setVolume(volume);
 }
 
 void SoundManager::setMusicVolume(float volume)
 {
 	backgroundMusic.setVolume(volume);
+	winMusic.setVolume(volume);
 }
+
+float SoundManager::getEffectsVolume()
+{
+	return sheep.getVolume();
+}
+
+float SoundManager::getMusicVolume()
+{
+	return backgroundMusic.getVolume();
+}
+
+

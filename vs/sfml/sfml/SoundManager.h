@@ -27,6 +27,11 @@ public:
 	sf::Music* getMusic(Music type);
 	void setEffectsVolume(float volume);
 	void setMusicVolume(float volume);
+	
+	float getEffectsVolume();
+	float getMusicVolume();
+
+
 };
 
 
