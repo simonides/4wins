@@ -4,6 +4,10 @@
 #include "Player.h"
 
 
+struct AiOptions{
+    bool useIntelligentMeepleChoosing;
+    bool useIntelligentMeeplePositioning;
+};
 
 
 struct GameSettings{
@@ -27,8 +31,7 @@ struct GameSettings{
     bool muted; 
 
     //These options are passed to the AI's (if neccessary):
-    bool option1;
-    bool option2;
+    AiOptions AiOptions[2];
 
     GameSettings();
 };
