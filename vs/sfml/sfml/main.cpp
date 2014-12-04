@@ -1,4 +1,6 @@
 
+#include <windows.h>
+//#include <wincon.h> 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
@@ -21,6 +23,7 @@
 #include "SoundManager.h"
 #include "GameSettings.h"
 #include "getopt.h"
+//
 
 #define PI 3.14159265
 
@@ -64,6 +67,9 @@ void AI_testFunction(const GameSettings& settings){
 using namespace FourWins;
 
 int main(int argc, char *argv[]){  
+
+	
+
 	ResourceManager resourceManager;
     SoundManager soundManager;
 	    
@@ -72,7 +78,7 @@ int main(int argc, char *argv[]){
     Game* game = nullptr;
     GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::KEEP_PLAYING;
       
-    //argc = 0;
+    //argc = 1;
     //argv[argc++] = "TEST";
     //argv[argc++] = "-sim=500";
     //argv[argc++] = "-p1=stupid";
@@ -82,15 +88,17 @@ int main(int argc, char *argv[]){
         settings = parseConsoleParameters(argc, argv);
         if (settings == nullptr){
             print_usage(argv[0]);
+			system("pause");
+			exit(0);
         }
     }
     if (settings != nullptr && settings->simulator > 0){
         AI_testFunction(*settings);
         exit(0);
     }
+	ShowWindow(GetConsoleWindow(), SW_HIDE); //hide console window .. hide only because it is needed for the network ais
 
-
-    sf::RenderWindow* window = setupWindow();
+	sf::RenderWindow* window = setupWindow();
 
     Menu::MainMenu* menu = new Menu::MainMenu(*window);
     menu->init(resourceManager, soundManager);

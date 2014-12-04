@@ -131,10 +131,10 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case PROFESSOR_JENKINS:		return sf::IntRect(128,   0, 128, 194);
 	case HIPSTER_HENRY:			return sf::IntRect(256,   0, 128, 194);
 	case BOYBAND_BILLY:			return sf::IntRect(384,   0, 128, 194);
-	case BOOKWORM_BETTY:		return sf::IntRect(0,   194, 128, 194);
-	case FASHION_FABIENNE:		return sf::IntRect(128, 194, 128, 194);
-	case HIPPIE_HILDY:			return sf::IntRect(256, 194, 128, 194);
-	case SMOKIN_STACY:			return sf::IntRect(384, 194, 128, 194);
+	case BOOKWORM_BETTY:		return sf::IntRect(0,   195, 127, 194);
+	case FASHION_FABIENNE:		return sf::IntRect(128, 195, 127, 194);
+	case HIPPIE_HILDY:			return sf::IntRect(256, 195, 127, 194);
+	case SMOKIN_STACY:			return sf::IntRect(384, 195, 127, 194);
 	
 	case BACKGROUND:			return sf::IntRect(0,	  0, 135,  68);
 	case BACKGROUND_WINDOW:		return sf::IntRect(4,	 70,  31,  49);

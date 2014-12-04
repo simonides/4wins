@@ -39,6 +39,7 @@ RGameMenu::RGameMenu(ResourceManager& resourceManager, SoundManager& soundManage
 
 	sfxMutebox.init(resourceManager, soundManager);
 	musicMutebox.init(resourceManager, soundManager);
+
 }
 
 
