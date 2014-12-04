@@ -39,7 +39,8 @@ void MusicMutebox::init(ResourceManager &resourceManager, SoundManager &soundMan
 	this->textureCheckedRect->top = musicMuteRect.top;
 	this->textureCheckedRect->width = musicMuteRect.width;
 	this->textureCheckedRect->height = musicMuteRect.height;
-	this->shape->setTextureRect(*this->textureRect);
+	
+	fitStateToVolume();
 }
 
 void MusicMutebox::setState(bool value)
@@ -50,7 +51,8 @@ void MusicMutebox::setState(bool value)
 
 void MusicMutebox::fitStateToVolume()
 {
-
+	this->isChecked = (this->soundManager->getMusicVolume() < 0.1f);
+	updateTextureRect();
 }
 
 void MusicMutebox::setOrigin(const sf::Vector2f &origin)

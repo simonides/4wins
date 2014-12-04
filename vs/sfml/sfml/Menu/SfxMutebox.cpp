@@ -39,12 +39,19 @@ void SfxMutebox::init(ResourceManager &resourceManager, SoundManager &soundManag
 	this->textureCheckedRect->top = sfxMuteRect.top;
 	this->textureCheckedRect->width = sfxMuteRect.width;
 	this->textureCheckedRect->height = sfxMuteRect.height;
-	this->shape->setTextureRect(*this->textureRect);
+	
+	fitStateToVolume();
 }
 
 void SfxMutebox::setState(bool value)
 {
 	this->isChecked = value;
+	updateTextureRect();
+}
+
+void SfxMutebox::fitStateToVolume()
+{
+	this->isChecked = (this->soundManager->getMusicVolume() < 0.1f);
 	updateTextureRect();
 }
 
