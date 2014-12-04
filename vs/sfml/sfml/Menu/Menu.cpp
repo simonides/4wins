@@ -241,6 +241,8 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 GameSettings *FourWins::Menu::MainMenu::loop()
 {
 	sf::Clock gameClock;
+	this->musicMutebox->fitStateToVolume();
+	this->sfxMutebox->fitStateToVolume();
 
 	while (this->window->isOpen() && !this->startGame)
 	{

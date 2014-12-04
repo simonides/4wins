@@ -51,7 +51,7 @@ void SfxMutebox::setState(bool value)
 
 void SfxMutebox::fitStateToVolume()
 {
-	this->isChecked = (this->soundManager->getMusicVolume() < 0.1f);
+	this->isChecked = (this->soundManager->getEffectsVolume() < 0.1f);
 	updateTextureRect();
 }
 
