@@ -27,6 +27,10 @@ void MusicMutebox::init(ResourceManager &resourceManager, SoundManager &soundMan
 	const sf::IntRect musicMuteRect = resourceManager.getTextureRect(resourceManager.SND_MUSIC_MUTE);
 
 	this->shape->setTexture(resourceManager.getTexture(resourceManager.SOUND_SPRITE));
+	this->shape->setPosition(sf::Vector2f(1307.5f, 47.5f));
+	this->shape->setSize(sf::Vector2f(75.0f, 75.0f));
+	this->shape->setOrigin(sf::Vector2f(37.5f, 37.5f));
+
 	this->textureRect->left = musicPlayRect.left;
 	this->textureRect->top = musicPlayRect.top;
 	this->textureRect->width = musicPlayRect.width;

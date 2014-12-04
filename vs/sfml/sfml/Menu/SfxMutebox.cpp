@@ -27,6 +27,10 @@ void SfxMutebox::init(ResourceManager &resourceManager, SoundManager &soundManag
 	const sf::IntRect sfxMuteRect = resourceManager.getTextureRect(resourceManager.SND_EFFECTS_MUTE);
 
 	this->shape->setTexture(resourceManager.getTexture(resourceManager.SOUND_SPRITE));
+	this->shape->setPosition(sf::Vector2f(1307.5f, 127.5f));
+	this->shape->setSize(sf::Vector2f(75.0f, 75.0f));
+	this->shape->setOrigin(sf::Vector2f(37.5f, 37.5f));
+
 	this->textureRect->left = sfxPlayRect.left;
 	this->textureRect->top = sfxPlayRect.top;
 	this->textureRect->width = sfxPlayRect.width;

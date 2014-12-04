@@ -229,12 +229,8 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 		setDefaultEntry(0);
 
 	this->musicMutebox->init(resourceManager, soundManager);
-	this->musicMutebox->setPosition(sf::Vector2f(1270.0f, 10.0f)).
-		setSize(sf::Vector2f(75.0f, 75.0f));
 	
 	this->sfxMutebox->init(resourceManager, soundManager);
-	this->sfxMutebox->setPosition(sf::Vector2f(1270.0f, 90.0f)).
-		setSize(sf::Vector2f(75.0f, 75.0f));
 
 	this->btnStart->init();
 	this->btnStart->setTexture(menuAtlas);
