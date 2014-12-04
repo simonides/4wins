@@ -89,6 +89,13 @@ void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 		exit(1);
 	}
 	textSprite.setSmooth(setSmooth);
+
+	if (!soundSprite.loadFromFile(WORKING_DIR + "muteButtons.png")){
+		std::cerr << "Couldn't load the texture: muteButtons" << std::endl;
+		exit(1);
+	}
+	soundSprite.setSmooth(setSmooth);
+
 }
 
 
@@ -109,10 +116,10 @@ sf::Texture* ResourceManager::getTexture(ResourceTexture textureType)
 	case AVATAR_SPRITE:			return &avatarSprite;
 	case TEXT_SPRITE:			return &textSprite;
 	case MENU_ATLAS:			return &menuAtlas;
-	default:					return &exitButtonTexture;
-	
+	case SOUND_SPRITE:			return &soundSprite;
+	default: assert(false);		return &exitButtonTexture;
 
-		//assert(false);
+		
 	}
 }
 
@@ -132,27 +139,32 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case BACKGROUND:			return sf::IntRect(0,	  0, 135,  68);
 	case BACKGROUND_WINDOW:		return sf::IntRect(4,	 70,  31,  49);
 	
-	case TEXT_PLAYER_1:			return sf::IntRect(0,	  0, 762, 212);//
-	case TEXT_PLAYER_2:			return sf::IntRect(0,	212, 762, 212);//
+	case TEXT_PLAYER_1:			return sf::IntRect(0,	  0, 762, 212);
+	case TEXT_PLAYER_2:			return sf::IntRect(0,	212, 762, 212);
 
-	case TEXT_WINS:				return sf::IntRect(0,   424, 581, 210);//
-	case TEXT_TIE:				return sf::IntRect(582, 424, 441, 210);//
+	case TEXT_WINS:				return sf::IntRect(0,   424, 581, 210);
+	case TEXT_TIE:				return sf::IntRect(582, 424, 441, 210);
 
-	case TEXT_CHOOSE:			return sf::IntRect(0,	635, 241, 73);//
-	case TEXT_SELECT:			return sf::IntRect(0,	708, 203, 73);//
-	case TEXT_A_MEEPLE:			return sf::IntRect(241, 635, 291, 73);//
-	case TEXT_A_POSITION:		return sf::IntRect(203,	708, 324, 73);//
-	case TEXT_PAUSE:			return sf::IntRect(0,   781, 612, 210);//
+	case TEXT_CHOOSE:			return sf::IntRect(0,	635, 241, 73);
+	case TEXT_SELECT:			return sf::IntRect(0,	708, 203, 73);
+	case TEXT_A_MEEPLE:			return sf::IntRect(241, 635, 291, 73);
+	case TEXT_A_POSITION:		return sf::IntRect(203,	708, 324, 73);
+	case TEXT_PAUSE:			return sf::IntRect(0,   781, 612, 210);
 
-	case ARROW_UP:				return sf::IntRect(762,   0, 131, 243);//
+	case ARROW_UP:				return sf::IntRect(762,   0, 131, 243);
 
-	case MENU_HEADLINE:			return sf::IntRect(0,   0, 499, 140);
-	case MENU_STARTBTN:			return sf::IntRect(500, 0, 350, 60);
-	case MENU_STARTBTN_H:		return sf::IntRect(500, 64, 350, 60);
-	case MENU_FRAME_UP:			return sf::IntRect(851, 0, 208, 30);
-	case MENU_FRAME_DOWN:		return sf::IntRect(851, 32, 208, 30);
+	case MENU_HEADLINE:			return sf::IntRect(0,     0, 499, 140);
+	case MENU_STARTBTN:			return sf::IntRect(500,   0, 350,  60);
+	case MENU_STARTBTN_H:		return sf::IntRect(500,  64, 350,  60);
+	case MENU_FRAME_UP:			return sf::IntRect(851,   0, 208,  30);
+	case MENU_FRAME_DOWN:		return sf::IntRect(851,  32, 208,  30);
 
-	default:					return sf::IntRect(0, 0, 16, 16);	//default something
+	case SND_MUSIC_PLAY:		return sf::IntRect(0,     0, 128, 128);
+	case SND_MUSIC_MUTE:		return sf::IntRect(128,	  0, 128, 128);
+	case SND_EFFECTS_PLAY:		return sf::IntRect(0,   128, 128, 128);
+	case SND_EFFECTS_MUTE:		return sf::IntRect(128, 128, 128, 128);
+
+	default: assert(false);		return sf::IntRect(0,     0,  16,  16);		//default something
 	}
 }
 sf::Font* ResourceManager::getFont(ResourceFont fontType)

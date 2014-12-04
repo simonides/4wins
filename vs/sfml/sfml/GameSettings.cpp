@@ -13,9 +13,9 @@
 
 GameSettings::GameSettings() : simulator(0), threadedSimulator(false), fast(false), noAIsim(false), muted(false), option1(true), option2(true){
     playerType[0] = HUMAN;
-    playerType[1] = HUMAN;
+	playerType[1] = SMART_AI;
     avatar[0] = ResourceManager::PROFESSOR_JENKINS;
-    avatar[1] = ResourceManager::HIPPIE_HILDY;
+    avatar[1] = ResourceManager::SMOOTH_STEVE;
 }
 
 

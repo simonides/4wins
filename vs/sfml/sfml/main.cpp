@@ -31,7 +31,7 @@ sf::RenderWindow* setupWindow(){
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE), GAME_TITLE);
 	window->setPosition(sf::Vector2i(0, 0));
 	//window->setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
-	window->setFramerateLimit(60);
+	//window->setFramerateLimit(60);
 	window->setSize(sf::Vector2u(WINDOW_WIDTH-200, WINDOW_HEIGHT-200));// 16:9
 	return window;
 }
