@@ -164,7 +164,11 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 	const sf::IntRect smoothSteveRect = resourceManager.getTextureRect(resourceManager.SMOOTH_STEVE);
 	const sf::IntRect profJenkinsRect = resourceManager.getTextureRect(resourceManager.PROFESSOR_JENKINS);
 	const sf::IntRect hipsterHenryRect = resourceManager.getTextureRect(resourceManager.HIPSTER_HENRY);
-	const sf::IntRect bookWorkBettyRect = resourceManager.getTextureRect(resourceManager.BOOKWORM_BETTY);
+	const sf::IntRect boybandBillyRect = resourceManager.getTextureRect(resourceManager.BOYBAND_BILLY);
+	const sf::IntRect bookwormBettyRect = resourceManager.getTextureRect(resourceManager.BOOKWORM_BETTY);
+	const sf::IntRect fashionFabienneRect = resourceManager.getTextureRect(resourceManager.FASHION_FABIENNE);
+	const sf::IntRect hippieHildyRect = resourceManager.getTextureRect(resourceManager.HIPPIE_HILDY);
+	const sf::IntRect smokinStacyRect = resourceManager.getTextureRect(resourceManager.SMOKIN_STACY);
 
 	this->acPlayer1->init();
 	this->acPlayer1->setFont(*font).
@@ -173,28 +177,28 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 		setThumbnailBoxPosition(sf::Vector2f(76.0f, 510.0f)).
 		setEnumForEntry(0, Menu::Avatars::SMOOTH_STEVE).
 		setTextureRectsForEntry(0, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(0, "Uncle Fucking Ben").
+		setStringForEntry(0, "Smooth Steve").
 		setEnumForEntry(1u, Menu::Avatars::PROFESSOR_JENKINS).
 		setTextureRectsForEntry(1u, profJenkinsRect, profJenkinsRect).
-		setStringForEntry(1u, "Meister Propper").
+		setStringForEntry(1u, "Professor Jenkins").
 		setEnumForEntry(2u, Menu::Avatars::HIPSTER_HENRY).
 		setTextureRectsForEntry(2u, hipsterHenryRect, hipsterHenryRect).
-		setStringForEntry(2u, "Ronald McDonald").
-		setEnumForEntry(3u, Menu::Avatars::SMOOTH_STEVE).
-		setTextureRectsForEntry(3u, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(3u, "Uncle Ben").
-		setEnumForEntry(4u, Menu::Avatars::SMOOTH_STEVE).
-		setTextureRectsForEntry(4u, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(4u, "Uncle Ben").
-		setEnumForEntry(5u, Menu::Avatars::SMOOTH_STEVE).
-		setTextureRectsForEntry(5u, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(5u, "Uncle Ben").
-		setEnumForEntry(6u, Menu::Avatars::SMOOTH_STEVE).
-		setTextureRectsForEntry(6u, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(6u, "Uncle Ben").
-		setEnumForEntry(7u, Menu::Avatars::BOOKWORM_BETTY).
-		setTextureRectsForEntry(7u, bookWorkBettyRect, bookWorkBettyRect).
-		setStringForEntry(7u, "Preview").
+		setStringForEntry(2u, "Hipster Henry").
+		setEnumForEntry(3u, Menu::Avatars::BOYBAND_BILLY).
+		setTextureRectsForEntry(3u, boybandBillyRect, boybandBillyRect).
+		setStringForEntry(3u, "Boyband Billy").
+		setEnumForEntry(4u, Menu::Avatars::BOOKWORM_BETTY).
+		setTextureRectsForEntry(4u, bookwormBettyRect, bookwormBettyRect).
+		setStringForEntry(4u, "Bookworm Betty").
+		setEnumForEntry(5u, Menu::Avatars::FASHION_FABIENNE).
+		setTextureRectsForEntry(5u, fashionFabienneRect, fashionFabienneRect).
+		setStringForEntry(5u, "Fashion Fabienne").
+		setEnumForEntry(6u, Menu::Avatars::HIPPIE_HILDY).
+		setTextureRectsForEntry(6u, hippieHildyRect, hippieHildyRect).
+		setStringForEntry(6u, "Hippie Hildy").
+		setEnumForEntry(7u, Menu::Avatars::SMOKIN_STACY).
+		setTextureRectsForEntry(7u, smokinStacyRect, smokinStacyRect).
+		setStringForEntry(7u, "Smokin Stacy").
 		setDefaultEntry(0);
 
 	this->acPlayer2->init();
@@ -204,28 +208,28 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 		setThumbnailBoxPosition(sf::Vector2f(1027.0f, 510.0f)).
 		setEnumForEntry(0, Menu::Avatars::SMOOTH_STEVE).
 		setTextureRectsForEntry(0, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(0, "Uncle Fucking Ben").
+		setStringForEntry(0, "Smooth Steve").
 		setEnumForEntry(1u, Menu::Avatars::PROFESSOR_JENKINS).
 		setTextureRectsForEntry(1u, profJenkinsRect, profJenkinsRect).
-		setStringForEntry(1u, "Meister Propper").
+		setStringForEntry(1u, "Professor Jenkins").
 		setEnumForEntry(2u, Menu::Avatars::HIPSTER_HENRY).
 		setTextureRectsForEntry(2u, hipsterHenryRect, hipsterHenryRect).
-		setStringForEntry(2u, "Ronald McDonald").
-		setEnumForEntry(3u, Menu::Avatars::SMOOTH_STEVE).
-		setTextureRectsForEntry(3u, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(3u, "Uncle Ben").
-		setEnumForEntry(4u, Menu::Avatars::SMOOTH_STEVE).
-		setTextureRectsForEntry(4u, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(4u, "Uncle Ben").
-		setEnumForEntry(5u, Menu::Avatars::SMOOTH_STEVE).
-		setTextureRectsForEntry(5u, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(5u, "Uncle Ben").
-		setEnumForEntry(6u, Menu::Avatars::SMOOTH_STEVE).
-		setTextureRectsForEntry(6u, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(6u, "Uncle Ben").
-		setEnumForEntry(7u, Menu::Avatars::SMOOTH_STEVE).
-		setTextureRectsForEntry(7u, smoothSteveRect, smoothSteveRect).
-		setStringForEntry(7u, "Uncle Ben").
+		setStringForEntry(2u, "Hipster Henry").
+		setEnumForEntry(3u, Menu::Avatars::BOYBAND_BILLY).
+		setTextureRectsForEntry(3u, boybandBillyRect, boybandBillyRect).
+		setStringForEntry(3u, "Boyband Billy").
+		setEnumForEntry(4u, Menu::Avatars::BOOKWORM_BETTY).
+		setTextureRectsForEntry(4u, bookwormBettyRect, bookwormBettyRect).
+		setStringForEntry(4u, "Bookworm Betty").
+		setEnumForEntry(5u, Menu::Avatars::FASHION_FABIENNE).
+		setTextureRectsForEntry(5u, fashionFabienneRect, fashionFabienneRect).
+		setStringForEntry(5u, "Fashion Fabienne").
+		setEnumForEntry(6u, Menu::Avatars::HIPPIE_HILDY).
+		setTextureRectsForEntry(6u, hippieHildyRect, hippieHildyRect).
+		setStringForEntry(6u, "Hippie Hildy").
+		setEnumForEntry(7u, Menu::Avatars::SMOKIN_STACY).
+		setTextureRectsForEntry(7u, smokinStacyRect, smokinStacyRect).
+		setStringForEntry(7u, "Smokin Stacy").
 		setDefaultEntry(0);
 
 	this->musicMutebox->init(resourceManager, soundManager);
