@@ -14,6 +14,7 @@
     <ProjectGuid>{EB7C740D-0C07-4EDE-8E68-274CF4DC40F5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>sfml</RootNamespace>
+    <ProjectName>4wins</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -150,6 +151,7 @@
     <ClInclude Include="RBackground.h" />
     <ClInclude Include="RBag.h" />
     <ClInclude Include="RBoard.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RField.h" />
     <ClInclude Include="RGameMenu.h" />
@@ -176,6 +178,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="4wins.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\icon.ico" />
+    <Image Include="Resources\icon.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
