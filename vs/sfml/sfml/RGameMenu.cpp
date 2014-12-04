@@ -37,6 +37,8 @@ RGameMenu::RGameMenu(ResourceManager& resourceManager, SoundManager& soundManage
 	menuButton.setOrigin(buttonOrigin);
 	menuButton.setPosition(WINDOW_WIDTH_TO_CALCULATE / 2.f, WINDOW_HEIGHT_TO_CALCULATE / 2.f + 100.f);
 
+	sfxMutebox.init(resourceManager, soundManager);
+	musicMutebox.init(resourceManager, soundManager);
 
 	if (soundManager.getEffectsVolume() < 0.1)
 	{
@@ -46,8 +48,6 @@ RGameMenu::RGameMenu(ResourceManager& resourceManager, SoundManager& soundManage
 	{
 		musicMutebox.setState(true);
 	}
-	sfxMutebox.init(resourceManager, soundManager);
-	musicMutebox.init(resourceManager, soundManager);
 
 	sfxMutebox.setPosition(sf::Vector2f(WINDOW_WIDTH_TO_CALCULATE -   120.f, 200.f));
 	musicMutebox.setPosition(sf::Vector2f(WINDOW_WIDTH_TO_CALCULATE - 120.f,  80.f));

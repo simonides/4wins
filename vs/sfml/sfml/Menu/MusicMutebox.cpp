@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "../ResourceManager.h"
 #include "../SoundManager.h"
+#include <assert.h>
 
 #include "MusicMutebox.h"
 
@@ -21,6 +22,7 @@ MusicMutebox::~MusicMutebox()
 
 void MusicMutebox::init(ResourceManager &resourceManager, SoundManager &soundManager)
 {
+	assert(soundManager != nullptr);
 	this->soundManager = &soundManager;
 
 	const sf::IntRect musicPlayRect = resourceManager.getTextureRect(resourceManager.SND_MUSIC_PLAY);
