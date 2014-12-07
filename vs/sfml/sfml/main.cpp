@@ -23,19 +23,21 @@
 #include "SoundManager.h"
 #include "GameSettings.h"
 #include "getopt.h"
-//
 
 #define PI 3.14159265
 
-const std::string GAME_TITLE = "4 Wins by ...";
-
 
 sf::RenderWindow* setupWindow(){
-	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE), GAME_TITLE);
+	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE), WINDOW_TITLE);
 	window->setPosition(sf::Vector2i(0, 0));
-	//window->setVerticalSyncEnabled(true); //entweder das oder set frameratelimit
+	//window->setVerticalSyncEnabled(true); //entweder das oder set frameratelimit -> laut doku besser das framelimit
 	window->setFramerateLimit(60);
 	window->setSize(sf::Vector2u(WINDOW_WIDTH-200, WINDOW_HEIGHT-200));// 16:9
+	
+	sf::Image icon; // maybe illegal to keep it here but it works
+	if (icon.loadFromFile(WORKING_DIR "icon.png")) {
+		window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	}
 	return window;
 }
 

@@ -14,45 +14,45 @@ VOLUME_EFFECTS(100.f)
 }
 
 void SoundManager::loadResourcesFromFileSys(){
-    if (!backgroundMusic.openFromFile(WORKING_DIR + "sounds/backgroundCancelingtheApocalypse.ogg")){
+    if (!backgroundMusic.openFromFile(WORKING_DIR "sounds/backgroundCancelingtheApocalypse.ogg")){
         std::cerr << "Couldn't load the music file: backgroundCancelingtheApocalypse" << std::endl;
         assert(false);
     }
     backgroundMusic.setLoop(true);
    
-    if (!winMusic.openFromFile(WORKING_DIR + "sounds/winMusic.ogg")){
+    if (!winMusic.openFromFile(WORKING_DIR "sounds/winMusic.ogg")){
         std::cerr << "Couldn't load the music file: winMusic" << std::endl;
         assert(false);
     }
     winMusic.setLoop(true);
  
-    if (!sheep.openFromFile(WORKING_DIR + "sounds/sheep.ogg")){
+    if (!sheep.openFromFile(WORKING_DIR "sounds/sheep.ogg")){
         std::cerr << "Couldn't load the sound file: sheep" << std::endl;
         assert(false);
     }
    
-    if (!meepleDrop.openFromFile(WORKING_DIR + "sounds/meepleDrop.ogg")){
+    if (!meepleDrop.openFromFile(WORKING_DIR "sounds/meepleDrop.ogg")){
         std::cerr << "Couldn't load the sound file: meepleDrop" << std::endl;
         assert(false);
     }
     
-    if (!meepleWinDrop.openFromFile(WORKING_DIR + "sounds/meepleWinDrop.ogg")){
+    if (!meepleWinDrop.openFromFile(WORKING_DIR "sounds/meepleWinDrop.ogg")){
         std::cerr << "Couldn't load the sound file: meepleWinDrop" << std::endl;
         assert(false);
     }
     
-    if (!gameStart.openFromFile(WORKING_DIR + "sounds/gameStart.ogg")){
+    if (!gameStart.openFromFile(WORKING_DIR "sounds/gameStart.ogg")){
         std::cerr << "Couldn't load the sound file: gameStart" << std::endl;
         assert(false);
     }
     
-    if (!select.openFromFile(WORKING_DIR + "sounds/select.ogg")){
+    if (!select.openFromFile(WORKING_DIR "sounds/select.ogg")){
         std::cerr << "Couldn't load the sound file: select" << std::endl;
         assert(false);
     }
     
     for (uint8_t i = 0; i < 5; ++i){
-        if (!ohYeah[i].openFromFile(WORKING_DIR + "sounds/ohYeah" + static_cast<char>(i+'1') + ".ogg")){
+        if (!ohYeah[i].openFromFile(std::string(WORKING_DIR) + "sounds/ohYeah" + static_cast<char>(i+'1') + ".ogg")){
             std::cerr << "Couldn't load the sound file: ohYeah" << static_cast<unsigned int>(i) << std::endl;
             assert(false);
         }

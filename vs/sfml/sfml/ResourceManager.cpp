@@ -10,87 +10,87 @@ ResourceManager::ResourceManager(){
 
 void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 {
-	if (!roboto.loadFromFile(WORKING_DIR + "Fonts/roboto/roboto-black.ttf")){
+	if (!roboto.loadFromFile(WORKING_DIR "Fonts/roboto/roboto-black.ttf")){
 		std::cerr << "Couldn't load the Font: roboto-black.ttf" << std::endl;
 		exit(1);
 	}
 
-	if (!meepleSprite.loadFromFile(WORKING_DIR + "pencilStyle.png")){
+	if (!meepleSprite.loadFromFile(WORKING_DIR "pencilStyle.png")){
 		std::cerr << "Couldn't load the texture: meepleSprites" << std::endl;
 		exit(1);
 	}
 	meepleSprite.setSmooth(setSmooth);
 
-	if (!avatarSprite.loadFromFile(WORKING_DIR + "players.png")){
+	if (!avatarSprite.loadFromFile(WORKING_DIR "players.png")){
 		std::cerr << "Couldn't load the texture: avatarSprite" << std::endl;
 		exit(1);
 	}
 	avatarSprite.setSmooth(setSmooth);
 
-	if (!glowSprite.loadFromFile(WORKING_DIR + "glow.png")){
+	if (!glowSprite.loadFromFile(WORKING_DIR "glow.png")){
 		std::cerr << "Couldn't load the texture: glow" << std::endl;
 		exit(1);
 	}
 	glowSprite.setSmooth(setSmooth);
 
 
-	if (!boardTexture.loadFromFile(WORKING_DIR + "board.png")){
+	if (!boardTexture.loadFromFile(WORKING_DIR "board.png")){
 		std::cerr << "Couldn't load the texture: board" << std::endl;
 		exit(1);
 	}
 	boardTexture.setSmooth(setSmooth);
 
 
-	if (!fieldTexture.loadFromFile(WORKING_DIR + "field.png")){
+	if (!fieldTexture.loadFromFile(WORKING_DIR "field.png")){
 		std::cerr << "Couldn't load the texture: field" << std::endl;
 		exit(1);
 	}
 	fieldTexture.setSmooth(setSmooth);
 
 
-	if (!backgroundSprite.loadFromFile(WORKING_DIR + "background.png")){
+	if (!backgroundSprite.loadFromFile(WORKING_DIR "background.png")){
 		std::cerr << "Couldn't load the texture: background" << std::endl;
 		exit(1);
 	}
 	backgroundSprite.setSmooth(setSmooth);
 
-	if (!exitButtonTexture.loadFromFile(WORKING_DIR + "quit.png")){
+	if (!exitButtonTexture.loadFromFile(WORKING_DIR "quit.png")){
 		std::cerr << "Couldn't load the texture: quit" << std::endl;
 		exit(1);
 	}
 	exitButtonTexture.setSmooth(setSmooth);
 
-	if (!reloadButtonTexture.loadFromFile(WORKING_DIR + "replay.png")){
+	if (!reloadButtonTexture.loadFromFile(WORKING_DIR "replay.png")){
 		std::cerr << "Couldn't load the texture: replay" << std::endl;
 		exit(1);
 	}
 	reloadButtonTexture.setSmooth(setSmooth);
 
-	if (!particleSprite.loadFromFile(WORKING_DIR + "particles.png")){
+	if (!particleSprite.loadFromFile(WORKING_DIR "particles.png")){
 		std::cerr << "Couldn't load the texture: particles" << std::endl;
 		exit(1);
 	}
 	//particleSprite.setSmooth(true); //check performance first
 
-	if (!menuButtonTexture.loadFromFile(WORKING_DIR + "menue.png")){
+	if (!menuButtonTexture.loadFromFile(WORKING_DIR "menue.png")){
 		std::cerr << "Couldn't load the texture: menue" << std::endl;
 		exit(1);
 	}
 	menuButtonTexture.setSmooth(setSmooth);
 
-	if (!menuAtlas.loadFromFile(WORKING_DIR + "menu_atlas.png")){
+	if (!menuAtlas.loadFromFile(WORKING_DIR "menu_atlas.png")){
 		std::cerr << "Couldn't load the texture: menu_atlas" << std::endl;
 		exit(1);
 	}
 	menuAtlas.setSmooth(setSmooth);
 
-	if (!textSprite.loadFromFile(WORKING_DIR + "textSheet.png")){
+	if (!textSprite.loadFromFile(WORKING_DIR "textSheet.png")){
 		std::cerr << "Couldn't load the texture: textSheet" << std::endl;
 		exit(1);
 	}
 	textSprite.setSmooth(setSmooth);
 
-	if (!soundSprite.loadFromFile(WORKING_DIR + "muteButtons.png")){
+	if (!soundSprite.loadFromFile(WORKING_DIR "muteButtons.png")){
 		std::cerr << "Couldn't load the texture: muteButtons" << std::endl;
 		exit(1);
 	}
@@ -132,9 +132,9 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case HIPSTER_HENRY:			return sf::IntRect(256,   0, 128, 194);
 	case BOYBAND_BILLY:			return sf::IntRect(384,   0, 128, 194);
 	case BOOKWORM_BETTY:		return sf::IntRect(0,   195, 127, 194);
-	case FASHION_FABIENNE:		return sf::IntRect(128, 195, 127, 194);
-	case HIPPIE_HILDY:			return sf::IntRect(256, 195, 127, 194);
-	case SMOKIN_STACY:			return sf::IntRect(384, 195, 127, 194);
+	case SMOKIN_STACY:			return sf::IntRect(128, 195, 127, 194);
+	case FASHION_FABIENNE:		return sf::IntRect(256, 195, 127, 194);
+	case  HIPPIE_HILDY:			return sf::IntRect(384, 195, 127, 194);
 	
 	case BACKGROUND:			return sf::IntRect(0,	  0, 135,  68);
 	case BACKGROUND_WINDOW:		return sf::IntRect(4,	 70,  31,  49);

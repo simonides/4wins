@@ -1,7 +1,9 @@
 #pragma once
 #pragma warning( disable : 4005 )
 
-#define WORKING_DIR std::string("Resources/")
+#define WORKING_DIR "Resources/"
+
+#define WINDOW_TITLE "4Wins by Jakob M., Sebastian S. and Simon D.   @"
 
 extern const unsigned int WINDOW_HEIGHT_TO_CALCULATE; // to this all pixel values are calculated so better don't alter it
 extern const unsigned int WINDOW_WIDTH_TO_CALCULATE;

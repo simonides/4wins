@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <string>
 //#include <iostream>
+#include <sstream>
 #include <math.h>
 
 #include <SFML/System.hpp>
@@ -180,7 +181,7 @@ void Game::reset(){
 GameMenuDecision::Enum Game::runGame(){
 	sf::Clock clock;
     float elapsedTime;
-	
+	float fpsElapsedTime = 0;
     reset();
 
     LoopState lastLoopState = DISPLAY_END_SCREEN;   
@@ -254,10 +255,15 @@ GameMenuDecision::Enum Game::runGame(){
 				case DISPLAY_END_SCREEN:			            gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);	break;
 				}
 			}
-		std::string title("4Wins by Jakob M., Sebastian S. and Simon D.   @");
-		title.append(std::to_string(fps));
-		title.append(" fps");
-		window->setTitle(title);
+			fpsElapsedTime += elapsedTime;
+			if (fpsElapsedTime > 0.75)
+			{
+				std::ostringstream ss;
+				ss.precision(4);
+				ss << WINDOW_TITLE << fps << "fps";
+				window->setTitle(ss.str());
+				fpsElapsedTime = 0;
+			}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//draw

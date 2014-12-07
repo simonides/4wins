@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <sstream>
 
 #include "../config.h"
 #include "../helper.h"
@@ -244,12 +245,19 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 
 GameSettings *FourWins::Menu::MainMenu::loop()
 {
-	sf::Clock gameClock;
+	sf::Clock clock;
+	float elapsedTime;
+	float fpsElapsedTime = 0;
+
 	this->musicMutebox->fitStateToVolume();
 	this->sfxMutebox->fitStateToVolume();
 
 	while (this->window->isOpen() && !this->startGame)
 	{
+		elapsedTime = clock.getElapsedTime().asSeconds();
+		float fps = 1.f / elapsedTime;
+		clock.restart();
+
 		pollEvents();
 
 		checkListboxes();
@@ -270,8 +278,21 @@ GameSettings *FourWins::Menu::MainMenu::loop()
 			this->particleSystem->newParticleCloud(100, *this->selectionParticleRain);
 			this->acPlayer2->resetSelectionChanged();
 		}
-		this->particleSystem->update(gameClock.getElapsedTime().asSeconds());
-		gameClock.restart();
+		this->particleSystem->update(elapsedTime);
+
+		fpsElapsedTime += elapsedTime;
+		if (fpsElapsedTime > 0.75)
+		{
+			std::ostringstream ss;
+			ss.precision(4) ;
+			ss << WINDOW_TITLE << fps << "fps";
+			window->setTitle(ss.str());
+			fpsElapsedTime = 0;
+		}
+	
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//draw
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		this->window->clear(sf::Color::White);
 
