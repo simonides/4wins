@@ -2,7 +2,7 @@
 #include "config.h"
 #include <assert.h>
 #include <iostream>
-
+#include <cstdint>
 ResourceManager::ResourceManager(){
 	loadResourcesFromFileSys(true);
 }
@@ -96,6 +96,22 @@ void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 	}
 	soundSprite.setSmooth(setSmooth);
 
+	if (!splashscreen.loadFromFile(WORKING_DIR "splashscreen.png")){
+		std::cerr << "Couldn't load the texture: splashscreen" << std::endl;
+		exit(1);
+	}
+	splashscreen.setSmooth(setSmooth);
+
+	for (uint8_t i = 0; i < 5; ++i){
+		if (!tutorial[i].loadFromFile(WORKING_DIR "Tut/tut" + std::to_string(i+1)+ ".png")){
+			std::cerr << "Couldn't load the texture: " WORKING_DIR "Tut/tut" + std::to_string(i+1) + ".png" << std::endl;
+			exit(1);
+		}
+		tutorial[i].setSmooth(setSmooth);
+	}
+
+	
+
 }
 
 
@@ -117,9 +133,17 @@ sf::Texture* ResourceManager::getTexture(ResourceTexture textureType)
 	case TEXT_SPRITE:			return &textSprite;
 	case MENU_ATLAS:			return &menuAtlas;
 	case SOUND_SPRITE:			return &soundSprite;
+	
+	case SPLASH_SCREEN:			return &splashscreen;
+	case TUT1:					return &tutorial[0];
+	case TUT2:					return &tutorial[1];
+	case TUT3:					return &tutorial[2];
+	case TUT4:					return &tutorial[3];
+	case TUT5:					return &tutorial[4];
+
 	default: assert(false);		return &exitButtonTexture;
 
-		
+
 	}
 }
 
@@ -134,7 +158,7 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case BOOKWORM_BETTY:		return sf::IntRect(0,   195, 127, 194);
 	case SMOKIN_STACY:			return sf::IntRect(128, 195, 127, 194);
 	case FASHION_FABIENNE:		return sf::IntRect(256, 195, 127, 194);
-	case  HIPPIE_HILDY:			return sf::IntRect(384, 195, 127, 194);
+	case HIPPIE_HILDY:			return sf::IntRect(384, 195, 127, 194);
 	
 	case BACKGROUND:			return sf::IntRect(0,	  0, 135,  68);
 	case BACKGROUND_WINDOW:		return sf::IntRect(4,	 70,  31,  49);
@@ -163,6 +187,8 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case SND_MUSIC_MUTE:		return sf::IntRect(128,	  0, 128, 128);
 	case SND_EFFECTS_PLAY:		return sf::IntRect(0,   128, 128, 128);
 	case SND_EFFECTS_MUTE:		return sf::IntRect(128, 128, 128, 128);
+
+	case FULL_SCREEN_RECT:	return sf::IntRect(0, 0, WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE);
 
 	default: assert(false);		return sf::IntRect(0,     0,  16,  16);		//default something
 	}

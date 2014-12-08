@@ -23,6 +23,7 @@
 #include "SoundManager.h"
 #include "GameSettings.h"
 #include "getopt.h"
+#include "PreMenu.h"
 
 #define PI 3.14159265
 
@@ -32,7 +33,7 @@ sf::RenderWindow* setupWindow(){
 	window->setPosition(sf::Vector2i(0, 0));
 	//window->setVerticalSyncEnabled(true); //entweder das oder set frameratelimit -> laut doku besser das framelimit
 	window->setFramerateLimit(60);
-	window->setSize(sf::Vector2u(WINDOW_WIDTH-200, WINDOW_HEIGHT-200));// 16:9
+	window->setSize(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));// 16:9
 	
 	sf::Image icon; // maybe illegal to keep it here but it works
 	if (icon.loadFromFile(WORKING_DIR "icon.png")) {
@@ -63,7 +64,29 @@ void AI_testFunction(const GameSettings& settings){
 }
 
 
+void displaySplashScreen(sf::RenderWindow& window)
+{
+	sf::Texture splashscreen;
+	if (!splashscreen.loadFromFile(WORKING_DIR "splashscreen.png")){
+		std::cerr << "Couldn't load the texture: splashscreen" << std::endl;
+		exit(1);
+	}
+	splashscreen.setSmooth(true);
 
+	float width = static_cast<float>(WINDOW_WIDTH_TO_CALCULATE);
+	float height = static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE);
+
+	sf::RectangleShape splashScreenRect;
+	splashScreenRect.setPosition(0, 0);
+	splashScreenRect.setSize(sf::Vector2f(width, height));
+	splashScreenRect.setTexture(&splashscreen);
+	splashScreenRect.setTextureRect(sf::IntRect(0, 0, WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE));
+	splashScreenRect.setFillColor(sf::Color(255, 255, 255, 255));
+
+	window.clear();
+	window.draw(splashScreenRect);
+	window.display();
+}
 
 
 using namespace FourWins;
@@ -72,8 +95,6 @@ int main(int argc, char *argv[]){
 
 	
 
-	ResourceManager resourceManager;
-    SoundManager soundManager;
 	    
     GameSettings* settings = nullptr;
     Player* players[2] = {nullptr, nullptr};
@@ -101,11 +122,18 @@ int main(int argc, char *argv[]){
 	ShowWindow(GetConsoleWindow(), SW_HIDE); //hide console window .. hide only because it is needed for the network ais
 
 	sf::RenderWindow* window = setupWindow();
+	displaySplashScreen(*window);
 
-    Menu::MainMenu* menu = new Menu::MainMenu(*window);
+	ResourceManager resourceManager;
+	SoundManager soundManager;
+
+	PreMenu* preMenu = new PreMenu(*window, resourceManager, soundManager);
+   
+	Menu::MainMenu* menu = new Menu::MainMenu(*window);
     menu->init(resourceManager, soundManager);
-
-        
+	
+	preMenu->runLoop();
+	
     while (window->isOpen()){
         if (settings == nullptr || gameMenuDecision == GameMenuDecision::BACK_TO_MENU){            
             delete settings;        //Delete the previous settings

@@ -61,6 +61,12 @@
     <Filter Include="Source Files\ParticleSystem">
       <UniqueIdentifier>{907cfa44-ee4d-4cec-a8ad-c97672466ff5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Tutorial">
+      <UniqueIdentifier>{234d259d-07f0-49d0-8b3b-1325a43266cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tutorial">
+      <UniqueIdentifier>{31e64051-30d7-40bd-bd4a-482a9e6c3093}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MeepleBag.cpp">
@@ -179,6 +185,9 @@
     </ClCompile>
     <ClCompile Include="RGameMenu.cpp">
       <Filter>Source Files\REntities</Filter>
+    </ClCompile>
+    <ClCompile Include="PreMenu.cpp">
+      <Filter>Source Files\Tutorial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -307,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PreMenu.h">
+      <Filter>Header Files\Tutorial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
