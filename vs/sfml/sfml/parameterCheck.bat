@@ -1,1 +1,1 @@
-start ../Debug/sfml.exe -p1=stupid -p2=smart -sim=500
+start ../Debug/4wins.exe -p1=stupid -p2=smart -m -f -i

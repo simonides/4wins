@@ -44,8 +44,9 @@
 #include <iostream>
 
 
-Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resourceManager, SoundManager& soundManager) 
+Game::Game(sf::RenderWindow& window, Player* _players[2], bool noAIsim, ResourceManager& resourceManager, SoundManager& soundManager)
 	: window(&window)
+    , noAIsim(noAIsim)
 	, resourceManager(&resourceManager)
 	, soundManager(&soundManager)
 	, textManager(new RTextManager(resourceManager))
@@ -103,7 +104,7 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resou
     //Init Particle systems:   
         dustBuilder->setSprites({ 2, 3 }, { 0, 1 })
             ->setPath({ 30, 110 }, { 270, 340 })
-            ->setGravity(25.f, 90)
+            ->setGravity(65.f, 90)
             ->setRotation()
             ->setFadeoutSpeed({ 300, 500 });   
         mouseCursorParticleBuilder->setSprites({ 0, 3 }, { 0, 1 })
@@ -212,6 +213,15 @@ GameMenuDecision::Enum Game::runGame(){
                 particleSystem->newParticleCloud(1, *mouseCursorParticleBuilder);
             }
 			// TODO maybe change to whitelist!
+			//bool pause = false;
+
+			//pause = inputEvents.releasedEscape == true ? true : pause;
+			if (inputEvents.windowLostFocus)
+			{
+				inputEvents.windowLostFocus = false;
+				inputEvents.releasedEscape = true;
+			}
+			// come in if I want to show the game menu
 			if (inputEvents.releasedEscape == true && loopState != DISPLAY_PAUSE_MENU && loopState != DISPLAY_END_SCREEN)
 			{
 				oldLoopState = loopState;
@@ -219,6 +229,12 @@ GameMenuDecision::Enum Game::runGame(){
 				gameMenu->setMenuState(GameWinner::PAUSE);
 				inputEvents.releasedEscape = false;
 			}
+			if (inputEvents.windowGainedFocus)
+			{
+				inputEvents.windowGainedFocus = false;
+				inputEvents.releasedEscape = true;
+			}
+
 			if (inputEvents.windowHasFocus){
 				switch (loopState)
 				{
@@ -226,7 +242,7 @@ GameMenuDecision::Enum Game::runGame(){
 					loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
 					break;
 				case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();								break;
-				case HUMAN_SELECT_MEEPLE:						loopState = humanSelectMeeple(inputEvents);					break;
+				case HUMAN_SELECT_MEEPLE:						loopState = humanSelectMeeple(inputEvents);						break;
 				case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();								break;
 				case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();							break;
 				case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple(elapsedTime);				break;
@@ -237,14 +253,12 @@ GameMenuDecision::Enum Game::runGame(){
 				case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);			break;
 				case CHECK_END_CONDITION:
 					loopState = checkEndCondition();
-					if (loopState == DISPLAY_END_SCREEN)
-					{
+					if (loopState == DISPLAY_END_SCREEN){       //Optimisation to avoid a (minimal) lag
 						gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);
 					}
 					break;
 				case DISPLAY_PAUSE_MENU:
-					if (inputEvents.releasedEscape == true)
-					{
+					if (inputEvents.releasedEscape == true){
 						loopState = oldLoopState;
 						inputEvents.releasedEscape = false;
 					}
@@ -306,6 +320,7 @@ GameMenuDecision::Enum Game::runGame(){
         }
 	}
     backgroundMusic->stop();
+    particleSystem->fadeOutAllParticles();
     return gameMenuDecision;
 }
 
@@ -319,11 +334,13 @@ void Game::createMeepleDust(sf::FloatRect fieldBounds){
 }
 
 InputEvents Game::pollEvents(){
-    static InputEvents events = { false, false, false, true, false, { 0, 0 } };
+    static InputEvents events = { false, false, false, true,false,false, false, { 0, 0 } };
 	events.releasedEscape = false;
 
     events.pressedLeftMouse = false;
     events.releasedLeftMouse = false;
+	events.windowGainedFocus = false;
+	events.windowLostFocus = false;
     events.mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 	
 	sf::Event event;
@@ -366,11 +383,13 @@ InputEvents Game::pollEvents(){
 				break;
             case sf::Event::LostFocus:
                 events.windowHasFocus = false;
+				events.windowLostFocus = true;
                 backgroundMusic->pause();
                 soundManager->getMusic(SoundManager::SHEEP)->play();
                 break;
             case sf::Event::GainedFocus:
                 events.windowHasFocus = true;
+				events.windowGainedFocus = true;
                 backgroundMusic->play();
                 break;
 		}
@@ -579,7 +598,7 @@ Game::LoopState Game::moveMeepleToSelectedPosition(float elapsedTime){
 
     selectedMeeple->setPosition(position);
 	
-    if (moveMeepleAnimationProgress >= 1){        
+    if (moveMeepleAnimationProgress >= 1 || noAIsim){        
         selectedMeeple->setGlow(nullptr);
 
         Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*(selectedMeeple->getLogicalMeeple())); //Remove the meeple from the bag
@@ -611,7 +630,7 @@ Game::LoopState Game::checkEndCondition(){
     //The meeple has just been placed. Sound is played soon
 	selectedMeeple = nullptr;
     
-	const WinCombination* combi = logicalBoard->checkWinSituation();
+    const WinCombination* combi = logicalBoard->checkWinSituation();
 	
     if (combi != nullptr){
 		for (uint8_t i = 0; i < 4; ++i){

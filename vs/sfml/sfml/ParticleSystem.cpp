@@ -84,3 +84,9 @@ void ParticleSystem::draw(sf::RenderWindow& window) const{
         window.draw(particles[i].shape);
     }
 }
+
+void ParticleSystem::fadeOutAllParticles(){
+    for (unsigned int i = 0; i < particleCount; ++i){
+        particles[i].fadeoutSpeed *= 10;
+    }
+}
