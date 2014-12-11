@@ -8,6 +8,7 @@
 #include "../GameSettings.h"
 #include "../ParticleSystem.h"
 #include "../ParticleBuilder.h"
+#include "../PreMenu.h"
 #include "MenuConstants.h"
 #include "Listbox.h"
 #include "Checkbox.h"
@@ -21,8 +22,9 @@
 
 using namespace FourWins;
 
-FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window) :
+FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window, PreMenu &tutorial) :
 	window(&window),
+	tutorial(&tutorial),
 	particleSystem(nullptr),
 	selectionParticleRain(nullptr),
 	backgroundShape(new sf::RectangleShape()),
@@ -37,6 +39,7 @@ FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window) :
 	acPlayer2(new Menu::AvatarChooser(window, 8u)),
 	musicMutebox(new MusicMutebox()),
 	sfxMutebox(new SfxMutebox()),
+	btnTutorial(new Menu::Button(window)),
 	btnStart(new Menu::Button(window)),
 	startGame(false)
 {}
@@ -55,6 +58,9 @@ FourWins::Menu::MainMenu::~MainMenu()
 	delete this->cbMeeplePos;
 	delete this->acPlayer1;
 	delete this->acPlayer2;
+	delete this->musicMutebox;
+	delete this->sfxMutebox;
+	delete this->btnTutorial;
 	delete this->btnStart;
 }
 
@@ -236,6 +242,13 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 	this->musicMutebox->init(resourceManager, soundManager);
 	
 	this->sfxMutebox->init(resourceManager, soundManager);
+	
+	this->btnTutorial->init();
+	this->btnTutorial->setTexture(menuAtlas);
+	this->btnTutorial->setTextureRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN));
+	this->btnTutorial->setTextureHighlightRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN_H));
+	this->btnTutorial->setPosition(sf::Vector2f(10.0f, 10.0f));
+	this->btnTutorial->setSize(sf::Vector2f(50.0f, 150.0f));
 
 	this->btnStart->init();
 	this->btnStart->setTexture(menuAtlas);
@@ -265,6 +278,11 @@ GameSettings *FourWins::Menu::MainMenu::loop()
 		if (this->btnStart->getIsReleased())
 		{
 			this->startGame = true;
+		}
+		if (this->btnTutorial->getIsReleased())
+		{
+			this->btnTutorial->resetReleased();
+			this->tutorial->runLoop();
 		}
 		if (this->acPlayer1->getSelectionChanged())
 		{
@@ -310,6 +328,7 @@ GameSettings *FourWins::Menu::MainMenu::loop()
 		this->acPlayer2->draw();
 		this->musicMutebox->draw(*this->window);
 		this->sfxMutebox->draw(*this->window);
+		this->btnTutorial->draw();
 		this->btnStart->draw();
 		this->window->draw(*this->headlineShape);
 
@@ -336,6 +355,7 @@ void FourWins::Menu::MainMenu::pollEvents()
 		this->cbMeeplePos->update(event, converted);
 		this->acPlayer1->update(event, converted);
 		this->acPlayer2->update(event, converted);
+		this->btnTutorial->update(event, converted);
 		this->btnStart->update(event, converted);
 
 		switch (event.type)

@@ -129,7 +129,7 @@ int main(int argc, char *argv[]){
 
 	PreMenu* preMenu = new PreMenu(*window, resourceManager, soundManager);
    
-	Menu::MainMenu* menu = new Menu::MainMenu(*window);
+	Menu::MainMenu* menu = new Menu::MainMenu(*window, *preMenu);
     menu->init(resourceManager, soundManager);
 	
 	preMenu->runLoop();

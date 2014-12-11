@@ -171,7 +171,12 @@ bool PreMenu::crossfade(float elapsedTime, sf::RectangleShape& rect1, sf::Rectan
 	return false;
 }
 
-
+void PreMenu::reset()
+{
+	goToMenu = false;
+	fadeIndexA = 0;
+	fadeIndexB = 1;
+}
 
 void PreMenu::pollEvents()
 {

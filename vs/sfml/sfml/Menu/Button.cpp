@@ -49,6 +49,7 @@ void FourWins::Menu::Button::setTextureRect(const sf::IntRect &rect)
 	this->textureRect->top = rect.top;
 	this->textureRect->width = rect.width;
 	this->textureRect->height = rect.height;
+	this->background->setTextureRect(*this->textureRect);
 }
 
 void FourWins::Menu::Button::setTextureHighlightRect(const sf::IntRect &rect)

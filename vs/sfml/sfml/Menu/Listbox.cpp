@@ -118,6 +118,7 @@ Menu::Listbox &FourWins::Menu::Listbox::setDefaultEntry(unsigned int index)
 		}
 		this->entries[index].setIsActive(true);
 	}
+	resetHover();
 	return *this;
 }
 

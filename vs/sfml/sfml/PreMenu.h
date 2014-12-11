@@ -14,6 +14,8 @@ public:
 private:
 	void pollEvents();
 	bool crossfade(float elapsedTime, sf::RectangleShape& rect1, sf::RectangleShape& rect2);
+	void reset();
+	void initBackground();
 
 	PreMenu& operator=(PreMenu&);
 

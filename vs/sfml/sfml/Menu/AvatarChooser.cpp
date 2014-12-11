@@ -163,6 +163,7 @@ Menu::AvatarChooser &FourWins::Menu::AvatarChooser::setDefaultEntry(unsigned int
 
 		this->previewText->setPosition(sf::Vector2f(previewTextX, this->previewText->getPosition().y));
 	}
+	resetHover();
 	return *this;
 }
 
