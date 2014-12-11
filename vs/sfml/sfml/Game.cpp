@@ -611,7 +611,7 @@ Game::LoopState Game::checkEndCondition(){
     //The meeple has just been placed. Sound is played soon
 	selectedMeeple = nullptr;
     
-	const WinCombination* combi = logicalBoard->checkWinSituation();
+    const WinCombination* combi = nullptr;// logicalBoard->checkWinSituation();
 	
     if (combi != nullptr){
 		for (uint8_t i = 0; i < 4; ++i){

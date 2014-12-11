@@ -99,13 +99,15 @@ int main(int argc, char *argv[]){
     GameSettings* settings = nullptr;
     Player* players[2] = {nullptr, nullptr};
     Game* game = nullptr;
+    SoundManager soundManager;
     GameMenuDecision::Enum gameMenuDecision = GameMenuDecision::KEEP_PLAYING;
-      
-    //argc = 1;
+     
+    //argc = 0;
     //argv[argc++] = "TEST";
-    //argv[argc++] = "-sim=500";
+    ////argv[argc++] = "-sim=500";
     //argv[argc++] = "-p1=stupid";
     //argv[argc++] = "-p2=smart";
+    //argv[argc++] = "-m";
 
     if (argc > 1){          //Parse program parameters
         settings = parseConsoleParameters(argc, argv);
@@ -113,6 +115,13 @@ int main(int argc, char *argv[]){
             print_usage(argv[0]);
 			system("pause");
 			exit(0);
+        }
+        if (settings->musicMuted){
+            soundManager.setMusicVolume(0);
+        }
+        if (settings->effectsMuted){
+            soundManager.setEffectsVolume(0);
+
         }
     }
     if (settings != nullptr && settings->simulator > 0){
@@ -125,7 +134,7 @@ int main(int argc, char *argv[]){
 	displaySplashScreen(*window);
 
 	ResourceManager resourceManager;
-	SoundManager soundManager;
+	
 
 	PreMenu* preMenu = new PreMenu(*window, resourceManager, soundManager);
    
