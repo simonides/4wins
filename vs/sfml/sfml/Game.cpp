@@ -212,6 +212,15 @@ GameMenuDecision::Enum Game::runGame(){
                 particleSystem->newParticleCloud(1, *mouseCursorParticleBuilder);
             }
 			// TODO maybe change to whitelist!
+			//bool pause = false;
+
+			//pause = inputEvents.releasedEscape == true ? true : pause;
+			if (inputEvents.windowLostFocus)
+			{
+				inputEvents.windowLostFocus = false;
+				inputEvents.releasedEscape = true;
+			}
+			// come in if I want to show the game menu
 			if (inputEvents.releasedEscape == true && loopState != DISPLAY_PAUSE_MENU && loopState != DISPLAY_END_SCREEN)
 			{
 				oldLoopState = loopState;
@@ -219,6 +228,12 @@ GameMenuDecision::Enum Game::runGame(){
 				gameMenu->setMenuState(GameWinner::PAUSE);
 				inputEvents.releasedEscape = false;
 			}
+			if (inputEvents.windowGainedFocus)
+			{
+				inputEvents.windowGainedFocus = false;
+				inputEvents.releasedEscape = true;
+			}
+
 			if (inputEvents.windowHasFocus){
 				switch (loopState)
 				{
@@ -226,7 +241,7 @@ GameMenuDecision::Enum Game::runGame(){
 					loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
 					break;
 				case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();								break;
-				case HUMAN_SELECT_MEEPLE:						loopState = humanSelectMeeple(inputEvents);					break;
+				case HUMAN_SELECT_MEEPLE:						loopState = humanSelectMeeple(inputEvents);						break;
 				case TC_START_SELECT_MEEPLE:					loopState = tcStartSelectMeeple();								break;
 				case TC_WAIT_FOR_SELECTED_MEEPLE:				loopState = tcWaitForSelectedMeeple();							break;
 				case HIGHLIGHT_SELECTED_MEEPLE:					loopState = highlightSelectedMeeple(elapsedTime);				break;
@@ -319,11 +334,13 @@ void Game::createMeepleDust(sf::FloatRect fieldBounds){
 }
 
 InputEvents Game::pollEvents(){
-    static InputEvents events = { false, false, false, true, false, { 0, 0 } };
+    static InputEvents events = { false, false, false, true,false,false, false, { 0, 0 } };
 	events.releasedEscape = false;
 
     events.pressedLeftMouse = false;
     events.releasedLeftMouse = false;
+	events.windowGainedFocus = false;
+	events.windowLostFocus = false;
     events.mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 	
 	sf::Event event;
@@ -366,11 +383,13 @@ InputEvents Game::pollEvents(){
 				break;
             case sf::Event::LostFocus:
                 events.windowHasFocus = false;
+				events.windowLostFocus = true;
                 backgroundMusic->pause();
                 soundManager->getMusic(SoundManager::SHEEP)->play();
                 break;
             case sf::Event::GainedFocus:
                 events.windowHasFocus = true;
+				events.windowGainedFocus = true;
                 backgroundMusic->play();
                 break;
 		}

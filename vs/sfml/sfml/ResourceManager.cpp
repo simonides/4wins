@@ -102,7 +102,7 @@ void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 	}
 	splashscreen.setSmooth(setSmooth);
 
-	for (uint8_t i = 0; i < 5; ++i){
+	for (uint8_t i = 0; i < 9; ++i){
 		if (!tutorial[i].loadFromFile(WORKING_DIR "Tut/tut" + std::to_string(i+1)+ ".png")){
 			std::cerr << "Couldn't load the texture: " WORKING_DIR "Tut/tut" + std::to_string(i+1) + ".png" << std::endl;
 			exit(1);
@@ -140,6 +140,11 @@ sf::Texture* ResourceManager::getTexture(ResourceTexture textureType)
 	case TUT3:					return &tutorial[2];
 	case TUT4:					return &tutorial[3];
 	case TUT5:					return &tutorial[4];
+	case TUT6:					return &tutorial[5];
+	case TUT7:					return &tutorial[6];
+	case TUT8:					return &tutorial[7];
+	case TUT9:					return &tutorial[8];
+
 
 	default: assert(false);		return &exitButtonTexture;
 
@@ -175,6 +180,8 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case TEXT_A_POSITION:		return sf::IntRect(203,	708, 324, 73);
 	case TEXT_PAUSE:			return sf::IntRect(0,   781, 612, 210);
 
+	case TEXT_SKIP_TO_MENU:		return sf::IntRect(532, 635, 338,  73);
+
 	case ARROW_UP:				return sf::IntRect(762,   0, 131, 243);
 
 	case MENU_HEADLINE:			return sf::IntRect(0,     0, 499, 140);
@@ -188,7 +195,7 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case SND_EFFECTS_PLAY:		return sf::IntRect(0,   128, 128, 128);
 	case SND_EFFECTS_MUTE:		return sf::IntRect(128, 128, 128, 128);
 
-	case FULL_SCREEN_RECT:	return sf::IntRect(0, 0, WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE);
+	case FULL_SCREEN_RECT:		return sf::IntRect(0, 0, WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE);
 
 	default: assert(false);		return sf::IntRect(0,     0,  16,  16);		//default something
 	}

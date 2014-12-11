@@ -14,6 +14,7 @@ public:
 private:
 	void pollEvents();
 	bool crossfade(float elapsedTime, sf::RectangleShape& rect1, sf::RectangleShape& rect2);
+	void skipToMenu();
 
 	PreMenu& operator=(PreMenu&);
 
@@ -36,12 +37,13 @@ private:
 	ResourceManager* resourceManager;
 	SoundManager* soundManager;
 	
-	sf::RectangleShape background[7];			//splash //5 tut //back of menu
-
+	sf::RectangleShape background[10];			//splash //5 tut //back of menu
+	sf::RectangleShape skipToMenuButton;
 
 
 	bool goToMenu;								// control the loop
 	bool leftMouseClicked;						// event
+	sf::Vector2f mousePosition;					// contains mouseposition
 
 };
 

@@ -43,6 +43,8 @@ struct InputEvents{
     bool releasedLeftMouse;
     bool rightMouseButtonPressed;
     bool windowHasFocus;
+	bool windowGainedFocus;
+	bool windowLostFocus;
 	bool releasedEscape;		//needs reset???
 
     sf::Vector2f mousePosition; //contains converted mousposition

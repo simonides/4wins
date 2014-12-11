@@ -27,7 +27,7 @@ private:
 
 	sf::Texture splashscreen;
 
-	sf::Texture tutorial[5];
+	sf::Texture tutorial[9];
 
 	void loadResourcesFromFileSys(bool setSmooth); // invoked by the constructor
 
@@ -49,7 +49,7 @@ public:
 		TEXT_SPRITE,
 		SOUND_SPRITE,
 
-		SPLASH_SCREEN, TUT1, TUT2, TUT3, TUT4, TUT5
+		SPLASH_SCREEN, TUT1, TUT2, TUT3, TUT4, TUT5, TUT6, TUT7, TUT8, TUT9
 
 	};
 
@@ -63,7 +63,7 @@ public:
 
 		TEXT_PLAYER_1, TEXT_PLAYER_2,
 		TEXT_CHOOSE, TEXT_SELECT, TEXT_A_MEEPLE, TEXT_A_POSITION,
-		TEXT_WINS, TEXT_TIE, ARROW_UP, TEXT_PAUSE,
+		TEXT_WINS, TEXT_TIE, ARROW_UP, TEXT_PAUSE, TEXT_SKIP_TO_MENU,
 
 		SND_MUSIC_MUTE, SND_MUSIC_PLAY, SND_EFFECTS_MUTE, SND_EFFECTS_PLAY,
 
