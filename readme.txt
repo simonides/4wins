@@ -1,41 +1,33 @@
-SFML - Simple and Fast Multimedia Library
-=========================================
 
-SFML is a simple, fast, cross-platform and object-oriented multimedia API. It provides access to windowing, graphics,
-audio and network.
-It is written in C++, and has bindings for various languages such as C, .Net, Ruby, Python.
+4 Wins
+... is a game developed by 3 students of the University of Applied Science Technikum Vienna.
 
-Authors
--------
+Developers:
+	Jakob Maier
+	Simon Dimitriadis
+	Sebastian Szuszkiewicz
 
-Laurent Gomila - main developer (laurent.gom@gmail.com)
-Marco Antognini - OS X developer (antognini.marco@gmail.com)
-Jonathan De Wachter - Android developer (dewachter.jonathan@gmail.com)
+Newton AI + Networking:
+	Andreas Hackl
 
-Download
---------
+Character Design:
+	Carina Fischer
 
-You can get the latest official release on SFML website (http://www.sfml-dev.org/download.php).
-You can also get the current development version from the git repository (https://github.com/LaurentGomila/SFML).
+This game uses the sfml framework http://www.sfml-dev.org/.
 
-Install
--------
+	Game explanation:
 
-Follow the instructions of the tutorials (http://www.sfml-dev.org/tutorials.php), there is one for each platform/compiler that SFML supports.
-
-Learn
------
-
-There are several places to learn SFML:
-* The official tutorials (http://www.sfml-dev.org/resources.php#tutorials)
-* The online API documentation (http://www.sfml-dev.org/resources.php#documentation)
-* The community wiki (https://github.com/LaurentGomila/SFML/wiki/)
-* The community forum (http://en.sfml-dev.org/forums/) (or http://fr.sfml-dev.org/forums/ for french people)
-
-Contribute
-----------
-
-SFML is an open-source project, and it needs your help to go on growing and improving.
-Don't hesitate to post suggestions or bug reports on the forum (http://en.sfml-dev.org/forums/),
-submit patches by e-mail, or post new bugs/features requests on the task tracker (https://github.com/LaurentGomila/SFML/issues/).
-You can even fork the project on github, maintain your own version and send us pull requests periodically to merge your work.
+	Each of the two players has 8 Meeples.
+	
+		1) Player 1 starts and can select a meeple for player2.
+		2) Player 2 has to place this meeple on a free field on the board.
+		3) Player 2 chooses a meeple for the first player.
+		4) Player 1 sets that meeple to a free field.
+	
+	This has to be repeated until one player wins or every meeple has been set which would 	be a tie.
+	
+	A player wins if he manages to place 4 meeples in a line that share at least one of the following properties:
+		* Color:	 Black  | White
+		* Shape: 	 Square | Round 
+		* Size:		 Small	| Big
+		* Detail: 	 Hole   | No hole
