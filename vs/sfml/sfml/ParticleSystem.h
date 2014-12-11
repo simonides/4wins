@@ -39,6 +39,8 @@ public:
     void update(float elapsedTime);
     void draw(sf::RenderWindow& window) const;
 
+    void fadeOutAllParticles();
+
     ~ParticleSystem();
 };
 

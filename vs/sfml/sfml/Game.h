@@ -89,6 +89,9 @@ private:
 	    const sf::Color HOVERED_MEEPLE_GLOW_COLOR;
 	    const sf::Color SELECTED_MEEPLE_GLOW_COLOR;
     
+    //Settings:
+        bool noAIsim;                                   //Immediate.The AI's meeples are not slowly moved to the board. They will be positioned immediately.
+
       
 	//Particles:
         ParticleSystem* particleSystem;                 //Particle controller: renders and simulates all particles
@@ -151,7 +154,7 @@ private:
 	    void createMeepleDust(sf::FloatRect fieldBounds);        
     /*Game& operator = (const Game&);*/
 public:
-    Game(sf::RenderWindow& window, Player* players[2], ResourceManager& resourceLoader, SoundManager& soundManager); //Initialises the game with 2 players
+    Game(sf::RenderWindow& window, Player* players[2], bool noAIsim, ResourceManager& resourceLoader, SoundManager& soundManager); //Initialises the game with 2 players
 	virtual ~Game();
 	GameMenuDecision::Enum runGame();           //Runs the game, until it is over; returns the winner
 

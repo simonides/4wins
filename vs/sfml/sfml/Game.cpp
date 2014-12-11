@@ -44,8 +44,9 @@
 #include <iostream>
 
 
-Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resourceManager, SoundManager& soundManager) 
+Game::Game(sf::RenderWindow& window, Player* _players[2], bool noAIsim, ResourceManager& resourceManager, SoundManager& soundManager)
 	: window(&window)
+    , noAIsim(noAIsim)
 	, resourceManager(&resourceManager)
 	, soundManager(&soundManager)
 	, textManager(new RTextManager(resourceManager))
@@ -103,7 +104,7 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resou
     //Init Particle systems:   
         dustBuilder->setSprites({ 2, 3 }, { 0, 1 })
             ->setPath({ 30, 110 }, { 270, 340 })
-            ->setGravity(25.f, 90)
+            ->setGravity(65.f, 90)
             ->setRotation()
             ->setFadeoutSpeed({ 300, 500 });   
         mouseCursorParticleBuilder->setSprites({ 0, 3 }, { 0, 1 })
@@ -252,14 +253,12 @@ GameMenuDecision::Enum Game::runGame(){
 				case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);			break;
 				case CHECK_END_CONDITION:
 					loopState = checkEndCondition();
-					if (loopState == DISPLAY_END_SCREEN)
-					{
+					if (loopState == DISPLAY_END_SCREEN){       //Optimisation to avoid a (minimal) lag
 						gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);
 					}
 					break;
 				case DISPLAY_PAUSE_MENU:
-					if (inputEvents.releasedEscape == true)
-					{
+					if (inputEvents.releasedEscape == true){
 						loopState = oldLoopState;
 						inputEvents.releasedEscape = false;
 					}
@@ -321,6 +320,7 @@ GameMenuDecision::Enum Game::runGame(){
         }
 	}
     backgroundMusic->stop();
+    particleSystem->fadeOutAllParticles();
     return gameMenuDecision;
 }
 
@@ -598,7 +598,7 @@ Game::LoopState Game::moveMeepleToSelectedPosition(float elapsedTime){
 
     selectedMeeple->setPosition(position);
 	
-    if (moveMeepleAnimationProgress >= 1){        
+    if (moveMeepleAnimationProgress >= 1 || noAIsim){        
         selectedMeeple->setGlow(nullptr);
 
         Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*(selectedMeeple->getLogicalMeeple())); //Remove the meeple from the bag
@@ -630,7 +630,7 @@ Game::LoopState Game::checkEndCondition(){
     //The meeple has just been placed. Sound is played soon
 	selectedMeeple = nullptr;
     
-	const WinCombination* combi = logicalBoard->checkWinSituation();
+    const WinCombination* combi = logicalBoard->checkWinSituation();
 	
     if (combi != nullptr){
 		for (uint8_t i = 0; i < 4; ++i){
