@@ -244,11 +244,11 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 	this->sfxMutebox->init(resourceManager, soundManager);
 	
 	this->btnTutorial->init();
-	this->btnTutorial->setTexture(menuAtlas);
-	this->btnTutorial->setTextureRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN));
-	this->btnTutorial->setTextureHighlightRect(resourceManager.getTextureRect(resourceManager.MENU_STARTBTN_H));
+	this->btnTutorial->setTexture(resourceManager.getTexture(resourceManager.TUTORIAL_BTN_SRITE));
+	this->btnTutorial->setTextureRect(resourceManager.getTextureRect(resourceManager.TUT_BTN));
+	this->btnTutorial->setTextureHighlightRect(resourceManager.getTextureRect(resourceManager.TUT_BTN_HIGHLIGHT));
 	this->btnTutorial->setPosition(sf::Vector2f(10.0f, 10.0f));
-	this->btnTutorial->setSize(sf::Vector2f(50.0f, 150.0f));
+	this->btnTutorial->setSize(sf::Vector2f(65.0f, 65.0f));
 
 	this->btnStart->init();
 	this->btnStart->setTexture(menuAtlas);
@@ -282,6 +282,7 @@ GameSettings *FourWins::Menu::MainMenu::loop()
 		if (this->btnTutorial->getIsReleased())
 		{
 			this->btnTutorial->resetReleased();
+			this->tutorial->reset();
 			this->tutorial->runLoop();
 		}
 		if (this->acPlayer1->getSelectionChanged())

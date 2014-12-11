@@ -102,6 +102,12 @@ void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 	}
 	splashscreen.setSmooth(setSmooth);
 
+	if (!tutorialBtnSprite.loadFromFile(WORKING_DIR "tutorial.png")){
+		std::cerr << "Couldn't load the texture: tutorial" << std::endl;
+		exit(1);
+	}
+	tutorialBtnSprite.setSmooth(setSmooth);
+
 	for (uint8_t i = 0; i < 9; ++i){
 		if (!tutorial[i].loadFromFile(WORKING_DIR "Tut/tut" + std::to_string(i+1)+ ".png")){
 			std::cerr << "Couldn't load the texture: " WORKING_DIR "Tut/tut" + std::to_string(i+1) + ".png" << std::endl;
@@ -133,6 +139,7 @@ sf::Texture* ResourceManager::getTexture(ResourceTexture textureType)
 	case TEXT_SPRITE:			return &textSprite;
 	case MENU_ATLAS:			return &menuAtlas;
 	case SOUND_SPRITE:			return &soundSprite;
+	case TUTORIAL_BTN_SRITE:	return &tutorialBtnSprite;
 	
 	case SPLASH_SCREEN:			return &splashscreen;
 	case TUT1:					return &tutorial[0];
@@ -189,6 +196,8 @@ sf::IntRect ResourceManager::getTextureRect(ResourceRect rectType) const
 	case MENU_STARTBTN_H:		return sf::IntRect(500,  64, 350,  60);
 	case MENU_FRAME_UP:			return sf::IntRect(851,   0, 208,  30);
 	case MENU_FRAME_DOWN:		return sf::IntRect(851,  32, 208,  30);
+	case TUT_BTN:				return sf::IntRect(0, 0, 128, 128);
+	case TUT_BTN_HIGHLIGHT:		return sf::IntRect(128, 0, 128, 128);
 
 	case SND_MUSIC_PLAY:		return sf::IntRect(0,     0, 128, 128);
 	case SND_MUSIC_MUTE:		return sf::IntRect(128,	  0, 128, 128);

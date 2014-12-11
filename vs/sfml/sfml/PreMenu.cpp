@@ -23,74 +23,23 @@ PreMenu::PreMenu(sf::RenderWindow& window, ResourceManager& resourceManager, Sou
 	, goToMenu(false)
 	, leftMouseClicked(false)
 {
-	float width = static_cast<float>(WINDOW_WIDTH_TO_CALCULATE);
-	float height = static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE);
-
-	background[0].setPosition(0, 0);
-	background[0].setSize(sf::Vector2f(width, height));
+	initBackground();
 	background[0].setTexture(resourceManager.getTexture(ResourceManager::SPLASH_SCREEN));
-	background[0].setTextureRect(resourceManager.getTextureRect(ResourceManager::FULL_SCREEN_RECT));
-	background[0].setFillColor(sf::Color(255, 255, 255, 255));
-
-	background[1].setPosition(0, 0);
-	background[1].setSize(sf::Vector2f(width, height));
 	background[1].setTexture(resourceManager.getTexture(ResourceManager::TUT1));
-	background[1].setTextureRect(resourceManager.getTextureRect(ResourceManager::FULL_SCREEN_RECT));
-	background[1].setFillColor(sf::Color(255, 255, 255, 0));
-
-	background[2].setPosition(0, 0);
-	background[2].setSize(sf::Vector2f(width, height));
 	background[2].setTexture(resourceManager.getTexture(ResourceManager::TUT2));
-	background[2].setTextureRect(resourceManager.getTextureRect(ResourceManager::FULL_SCREEN_RECT));
-	background[2].setFillColor(sf::Color(255, 255, 255, 0));
-
-	background[3].setPosition(0, 0);
-	background[3].setSize(sf::Vector2f(width, height));
 	background[3].setTexture(resourceManager.getTexture(ResourceManager::TUT3));
-	background[3].setTextureRect(resourceManager.getTextureRect(ResourceManager::FULL_SCREEN_RECT));
-	background[3].setFillColor(sf::Color(255, 255, 255, 0));
-
-	background[4].setPosition(0, 0);
-	background[4].setSize(sf::Vector2f(width, height));
 	background[4].setTexture(resourceManager.getTexture(ResourceManager::TUT4));
-	background[4].setTextureRect(resourceManager.getTextureRect(ResourceManager::FULL_SCREEN_RECT));
-	background[4].setFillColor(sf::Color(255, 255, 255, 0));
-
-	background[5].setPosition(0, 0);
-	background[5].setSize(sf::Vector2f(width, height));
 	background[5].setTexture(resourceManager.getTexture(ResourceManager::TUT5));
-	background[5].setTextureRect(resourceManager.getTextureRect(ResourceManager::FULL_SCREEN_RECT));
-	background[5].setFillColor(sf::Color(255, 255, 255, 0));
-
-	background[6].setPosition(0, 0);
-	background[6].setSize(sf::Vector2f(width, height));
 	background[6].setTexture(resourceManager.getTexture(ResourceManager::TUT6));
-	background[6].setTextureRect(resourceManager.getTextureRect(ResourceManager::FULL_SCREEN_RECT));
-	background[6].setFillColor(sf::Color(255, 255, 255, 0));
-
-	background[7].setPosition(0, 0);
-	background[7].setSize(sf::Vector2f(width, height));
 	background[7].setTexture(resourceManager.getTexture(ResourceManager::TUT7));
-	background[7].setTextureRect(resourceManager.getTextureRect(ResourceManager::FULL_SCREEN_RECT));
-	background[7].setFillColor(sf::Color(255, 255, 255, 0));
-
-	background[8].setPosition(0, 0);
-	background[8].setSize(sf::Vector2f(width, height));
 	background[8].setTexture(resourceManager.getTexture(ResourceManager::TUT8));
-	background[8].setTextureRect(resourceManager.getTextureRect(ResourceManager::FULL_SCREEN_RECT));
-	background[8].setFillColor(sf::Color(255, 255, 255, 0));
-
-	background[9].setPosition(0, 0);
-	background[9].setSize(sf::Vector2f(width, height));
 	background[9].setTexture(resourceManager.getTexture(ResourceManager::TUT9));
-	background[9].setTextureRect(resourceManager.getTextureRect(ResourceManager::FULL_SCREEN_RECT));
-	background[9].setFillColor(sf::Color(255, 255, 255, 0));
 
 	skipToMenuButton.setPosition(WINDOW_WIDTH_TO_CALCULATE - 250.f, 15.f);
 	skipToMenuButton.setSize(sf::Vector2f(338.f * 0.7f , 73.f * 0.7f));
 	skipToMenuButton.setTexture(resourceManager.getTexture(ResourceManager::TEXT_SPRITE));
 	skipToMenuButton.setTextureRect(resourceManager.getTextureRect(ResourceManager::TEXT_SKIP_TO_MENU));
-	//skipToMenuButton.setFillColor(sf::Color(255, 255, 255, 0));
+	skipToMenuButton.setFillColor(sf::Color::Black);
 	
 }
 
@@ -191,7 +140,7 @@ void PreMenu::runLoop()
 	
 }
 
-bool PreMenu::crossfade(float elapsedTime, sf::RectangleShape& rect1, sf::RectangleShape& rect2)
+bool PreMenu::crossfade(float elapsedTime, sf::RectangleShape&, sf::RectangleShape& rect2)
 {
 	float temp = alpha1 - elapsedTime * ANIMATION_SPEED;
 	float temp2 = alpha2 + elapsedTime * ANIMATION_SPEED;
@@ -217,11 +166,24 @@ bool PreMenu::crossfade(float elapsedTime, sf::RectangleShape& rect1, sf::Rectan
 	return false;
 }
 
+void PreMenu::initBackground(){
+	float width = static_cast<float>(WINDOW_WIDTH_TO_CALCULATE);
+	float height = static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE);
+
+	for (uint8_t i = 0; i < 10; ++i){
+		background[i].setPosition(0, 0);
+		background[i].setSize(sf::Vector2f(width, height));
+		background[i].setTextureRect(resourceManager->getTextureRect(ResourceManager::FULL_SCREEN_RECT));
+		background[i].setFillColor(sf::Color(255, 255, 255, 0));
+	}
+	background[0].setFillColor(sf::Color(255, 255, 255, 255));
+}
 void PreMenu::reset()
 {
 	goToMenu = false;
 	fadeIndexA = 0;
 	fadeIndexB = 1;
+	initBackground();
 }
 
 void PreMenu::skipToMenu()
@@ -229,7 +191,7 @@ void PreMenu::skipToMenu()
 	//alpha1 = 255;			// fade to menubackground
 	//alpha2 = 0;
 	//fadeIndexB = 6;
-	//loopState = CROSSFADE;
+	//loopState = CROSSFADE;ect1
 	goToMenu = true;		// go to menu directly
 }
 void PreMenu::pollEvents()

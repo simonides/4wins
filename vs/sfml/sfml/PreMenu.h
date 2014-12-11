@@ -10,11 +10,12 @@ class PreMenu
 public:
 	PreMenu(sf::RenderWindow& window, ResourceManager& resourceManager, SoundManager& soundManager);
 	void runLoop();
+	void reset();
 
 private:
 	void pollEvents();
 	bool crossfade(float elapsedTime, sf::RectangleShape& rect1, sf::RectangleShape& rect2);
-	void skipToMenu();	void reset();
+	void skipToMenu();
 	void initBackground();
 	PreMenu& operator=(PreMenu&);
 

@@ -22,6 +22,7 @@ private:
 	sf::Texture avatarSprite;
 	sf::Texture textSprite;
 	sf::Texture soundSprite;
+	sf::Texture tutorialBtnSprite;
 
 	sf::Texture menuAtlas;
 
@@ -48,6 +49,7 @@ public:
 		MENU_ATLAS,
 		TEXT_SPRITE,
 		SOUND_SPRITE,
+		TUTORIAL_BTN_SRITE,
 
 		SPLASH_SCREEN, TUT1, TUT2, TUT3, TUT4, TUT5, TUT6, TUT7, TUT8, TUT9
 
@@ -60,6 +62,7 @@ public:
 		BOOKWORM_BETTY, FASHION_FABIENNE, HIPPIE_HILDY, SMOKIN_STACY,
 
 		MENU_HEADLINE, MENU_STARTBTN, MENU_STARTBTN_H, MENU_FRAME_UP, MENU_FRAME_DOWN,
+		TUT_BTN, TUT_BTN_HIGHLIGHT,
 
 		TEXT_PLAYER_1, TEXT_PLAYER_2,
 		TEXT_CHOOSE, TEXT_SELECT, TEXT_A_MEEPLE, TEXT_A_POSITION,
