@@ -13,7 +13,7 @@ PreMenu::PreMenu(sf::RenderWindow& window, ResourceManager& resourceManager, Sou
 	, firstFadingFrame(false)
 	, fadeIndexA(0)
 	, fadeIndexB(1)
-	, ANIMATION_SPEED(180)
+	, ANIMATION_SPEED(350)
 	, TIME_TO_WAIT_TILL_NEXT_SWITCH(8.f) // in seconds
 	, alpha1(255)
 	, alpha2(0)
@@ -212,9 +212,8 @@ bool PreMenu::crossfade(float elapsedTime, sf::RectangleShape& rect1, sf::Rectan
 		alpha2 = 255;
 		return true;
 	}
-	rect1.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha1)));
+	//rect1.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha1)));
 	rect2.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha2)));
-
 	return false;
 }
 
