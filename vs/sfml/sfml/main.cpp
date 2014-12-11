@@ -155,7 +155,7 @@ int main(int argc, char *argv[]){
             delete players[1];
             players[0] = createPlayer(*settings, 0);
             players[1] = createPlayer(*settings, 1);
-            game = new Game(*window, players, resourceManager, soundManager);
+            game = new Game(*window, players, settings->noAIsim,resourceManager, soundManager);
         }
                 
         if (!window->isOpen()){

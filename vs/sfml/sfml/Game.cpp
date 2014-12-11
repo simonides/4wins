@@ -44,8 +44,9 @@
 #include <iostream>
 
 
-Game::Game(sf::RenderWindow& window, Player* _players[2], ResourceManager& resourceManager, SoundManager& soundManager) 
+Game::Game(sf::RenderWindow& window, Player* _players[2], bool noAIsim, ResourceManager& resourceManager, SoundManager& soundManager)
 	: window(&window)
+    , noAIsim(noAIsim)
 	, resourceManager(&resourceManager)
 	, soundManager(&soundManager)
 	, textManager(new RTextManager(resourceManager))
@@ -579,7 +580,7 @@ Game::LoopState Game::moveMeepleToSelectedPosition(float elapsedTime){
 
     selectedMeeple->setPosition(position);
 	
-    if (moveMeepleAnimationProgress >= 1){        
+    if (moveMeepleAnimationProgress >= 1 || noAIsim){        
         selectedMeeple->setGlow(nullptr);
 
         Meeple* placeMe = players[activePlayerIndex]->logicalMeepleBag->removeMeeple(*(selectedMeeple->getLogicalMeeple())); //Remove the meeple from the bag
@@ -611,7 +612,7 @@ Game::LoopState Game::checkEndCondition(){
     //The meeple has just been placed. Sound is played soon
 	selectedMeeple = nullptr;
     
-    const WinCombination* combi = nullptr;// logicalBoard->checkWinSituation();
+    const WinCombination* combi = logicalBoard->checkWinSituation();
 	
     if (combi != nullptr){
 		for (uint8_t i = 0; i < 4; ++i){
