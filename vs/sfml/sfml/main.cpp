@@ -92,9 +92,6 @@ void displaySplashScreen(sf::RenderWindow& window)
 using namespace FourWins;
 
 int main(int argc, char *argv[]){  
-
-	
-
 	    
     GameSettings* settings = nullptr;
     Player* players[2] = {nullptr, nullptr};

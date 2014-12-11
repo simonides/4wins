@@ -104,7 +104,7 @@ Game::Game(sf::RenderWindow& window, Player* _players[2], bool noAIsim, Resource
     //Init Particle systems:   
         dustBuilder->setSprites({ 2, 3 }, { 0, 1 })
             ->setPath({ 30, 110 }, { 270, 340 })
-            ->setGravity(25.f, 90)
+            ->setGravity(65.f, 90)
             ->setRotation()
             ->setFadeoutSpeed({ 300, 500 });   
         mouseCursorParticleBuilder->setSprites({ 0, 3 }, { 0, 1 })
@@ -238,14 +238,12 @@ GameMenuDecision::Enum Game::runGame(){
 				case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);			break;
 				case CHECK_END_CONDITION:
 					loopState = checkEndCondition();
-					if (loopState == DISPLAY_END_SCREEN)
-					{
+					if (loopState == DISPLAY_END_SCREEN){       //Optimisation to avoid a (minimal) lag
 						gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);
 					}
 					break;
 				case DISPLAY_PAUSE_MENU:
-					if (inputEvents.releasedEscape == true)
-					{
+					if (inputEvents.releasedEscape == true){
 						loopState = oldLoopState;
 						inputEvents.releasedEscape = false;
 					}
@@ -307,6 +305,7 @@ GameMenuDecision::Enum Game::runGame(){
         }
 	}
     backgroundMusic->stop();
+    particleSystem->fadeOutAllParticles();
     return gameMenuDecision;
 }
 
