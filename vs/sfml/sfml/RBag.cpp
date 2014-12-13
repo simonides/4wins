@@ -24,7 +24,7 @@ void RBag::draw(sf::RenderWindow& window){
 }
 
 //returns only UNused meeples 
-RMeeple* RBag::getRMeepleAtPosition(sf::Vector2f& position){
+RMeeple* RBag::getRMeepleAtPosition(sf::Vector2f& position) const{
     for (std::vector<RMeeple*>::const_iterator it = rMeeples.begin(); it != rMeeples.end(); ++it){
         if ((*it)->containsPosition(position)){
             return *it;
@@ -76,5 +76,6 @@ void RBag::reset(){
     for (std::vector<RMeeple*>::iterator it = rMeeples.begin(); it != rMeeples.end(); ++it){
         (*it)->reset();
     }
+	sort(rMeeples.begin(), rMeeples.end(), [](RMeeple* a, RMeeple* b){return a->getYPos() > b->getYPos(); });
 }
 

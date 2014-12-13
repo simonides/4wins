@@ -149,9 +149,10 @@ Menu::AvatarChooser &FourWins::Menu::AvatarChooser::setStringForEntry(unsigned i
 	return *this;
 }
 
-Menu::AvatarChooser &FourWins::Menu::AvatarChooser::setDefaultEntry(unsigned int index)
-{
-	if (index < this->CHOICE_COUNT)
+Menu::AvatarChooser &FourWins::Menu::AvatarChooser::setDefaultEntry()
+{ 
+	unsigned int index = rand()%this->CHOICE_COUNT;
+	//if (index < this->CHOICE_COUNT)
 	{
 		this->selectedChoice = &this->choices[index];
 		this->previewShape->setTextureRect(*this->choices[index].previewTextureRect);
@@ -234,15 +235,16 @@ void FourWins::Menu::AvatarChooser::checkForHover(const sf::Vector2f &mousePosit
 			{
 				this->choices[i].thumbnailShape->setOutlineColor(sf::Color::Yellow);
 			}
-			this->previewShape->setTextureRect(*this->choices[i].previewTextureRect);
+			//Looks better without hover-preview
+			/*this->previewShape->setTextureRect(*this->choices[i].previewTextureRect);
 			this->previewText->setString(*this->choices[i].previewString);
 
 			float previewTextX = this->previewTextShape->getPosition().x +
 				(this->previewTextShape->getSize().x / 2.0f) -
 				(this->previewText->getLocalBounds().width / 2.0f);
 
-			this->previewText->setPosition(sf::Vector2f(previewTextX, this->previewText->getPosition().y));
-			break;
+			this->previewText->setPosition(sf::Vector2f(previewTextX, this->previewText->getPosition().y));*/
+			return;
 		}
 	}
 }

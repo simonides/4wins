@@ -107,7 +107,7 @@
     <ClCompile Include="Menu\SfxMutebox.cpp" />
     <ClCompile Include="ParticleBuilder.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
-    <ClCompile Include="PreMenu.cpp" />
+    <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="RBackground.cpp" />
     <ClCompile Include="RBag.cpp" />
     <ClCompile Include="RBoard.cpp" />
@@ -149,7 +149,7 @@
     <ClInclude Include="ParticleBuilder.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PreMenu.h" />
+    <ClInclude Include="Tutorial.h" />
     <ClInclude Include="RBackground.h" />
     <ClInclude Include="RBag.h" />
     <ClInclude Include="RBoard.h" />

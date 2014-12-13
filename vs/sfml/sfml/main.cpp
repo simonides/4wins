@@ -1,6 +1,6 @@
 
-#include <windows.h>
-//#include <wincon.h> 
+#include <windows.h> // TODO should be deleted!
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
@@ -11,22 +11,25 @@
 #include "Player.h"
 #include "Game.h"
 #include "GameSimulator.h"
-#include "ThreadedGameSimulator.h"
+//#include "ThreadedGameSimulator.h"
 #include "config.h"
-#include "RandomAI.h"
-#include "StupidAI.h"
-#include "ThinkingAI.h"
-#include "SmartAI.h"
+//#include "RandomAI.h"
+//#include "StupidAI.h"
+//#include "ThinkingAI.h"
+//#include "SmartAI.h"
 #include "ResourceManager.h"
 
 #include "Menu/Menu.h"
 #include "SoundManager.h"
 #include "GameSettings.h"
 #include "getopt.h"
-#include "PreMenu.h"
+#include "Tutorial.h"
 
 #define PI 3.14159265
+#include "ThreadedGameSimulator.h"
 
+
+class GameSimulator;
 
 sf::RenderWindow* setupWindow(){
 	sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE), WINDOW_TITLE);
@@ -71,7 +74,12 @@ void displaySplashScreen(sf::RenderWindow& window)
 		std::cerr << "Couldn't load the texture: splashscreen" << std::endl;
 		exit(1);
 	}
-	splashscreen.setSmooth(true);
+	sf::Texture splashTextTex;
+	if (!splashTextTex.loadFromFile(WORKING_DIR "loading.png")){
+		std::cerr << "Couldn't load the texture: loading" << std::endl;
+		exit(1);
+	}
+	splashTextTex.setSmooth(true);
 
 	float width = static_cast<float>(WINDOW_WIDTH_TO_CALCULATE);
 	float height = static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE);
@@ -83,8 +91,16 @@ void displaySplashScreen(sf::RenderWindow& window)
 	splashScreenRect.setTextureRect(sf::IntRect(0, 0, WINDOW_WIDTH_TO_CALCULATE, WINDOW_HEIGHT_TO_CALCULATE));
 	splashScreenRect.setFillColor(sf::Color(255, 255, 255, 255));
 
+	sf::RectangleShape splashText;
+	splashText.setSize(sf::Vector2f(344.f * 0.8f, 72.f * 0.8f));
+	splashText.setTexture(&splashTextTex);
+	splashText.setPosition(WINDOW_WIDTH_TO_CALCULATE - 175.f, WINDOW_HEIGHT_TO_CALCULATE - 45.f);
+	splashText.setOrigin(splashText.getGlobalBounds().width / 2.f, splashText.getGlobalBounds().height / 2.f);
+	splashText.setFillColor(sf::Color::Black);
+
 	window.clear();
 	window.draw(splashScreenRect);
+	window.draw(splashText);
 	window.display();
 }
 
@@ -92,7 +108,9 @@ void displaySplashScreen(sf::RenderWindow& window)
 using namespace FourWins;
 
 int main(int argc, char *argv[]){  
-	    
+	
+	srand(static_cast<unsigned int>(time(nullptr)));
+
     GameSettings* settings = nullptr;
     Player* players[2] = {nullptr, nullptr};
     Game* game = nullptr;
@@ -118,7 +136,6 @@ int main(int argc, char *argv[]){
         }
         if (settings->effectsMuted){
             soundManager.setEffectsVolume(0);
-
         }
     }
     if (settings != nullptr && settings->simulator > 0){
@@ -133,12 +150,14 @@ int main(int argc, char *argv[]){
 	ResourceManager resourceManager;
 	
 
-	PreMenu* preMenu = new PreMenu(*window, resourceManager, soundManager);
+	Tutorial* tutorial = new Tutorial(*window, resourceManager, soundManager);
    
-	Menu::MainMenu* menu = new Menu::MainMenu(*window, *preMenu);
+	Menu::MainMenu* menu = new Menu::MainMenu(*window, *tutorial);
     menu->init(resourceManager, soundManager);
-	
-	preMenu->runLoop();
+	// if settings == nullptr they have to be set up by the menu and we display the tutorial screen
+	if (settings == nullptr){
+		tutorial->runLoop();
+	}
 	
     while (window->isOpen()){
         if (settings == nullptr || gameMenuDecision == GameMenuDecision::BACK_TO_MENU){            

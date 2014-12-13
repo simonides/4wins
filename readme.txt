@@ -31,3 +31,5 @@ This game uses the sfml framework http://www.sfml-dev.org/.
 		* Shape: 	 Square | Round 
 		* Size:		 Small	| Big
 		* Detail: 	 Hole   | No hole
+
+In the near future everyone can write an AI, stay tuned!

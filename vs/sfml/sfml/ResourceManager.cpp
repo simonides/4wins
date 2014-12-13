@@ -84,7 +84,7 @@ void ResourceManager::loadResourcesFromFileSys(bool setSmooth)
 	}
 	menuAtlas.setSmooth(setSmooth);
 
-	if (!textSprite.loadFromFile(WORKING_DIR "textSheet.png")){
+	if (!textSprite.loadFromFile(WORKING_DIR "textSprite.png")){
 		std::cerr << "Couldn't load the texture: textSheet" << std::endl;
 		exit(1);
 	}

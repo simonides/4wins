@@ -8,7 +8,7 @@
 #include "../GameSettings.h"
 #include "../ParticleSystem.h"
 #include "../ParticleBuilder.h"
-#include "../PreMenu.h"
+#include "../Tutorial.h"
 #include "MenuConstants.h"
 #include "Listbox.h"
 #include "Checkbox.h"
@@ -22,7 +22,7 @@
 
 using namespace FourWins;
 
-FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window, PreMenu &tutorial) :
+FourWins::Menu::MainMenu::MainMenu(sf::RenderWindow &window, Tutorial &tutorial) :
 	window(&window),
 	tutorial(&tutorial),
 	particleSystem(nullptr),
@@ -71,10 +71,11 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 
 	this->particleSystem = new ParticleSystem(*resourceManager.getTexture(resourceManager.PARTICLE_SPRITE), sf::Vector2u(4, 2));
 	this->selectionParticleRain = new ParticleBuilder(sf::Vector2f(), { 5.0f, 18.0f });
+
 	this->selectionParticleRain->setSprites(sf::Vector2u(0, 2), sf::Vector2u(0, 2))
-		->setPath({ 400.0f, 700.0f }, { 240.0f, 300.0f })
-		->setGravity(380.0f, 90.0f)
-		->setFadeoutSpeed({ 300.0f, 350.0f })
+		->setPath({ 100, 300 }, { 200, 340 })
+		->setGravity(200, 800)
+		->setRotation({ 0, 600 }, { 0.5, 2.5 })
 		->setDynamicColor({ 2.0f, 8.0f });
 
 	this->backgroundShape->setTexture(resourceManager.getTexture(resourceManager.BACKGROUND_TEX));
@@ -114,10 +115,10 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 		setValueForEntry(3u, 't').
 		setStringForEntry(4u, "Smart AI").
 		setValueForEntry(4u, 'm').
-		setStringForEntry(5u, "??? AI").
-		setValueForEntry(5u, 'x').
-		setStringForEntry(6u, "??? AI").
-		setValueForEntry(6u, 'x').
+		setStringForEntry(5u, "Newton AI").
+		setValueForEntry(5u, 'm').//TODO neu mappen
+		setStringForEntry(6u, "Networking AI").
+		setValueForEntry(6u, 'm').//TODO neu mappen
 		setStringForEntry(7u, "??? AI").
 		setValueForEntry(7u, 'x').
 		setDefaultEntry(0);
@@ -138,10 +139,10 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 		setValueForEntry(3u, 't').
 		setStringForEntry(4u, "Smart AI").
 		setValueForEntry(4u, 'm').
-		setStringForEntry(5u, "??? AI").
-		setValueForEntry(5u, 'x').
-		setStringForEntry(6u, "??? AI").
-		setValueForEntry(6u, 'x').
+		setStringForEntry(5u, "Newton AI").
+		setValueForEntry(5u, 'm').//TODO neu mappen
+		setStringForEntry(6u, "Networking AI").
+		setValueForEntry(6u, 'm').//TODO neu mappen
 		setStringForEntry(7u, "??? AI").
 		setValueForEntry(7u, 'x').
 		setDefaultEntry(0);
@@ -206,7 +207,7 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 		setEnumForEntry(7u, Menu::Avatars::SMOKIN_STACY).
 		setTextureRectsForEntry(7u, smokinStacyRect, smokinStacyRect).
 		setStringForEntry(7u, "Smokin Stacy").
-		setDefaultEntry(0);
+		setDefaultEntry();
 
 	this->acPlayer2->init();
 	this->acPlayer2->setFont(*font).
@@ -237,7 +238,7 @@ void FourWins::Menu::MainMenu::init(ResourceManager &resourceManager, SoundManag
 		setEnumForEntry(7u, Menu::Avatars::SMOKIN_STACY).
 		setTextureRectsForEntry(7u, smokinStacyRect, smokinStacyRect).
 		setStringForEntry(7u, "Smokin Stacy").
-		setDefaultEntry(0);
+		setDefaultEntry();
 
 	this->musicMutebox->init(resourceManager, soundManager);
 	
@@ -287,13 +288,13 @@ GameSettings *FourWins::Menu::MainMenu::loop()
 		}
 		if (this->acPlayer1->getSelectionChanged())
 		{
-			this->selectionParticleRain->setPosition(sf::Vector2f(190.0f, 120.0f), { -5.0f, 5.0f });
+			this->selectionParticleRain->setPosition(sf::Vector2f(190.0f, 0.0f), { -5.0f, 5.0f });
 			this->particleSystem->newParticleCloud(100, *this->selectionParticleRain);
 			this->acPlayer1->resetSelectionChanged();
 		}
 		if (this->acPlayer2->getSelectionChanged())
 		{
-			this->selectionParticleRain->setPosition(sf::Vector2f(1140.0f, 120.0f), { -5.0f, 5.0f });
+			this->selectionParticleRain->setPosition(sf::Vector2f(1140.0f, 0.0f), { -5.0f, 5.0f });
 			this->particleSystem->newParticleCloud(100, *this->selectionParticleRain);
 			this->acPlayer2->resetSelectionChanged();
 		}
@@ -314,7 +315,6 @@ GameSettings *FourWins::Menu::MainMenu::loop()
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		this->window->clear(sf::Color::White);
-
 		this->window->draw(this->acPlayer1->getPreviewShape());
 		this->window->draw(this->acPlayer2->getPreviewShape());
 		this->particleSystem->draw(*this->window);

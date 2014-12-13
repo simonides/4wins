@@ -15,7 +15,7 @@ public:
 	~RBag();
 	void draw(sf::RenderWindow& window);
 
-	RMeeple* getRMeepleAtPosition(sf::Vector2f& position);  
+	RMeeple* getRMeepleAtPosition(sf::Vector2f& position) const;  
 
 	RMeeple* getRmeepleFromUsed(const Meeple* meeple) const;
     RMeeple* getRmeepleFromUnused(const Meeple* meeple);

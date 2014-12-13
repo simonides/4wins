@@ -5,7 +5,7 @@
 #include "Meeple.h"
 #include "MeepleBag.h"
 
-std::string BoardPos::toString(){
+std::string BoardPos::toString() const{
     return std::string('(' + std::to_string(x + 1) + '|' + std::to_string(y + 1) + ')');
 }
 

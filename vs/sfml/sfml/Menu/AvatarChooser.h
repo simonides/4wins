@@ -67,7 +67,7 @@ namespace FourWins
 			AvatarChooser &setEnumForEntry(unsigned int index, Avatars value);
 			AvatarChooser &setStringForEntry(unsigned int index, const sf::String &str);
 			//opterator[] useful ??
-			AvatarChooser &setDefaultEntry(unsigned int index);
+			AvatarChooser &setDefaultEntry();
 			inline const sf::RectangleShape &getPreviewShape() const
 			{
 				return *this->previewShape;

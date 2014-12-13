@@ -5,10 +5,10 @@
 class ResourceManager;
 class SoundManager;
 
-class PreMenu
+class Tutorial
 {
 public:
-	PreMenu(sf::RenderWindow& window, ResourceManager& resourceManager, SoundManager& soundManager);
+	Tutorial(sf::RenderWindow& window, ResourceManager& resourceManager, SoundManager& soundManager);
 	void runLoop();
 	void reset();
 
@@ -17,7 +17,7 @@ private:
 	bool crossfade(float elapsedTime, sf::RectangleShape& rect1, sf::RectangleShape& rect2);
 	void skipToMenu();
 	void initBackground();
-	PreMenu& operator=(PreMenu&);
+	Tutorial& operator=(Tutorial&);
 
 	enum
 	{
@@ -43,7 +43,8 @@ private:
 
 
 	bool goToMenu;								// control the loop
-	bool leftMouseClicked;						// event
+	bool leftMouseClicked;						// event left
+	bool rightMouseClicked;						// event right 
 	sf::Vector2f mousePosition;					// contains mouseposition
 
 };

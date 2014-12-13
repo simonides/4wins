@@ -162,7 +162,9 @@ void Game::reset(){
 	players[1]->rbag->reset();
 
 	gameMenu->reset();
-
+	if (selectedMeeple != nullptr){
+		selectedMeeple->setGlow(nullptr);
+	}
     selectedMeeple = nullptr;
     firstFrameOfState = true;
 
@@ -176,6 +178,7 @@ void Game::reset(){
         winningCombiRMeeples[i]->setGlow(nullptr);
         winningCombiRMeeples[i] = nullptr;
     }
+	//activePlayerIndex = 0;
 }
 
 //Game Loop for one game, until there is a winner or the board is full
@@ -238,7 +241,7 @@ GameMenuDecision::Enum Game::runGame(){
 			if (inputEvents.windowHasFocus){
 				switch (loopState)
 				{
-				case INIT_STATE:                                //todo das stimmt no ned ganz human iplayer und tc !!!!
+				case INIT_STATE:                                // TODO das stimmt no ned ganz human iplayer und tc !!!!
 					loopState = players[activePlayerIndex]->type == Player::HUMAN ? HUMAN_SELECT_MEEPLE : TC_START_SELECT_MEEPLE;
 					break;
 				case I_PLAYER_SELECT_MEEPLE:					loopState = i_playerSelectMeeple();								break;
@@ -253,7 +256,7 @@ GameMenuDecision::Enum Game::runGame(){
 				case MOVE_MEEPLE_TO_SELECTED_POSITION:			loopState = moveMeepleToSelectedPosition(elapsedTime);			break;
 				case CHECK_END_CONDITION:
 					loopState = checkEndCondition();
-					if (loopState == DISPLAY_END_SCREEN){       //Optimisation to avoid a (minimal) lag
+					if (loopState == DISPLAY_END_SCREEN){       // Optimization to avoid a (minimal) lag
 						gameMenuDecision = displayEndscreen(inputEvents, elapsedTime);
 					}
 					break;
@@ -262,6 +265,11 @@ GameMenuDecision::Enum Game::runGame(){
 						loopState = oldLoopState;
 						inputEvents.releasedEscape = false;
 					}
+					if (hoveredMeeple != nullptr)
+					{
+						hoveredMeeple->setGlow(nullptr);
+					}
+					hoveredMeeple = nullptr;
 					gameMenu->resetHover();
 					gameMenuDecision =  gameMenu->handleClickAndHover(&inputEvents);
 					break;
@@ -289,7 +297,6 @@ GameMenuDecision::Enum Game::runGame(){
 		background->draw(*window);
 
 		board->draw(*window);
-
 		sort(meeplesToDrawAndSort.begin(), meeplesToDrawAndSort.end(), [](RMeeple* a, RMeeple* b){return a->getYPos() < b->getYPos(); });
 		for (std::vector<RMeeple*>::iterator it = meeplesToDrawAndSort.begin(); it != meeplesToDrawAndSort.end(); ++it){
 			(*it)->draw(*window);
@@ -332,8 +339,9 @@ void Game::createMeepleDust(sf::FloatRect fieldBounds){
                ->setPath({ 50, 150 }, { 290, 320 }); //right dust
     particleSystem->newParticleCloud(20, *dustBuilder);
 }
-
+static bool test = false;
 InputEvents Game::pollEvents(){
+	test = false;
     static InputEvents events = { false, false, false, true,false,false, false, { 0, 0 } };
 	events.releasedEscape = false;
 
@@ -372,6 +380,11 @@ InputEvents Game::pollEvents(){
 				if (event.key.code == sf::Keyboard::Escape )
 				{
 					events.releasedEscape = true;
+				}
+				if (event.key.code == sf::Keyboard::M)
+				{
+					
+					test = true;
 				}
 				break;
 			case sf::Event::Resized:
@@ -517,7 +530,15 @@ Game::LoopState Game::humanSelectMeeplePosition(InputEvents inputEvents){
         sf::Vector2f test(inputEvents.mousePosition.x - draggedMeepleMouseOffset.x, inputEvents.mousePosition.y - draggedMeepleMouseOffset.y);
 		selectedMeeple->setPosition(test);
 		sf::Vector2f lookupPos = selectedMeeple->getCoords();
-		board->setHoveredField(board->getBoardPosForPosititon(lookupPos));
+		BoardPos boardPos =  board->getBoardPosForPosititon(lookupPos);
+		if (boardPos.isValid())
+		{
+			if (logicalBoard->isFieldEmpty(boardPos)){ // check if field is already occupied to remove hover effect if so
+				board->setHoveredField(boardPos);
+			} else {
+				board->setHoveredField({ 42, 42 });
+			}
+		}
 	}
 
     if (inputEvents.releasedLeftMouse && draggingMeeple){

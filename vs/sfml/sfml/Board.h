@@ -9,7 +9,15 @@ class Meeple;
 struct BoardPos{
     uint8_t x;
     uint8_t y;
-    std::string toString();
+    std::string toString() const;
+	
+	bool isValid() const{
+		return x < 4 && y < 4;
+	}
+
+	inline bool operator==(const BoardPos& rhs) const{
+		return x == rhs.x && y == rhs.y;
+	}
 };
 
 struct WinCombination{      //Contains 4 meeples, that are either in a row, column, or diagonal. If these meeples are similar, a player won the game

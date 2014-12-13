@@ -14,7 +14,7 @@ class ParticleSystem;
 class ParticleBuilder;
 class MusicMutebox;
 class SfxMutebox;
-class PreMenu;
+class Tutorial;
 struct GameSettings;
 
 namespace FourWins
@@ -30,7 +30,7 @@ namespace FourWins
 		{
 		private:
 			sf::RenderWindow *window;
-			PreMenu *tutorial;
+			Tutorial *tutorial;
 			ParticleSystem *particleSystem;
 			ParticleBuilder *selectionParticleRain;
 			sf::RectangleShape *backgroundShape;
@@ -50,7 +50,7 @@ namespace FourWins
 			bool startGame;
 
 		public:
-			explicit MainMenu(sf::RenderWindow &window, PreMenu &tutorial);
+			explicit MainMenu(sf::RenderWindow &window, Tutorial &tutorial);
 			~MainMenu();
 			void init(ResourceManager &resourceManager, SoundManager &soundManager);
 

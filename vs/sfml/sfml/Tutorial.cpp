@@ -1,4 +1,4 @@
-#include "PreMenu.h"
+#include "Tutorial.h"
 #include "helper.h"
 #include "ResourceManager.h"
 #include "SoundManager.h"
@@ -8,7 +8,7 @@
 #include <assert.h>
 
 
-PreMenu::PreMenu(sf::RenderWindow& window, ResourceManager& resourceManager, SoundManager& soundManager)
+Tutorial::Tutorial(sf::RenderWindow& window, ResourceManager& resourceManager, SoundManager& soundManager)
 	: loopState(WAIT)
 	, firstFadingFrame(false)
 	, fadeIndexA(0)
@@ -22,6 +22,7 @@ PreMenu::PreMenu(sf::RenderWindow& window, ResourceManager& resourceManager, Sou
 	, soundManager(&soundManager)
 	, goToMenu(false)
 	, leftMouseClicked(false)
+	, rightMouseClicked(false)
 {
 	initBackground();
 	background[0].setTexture(resourceManager.getTexture(ResourceManager::SPLASH_SCREEN));
@@ -44,24 +45,23 @@ PreMenu::PreMenu(sf::RenderWindow& window, ResourceManager& resourceManager, Sou
 }
 
 
-void PreMenu::runLoop()
+void Tutorial::runLoop()
 {
-	switchClock.restart();
-
 	sf::Clock clock;
 	float elapsedTime;
 	float fpsElapsedTime = 0;
+
+	switchClock.restart();
 	
-	while (window->isOpen() && goToMenu == false)
-	{
+	while (window->isOpen() && goToMenu == false){
 		elapsedTime = clock.getElapsedTime().asSeconds();
 		float fps = 1.f / elapsedTime;
 		clock.restart();
 
 		pollEvents();
 
-		if (skipToMenuButton.getGlobalBounds().contains(mousePosition))		//hovered
-		{
+		if (skipToMenuButton.getGlobalBounds().contains(mousePosition))	{	//hovered
+
 			skipToMenuButton.setFillColor(sf::Color(220,0,220,255));		//magenta
 			if (leftMouseClicked)
 			{
@@ -69,8 +69,7 @@ void PreMenu::runLoop()
 				goToMenu = true;
 				break;
 			}
-		} else
-		{
+		} else {
 			skipToMenuButton.setFillColor(sf::Color::Black);
 		}
 
@@ -79,38 +78,57 @@ void PreMenu::runLoop()
 		case CROSSFADE:
 		{
 			leftMouseClicked = false;
-			if (firstFadingFrame)
-			{
+			rightMouseClicked = false; // check if/why needed
+
+			if (firstFadingFrame){
 				firstFadingFrame = false;
 				alpha1 = 255;
 				alpha2 = 0;
 			}
 			if (crossfade(elapsedTime, background[fadeIndexA], background[fadeIndexB])){
 				loopState = WAIT;
-				
-				++fadeIndexA;
-				++fadeIndexB;
+				bool goForward = fadeIndexB < fadeIndexA;
+				if (goForward){
+					uint8_t temp = fadeIndexA;		// swap indices
+					fadeIndexA = fadeIndexB;
+					fadeIndexB = temp;
+				}
+				else{
+					++fadeIndexA;
+					++fadeIndexB;
+				}
 			}
-		}break;
-		
+		} break;
+
 		case WAIT:
 		{
-
-			if (switchClock.getElapsedTime().asSeconds() > TIME_TO_WAIT_TILL_NEXT_SWITCH || leftMouseClicked)
+			if (rightMouseClicked)
 			{
+				rightMouseClicked = false;			// consume events
+				leftMouseClicked = false;			// just to be safe
+				switchClock.restart();
+
+				if (fadeIndexB > 1){				// at second screen or higher
+					firstFadingFrame = true;
+					loopState = CROSSFADE;
+					fadeIndexB -= 2;				// jump to one before fadeIndexA
+				}
+			}
+			else if (switchClock.getElapsedTime().asSeconds() > TIME_TO_WAIT_TILL_NEXT_SWITCH || leftMouseClicked) {
 				if (fadeIndexB == 10)								// 10 = backgroundarray size
 				{
 					goToMenu = true;
 					break;
 				}
-				leftMouseClicked = false;
+				leftMouseClicked = false;							// consume events
+				//rightMouseClicked = false;		// not needed because of the else if // just to be safe
 				loopState = CROSSFADE;
 				firstFadingFrame = true;
 				switchClock.restart();
 			}
-		}break;
+		} break;
 
-		default: assert(false);  break;
+		default: { assert(false);					} break;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,12 +158,12 @@ void PreMenu::runLoop()
 	
 }
 
-bool PreMenu::crossfade(float elapsedTime, sf::RectangleShape&, sf::RectangleShape& rect2)
+bool Tutorial::crossfade(float elapsedTime, sf::RectangleShape& rect1, sf::RectangleShape& rect2)
 {
 	float temp = alpha1 - elapsedTime * ANIMATION_SPEED;
 	float temp2 = alpha2 + elapsedTime * ANIMATION_SPEED;
-	//std::cout << "color " << static_cast<int>(temp) << std::endl;
-	//std::cout << "color2 " << static_cast<int>(temp2) << std::endl;
+	// std::cout << "color " << static_cast<int>(temp) << std::endl;
+	// std::cout << "color2 " << static_cast<int>(temp2) << std::endl;
 	
 	// ensure high calc times don't screw up the outcome (drag the window for a sec outputs a too high value)
 	// maybe just limit it would be better.. 
@@ -159,14 +177,16 @@ bool PreMenu::crossfade(float elapsedTime, sf::RectangleShape&, sf::RectangleSha
 	{
 		alpha1 = 0;
 		alpha2 = 255;
+		rect1.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha1)));
 		return true;
 	}
+	// disabled because it should not be crossfaded only overlayed 
 	//rect1.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha1)));
 	rect2.setFillColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha2)));
 	return false;
 }
 
-void PreMenu::initBackground(){
+void Tutorial::initBackground(){
 	float width = static_cast<float>(WINDOW_WIDTH_TO_CALCULATE);
 	float height = static_cast<float>(WINDOW_HEIGHT_TO_CALCULATE);
 
@@ -178,15 +198,16 @@ void PreMenu::initBackground(){
 	}
 	background[0].setFillColor(sf::Color(255, 255, 255, 255));
 }
-void PreMenu::reset()
+void Tutorial::reset()
 {
 	goToMenu = false;
-	fadeIndexA = 0;
-	fadeIndexB = 1;
+	fadeIndexA = 1;
+	fadeIndexB = 2;
 	initBackground();
+	background[1].setFillColor(sf::Color(255, 255, 255, 255)); // set second screen opaqe
 }
 
-void PreMenu::skipToMenu()
+void Tutorial::skipToMenu()
 {
 	//alpha1 = 255;			// fade to menubackground
 	//alpha2 = 0;
@@ -194,42 +215,44 @@ void PreMenu::skipToMenu()
 	//loopState = CROSSFADE;ect1
 	goToMenu = true;		// go to menu directly
 }
-void PreMenu::pollEvents()
+void Tutorial::pollEvents()
 {
 	sf::Event event;
 	mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+	leftMouseClicked = false;
+	rightMouseClicked = false;
 
 	while (window->pollEvent(event)){
 		switch (event.type){
 
 		case sf::Event::MouseButtonReleased:
+		{
 			switch (event.mouseButton.button){
-			case sf::Mouse::Left:
-				leftMouseClicked = true;
-				break;
-			default: break;
+			case sf::Mouse::Left:{		leftMouseClicked = true;	} break;
+			case sf::Mouse::Right:{		rightMouseClicked = true;	} break;
+			default:{ /* do nothing */								} break;
 			}
-			break;
-		case sf::Event::KeyReleased:
-			if (event.key.code == sf::Keyboard::Escape)
-			{
+		} break;
+
+		case sf::Event::KeyReleased:{
+			if (event.key.code == sf::Keyboard::Escape){
 				skipToMenu();
 			}
-			break;
-		case sf::Event::Resized:
-			handleResizeWindowEvent(window);
-			break;
+			else if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Space){
+				leftMouseClicked = true;								// mouse is the main input and this can be reused
+			}
+			else if (event.key.code == sf::Keyboard::Left){
+				rightMouseClicked = true;								// mouse is the main input and this can be reused
+			}
+		} break;
 
-		case sf::Event::Closed:
-			window->close();
-			break;
-		case sf::Event::LostFocus:
+		case sf::Event::Resized:	{	handleResizeWindowEvent(window);	} break;
+		case sf::Event::Closed:		{	window->close();					} break;
+		case sf::Event::LostFocus:	{
 			//events.windowHasFocus = false;
 			soundManager->getMusic(SoundManager::SHEEP)->play();
-			break;
-		case sf::Event::GainedFocus:
-			//events.windowHasFocus = true;
-			break;
+		} break;
+		case sf::Event::GainedFocus: { /*events.windowHasFocus = true;*/	} break;
 		}
 	}
 }

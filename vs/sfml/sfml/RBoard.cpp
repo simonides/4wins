@@ -61,10 +61,12 @@ BoardPos RBoard::getBoardPosForPosititon(sf::Vector2f& position) const{
 }
 
 void RBoard::setHoveredField(const BoardPos boardPos){
+	// if there is already a hovered field (hoveredField) then set to not occupied
 	if (hoveredField.x < 4 && hoveredField.y < 4){
 		fields[hoveredField.x][hoveredField.y]->setShape(FieldShape::NOT_OCCUPIED);
 	}
 	hoveredField = boardPos;
+	// if new board pos is a valid field then set occupied
 	if (boardPos.x < 4 && boardPos.y < 4){
         fields[boardPos.x][boardPos.y]->setShape(FieldShape::OCCUPIED);
 	}

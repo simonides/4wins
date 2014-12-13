@@ -186,7 +186,7 @@
     <ClCompile Include="RGameMenu.cpp">
       <Filter>Source Files\REntities</Filter>
     </ClCompile>
-    <ClCompile Include="PreMenu.cpp">
+    <ClCompile Include="Tutorial.cpp">
       <Filter>Source Files\Tutorial</Filter>
     </ClCompile>
   </ItemGroup>
@@ -317,7 +317,7 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PreMenu.h">
+    <ClInclude Include="Tutorial.h">
       <Filter>Header Files\Tutorial</Filter>
     </ClInclude>
   </ItemGroup>
