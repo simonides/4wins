@@ -33,3 +33,6 @@ This game uses the sfml framework http://www.sfml-dev.org/.
 		* Detail: 	 Hole   | No hole
 
 In the near future everyone can write an AI, stay tuned!
+
+Downloadlink to our builds:
+https://drive.google.com/folderview?id=0B2hnL4Zx0DMESzlWQW5MalExUWc&usp=sharing
